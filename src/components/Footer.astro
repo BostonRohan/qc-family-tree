@@ -1,0 +1,136 @@
+---
+import { Image } from "astro:assets";
+import logoImage from "../assets/logo-fullcolor-white-tag.png";
+---
+
+<footer>
+  <iframe
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3258.5532326854427!2d-80.87968724845699!3d35.242490061417726!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8856a1eaba17e7c3%3A0x798145751b05c264!2s2910+Parkway+Ave%2C+Charlotte%2C+NC+28208!5e0!3m2!1sen!2sus!4v1539012587668"
+    width="100%"
+    height="300"
+    style="border:0"
+    allowfullscreen=""></iframe>
+  <div class="bg-accent text-accent-foreground/80 py-8">
+    <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-12 gap-8">
+      {/* Left column (logo + contact info) */}
+      <div class="md:col-span-5 space-y-4 text-center md:text-left">
+        <a href="/" class="inline-block">
+          <Image src={logoImage} alt="QC Family Tree" width={64} height={64} />
+        </a>
+        <div>
+          <a href="tel:7043922346" class="block hover:text-accent-foreground"
+            >704-392-2346</a
+          >
+          <a
+            href="mailto:greg@qcfamilytree.org"
+            class="block hover:text-accent-foreground">Email Us</a
+          >
+          <a
+            href="https://goo.gl/maps/jr6zh85UM9G2"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="block hover:text-accent-foreground"
+          >
+            2910 Parkway Avenue<br />
+            Charlotte, North Carolina 28208
+          </a>
+        </div>
+      </div>
+
+      {/* Right column (links) */}
+      <div class="md:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-6">
+        {/* Column 1 */}
+        <div>
+          <h4 class="font-semibold mb-2">
+            <a
+              href="https://www.qcfamilytree.org/about"
+              class="hover:text-accent-foreground"
+              class="hover:text-accent-foreground">About Us</a
+            >
+          </h4>
+          <ul class="space-y-1">
+            <li>
+              <a
+                href="https://www.qcfamilytree.org/about/who-we-are"
+                class="hover:text-accent-foreground">Who We Are</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.qcfamilytree.org/about/what-we-do"
+                class="hover:text-accent-foreground">What We Do</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.qcfamilytree.org/about/contact"
+                class="hover:text-accent-foreground">Contact</a
+              >
+            </li>
+            <li>
+              <a
+                class="hover:text-accent-foreground"
+                href="https://www.qcfamilytree.org/about/test">Resources</a
+              >
+            </li>
+            <li>
+              <a
+                class="hover:text-accent-foreground"
+                href="https://www.qcfamilytree.org/about/frequently-asked-questions"
+                >FAQ</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        {/* Column 2 */}
+        <div>
+          <h4 class="font-semibold mb-2">
+            <a
+              class="hover:text-accent-foreground"
+              href="https://www.qcfamilytree.org/get-involved">Get Involved</a
+            >
+          </h4>
+          <ul class="space-y-1">
+            <li>
+              <a
+                class="hover:text-accent-foreground"
+                href="https://www.qcfamilytree.org/get-involved/contribute"
+                >Contribute</a
+              >
+            </li>
+            <li>
+              <a
+                class="hover:text-accent-foreground"
+                href="https://www.qcfamilytree.org/get-involved/calendar"
+                >Calendar</a
+              >
+            </li>
+            <li>
+              <a
+                class="hover:text-accent-foreground"
+                href="https://www.qcfamilytree.org/get-involved/sponsor-a-community-meal"
+                >Sponsor a Community Meal</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        {/* Column 3 */}
+        <div>
+          <h4 class="font-semibold mb-2">
+            <a
+              class="hover:text-accent-foreground"
+              href="https://www.qcfamilytree.org/blog">Blog</a
+            >
+          </h4>
+        </div>
+      </div>
+    </div>
+
+    {/* Footer bottom */}
+    <div class="container mx-auto px-4 mt-8 text-center text-sm">
+      <p>Copyright © 2025 QC Family Tree</p>
+    </div>
+  </div>
+</footer>

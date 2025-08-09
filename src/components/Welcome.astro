@@ -1,0 +1,44 @@
+---
+import { Image } from "astro:assets";
+import headerImage from "../assets/homepage-header.jpg";
+import logoImage from "../assets/logo-fullcolor-white-tag.png";
+---
+
+<section class="w-full sm:h-[750px] h-[650px] relative max-w-[1280px] mx-auto">
+  <div class="relative">
+    <Image
+      src={headerImage}
+      format="webp"
+      sizes="100vw"
+      alt=""
+      fetchpriority="high"
+      class="h-[400px] object-cover"
+    />
+    <div class="absolute bottom-0 w-full h-1/3">
+      <div
+        class="z-20 w-full flex-col justify-center relative flex items-center p-4"
+      >
+        <Image
+          width={400}
+          height={400}
+          src={logoImage}
+          alt="QC Family Tree"
+          fetchpriority="high"
+          class="sm:w-[400px] sm:h-[400px] w-[250px] h-[250px]"
+        />
+        <h1
+          class="flex flex-col font-semibold text-center sm:gap-4 font-ubuntu"
+        >
+          <span class="sm:text-5xl text-[8vw]">Cultivating Community</span>
+          <span class="sm:text-4xl text-[6vw] text-secondary"
+            >For The Common Good</span
+          >
+        </h1>
+      </div>
+      <div
+        class="h-full z-10 absolute bottom-0 sm:from-20% from-white bg-linear-to-t to-transparent w-full"
+      >
+      </div>
+    </div>
+  </div>
+</section>

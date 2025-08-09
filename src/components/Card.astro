@@ -1,0 +1,8 @@
+---
+const { title, textContent } = Astro.props;
+---
+
+<div class="bg-accent/20 rounded-2xl p-4 space-y-2">
+  <h2 class="font-ubuntu font-semibold text-2xl">{title}</h2>
+  {textContent && <p class="opacity-80">{textContent}</p>}
+</div>

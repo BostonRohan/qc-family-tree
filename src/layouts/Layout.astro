@@ -1,0 +1,49 @@
+---
+import NavComponent from "@/components/ui/navigation-menu";
+import "../styles/global.css";
+import HamburgerMenu from "@/components/ui/mobile-navigation-menu";
+import SocialIcons from "@/components/SocialIcons.tsx";
+import { Font } from "astro:assets";
+import Footer from "@/components/Footer.astro";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+
+const navWrapperClassName =
+  "fixed inset-x-0 sm:top-4 top-2 w-full z-[100] bg-white/75 backdrop-blur-2xl justify-center max-w-2xl rounded-2xl mx-auto text-center flex";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <Font cssVariable="--font-ubuntu" />
+
+    <title>{title}</title>
+  </head>
+  <body class="h-full w-full">
+    <main class="w-full h-full">
+      <div class="md:block hidden">
+        <div class={navWrapperClassName}>
+          <NavComponent client:visible />
+          <SocialIcons
+            iconClassName="w-5 h-5 hover:fill-accent"
+            wrapperClassName="absolute right-0 gap-4 inset-y-0 p-3 flex items-center"
+          />
+        </div>
+      </div>
+      <div class="md:hidden block">
+        <HamburgerMenu client:visible wrapperClassName={navWrapperClassName} />
+      </div>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
