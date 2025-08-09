@@ -28,7 +28,7 @@ export default defineConfig({
   // server is required to support embedded Sanity Studio
   // opt into static rendering on each page
   output: "server",
-  adapter: vercel(),
+  adapter: vercel({ imageService: true }),
   vite: {
     plugins: [tailwind()],
   },
