@@ -8,9 +8,19 @@ import Footer from "@/components/Footer.astro";
 
 interface Props {
   title: string;
+  description: string;
+  slug: string;
+  ogImage?: string;
+  ogImageAlt?: string;
 }
 
-const { title } = Astro.props;
+const {
+  title,
+  description,
+  slug,
+  ogImage = "/og.jpg",
+  ogImageAlt = "People standing outside listening to speaker at a QC Family Tree event",
+} = Astro.props;
 
 const navWrapperClassName =
   "fixed inset-x-0 sm:top-4 top-2 w-full z-[100] bg-white/75 backdrop-blur-2xl justify-center max-w-2xl rounded-2xl mx-auto text-center flex";
@@ -23,6 +33,22 @@ const navWrapperClassName =
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={`https://qcfamilytree.org/${slug}`} />
+    <meta property="og:site_name" content="Courtney Rohan" />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(ogImage, Astro.url)} />
+    <meta property="og:image:alt" content={ogImageAlt} />
+
+    <!-- Twitter or X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@qcfamilytree" />
+    <meta property="twitter:image" content={new URL(ogImage, Astro.url)} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
 
     <Font cssVariable="--font-ubuntu" />
 
