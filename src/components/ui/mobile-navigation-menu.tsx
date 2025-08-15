@@ -13,6 +13,7 @@ import SocialIcons from "../SocialIcons.tsx";
 type MenuItem = {
   title: string;
   href?: string;
+  target?: string;
   submenu?: MenuItem[];
 };
 
@@ -32,27 +33,31 @@ const menuItems: MenuItem[] = [
     submenu: [
       {
         title: "Who we are",
-        href: "https://www.qcfamilytree.org/about/who-we-are",
+        href: "#about",
       },
       {
         title: "What we do",
-        href: "https://www.qcfamilytree.org/about/what-we-do",
+        href: "/",
       },
     ],
   },
   {
     title: "Get Involved",
     submenu: [
-      { title: "Contribute", href: "/get-involved/contribute" },
-      { title: "Events", href: "/get-involved/calendar" },
+      { title: "Contribute", href: "/" },
+      { title: "Events", href: "/" },
       {
         title: "Sponsor a Community Meal",
-        href: "/get-involved/sponsor-a-community-meal",
+        href: "/",
       },
     ],
   },
-  { title: "Blog", href: "https://www.qcfamilytree.org/blog" },
-  { title: "Donate", href: "https://www.qcfamilytree.org/get-involved/donate" },
+  { title: "Blog", href: "/" },
+  {
+    title: "Donate",
+    href: "https://www.paypal.com/ncp/payment/WV9H2PTYW66EE",
+    target: "_blank",
+  },
 ];
 
 const MenuItemComponent: React.FC<{ item: MenuItem; depth?: number }> = ({
@@ -95,6 +100,7 @@ const MenuItemComponent: React.FC<{ item: MenuItem; depth?: number }> = ({
   return (
     <a
       href={item.href}
+      target={item.target ?? "_self"}
       className={cn(
         "block py-2 text-lg font-medium transition-colors hover:text-primary",
         depth > 0 && "pl-4",

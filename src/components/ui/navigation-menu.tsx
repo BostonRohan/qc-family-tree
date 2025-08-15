@@ -183,12 +183,12 @@ function ListItem({
 const about: { title: string; href: string; description: string }[] = [
   {
     title: "Who we are",
-    href: "https://www.qcfamilytree.org/about/who-we-are",
+    href: "#about",
     description: "Learn about our mission and the people behind it.",
   },
   {
     title: "What we do",
-    href: "https://www.qcfamilytree.org/about/what-we-do",
+    href: "/",
     description:
       "See how we cultivate community, creativity, and justice together.",
   },
@@ -197,19 +197,19 @@ const about: { title: string; href: string; description: string }[] = [
 const getInvolved: { title: string; href: string; description: string }[] = [
   {
     title: "Contribute",
-    href: "https://www.qcfamilytree.org/get-involved/contribute/who-we-are",
+    href: "/",
     description:
       "Give your time, skills, or resources to support the community.",
   },
   {
     title: "Events",
-    href: "https://www.qcfamilytree.org/get-involved/calendar",
+    href: "/",
     description:
       "Join gatherings that celebrate, connect, and strengthen our community.",
   },
   {
     title: "Sponsor a Community Meal",
-    href: "https://www.qcfamilytree.org/get-involved/sponsor-a-community-meal",
+    href: "/",
     description:
       "Help provide a shared meal that nourishes bodies and relationships.",
   },
@@ -258,12 +258,15 @@ export default function NavComponent() {
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <a href="https://www.qcfamilytree.org/blog">Blog</a>
+            <a href="/">Blog</a>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <a href="https://www.qcfamilytree.org/get-involved/contribute">
+            <a
+              href="https://www.paypal.com/ncp/payment/WV9H2PTYW66EE"
+              target="_blank"
+            >
               Donate
             </a>
           </NavigationMenuLink>
