@@ -264,7 +264,7 @@ export default function NavComponent() {
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
             <a
-              href="https://www.paypal.com/ncp/payment/WV9H2PTYW66EE"
+              href="https://www.paypal.com/donate?hosted_button_id=5CZWHCA4YRQLW"
               target="_blank"
             >
               Donate
