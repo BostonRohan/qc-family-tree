@@ -12,7 +12,13 @@ const EVENTS_QUERY = `*[
     crop { bottom, left, right, top }
   }}`;
 
-const events = await sanityClient.fetch<SanityDocument[]>(EVENTS_QUERY);
+const events = await sanityClient
+  .fetch<SanityDocument[]>(EVENTS_QUERY)
+  .catch((error) => {
+    console.error("Error fetching events:", error);
+
+    return [];
+  });
 ---
 
 <section id="about" class="px-4 w-full space-y-24 flex gap-4 justify-center">
