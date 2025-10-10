@@ -1,0 +1,31 @@
+---
+import type { SanityDocument } from "@sanity/client";
+import { sanityClient } from "sanity:client";
+import EventCard from "./Cards/Eventcard.astro";
+
+const EVENTS_QUERY = `*[
+  _type == "event"]|order(publishedAt desc)[0...2]{_id, title, publishedAt, description, startDateTime, endDateTime, ctaLink, isFull,
+  image {
+    "id": asset._ref,
+    "preview": asset->metadata.lqip,
+    hotspot { x, y },
+    crop { bottom, left, right, top }
+  }}`;
+
+const events = await sanityClient.fetch<SanityDocument[]>(EVENTS_QUERY);
+---
+
+<section id="about" class="px-4 w-full space-y-24 flex gap-4 justify-center">
+  {
+    events.map((event) => (
+      <EventCard
+        title={event.title}
+        image={event.image}
+        description={event.description}
+        startDateTime={event.startDateTime}
+        endDateTime={event.endDateTime}
+        ctaLink={event.ctaLink}
+      />
+    ))
+  }
+</section>
