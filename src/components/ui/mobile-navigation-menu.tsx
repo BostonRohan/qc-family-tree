@@ -9,57 +9,7 @@ import {
 } from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
 import SocialIcons from "../SocialIcons.tsx";
-import { donateLink } from "constants.ts";
-
-type MenuItem = {
-  title: string;
-  href?: string;
-  target?: string;
-  submenu?: MenuItem[];
-};
-
-const menuItems: MenuItem[] = [
-  {
-    title: "Home",
-    href: "/",
-    submenu: [
-      {
-        title: "Contact",
-        href: "/#contact",
-      },
-    ],
-  },
-  {
-    title: "About Us",
-    submenu: [
-      {
-        title: "Who we are",
-        href: "#about",
-      },
-      {
-        title: "What we do",
-        href: "/",
-      },
-    ],
-  },
-  {
-    title: "Get Involved",
-    submenu: [
-      { title: "Contribute", href: "/get-involved/contribute" },
-      { title: "Events", href: "/" },
-      {
-        title: "Sponsor a Community Meal",
-        href: "/",
-      },
-    ],
-  },
-  { title: "Blog", href: "/" },
-  {
-    title: "Donate",
-    href: donateLink,
-    target: "_blank",
-  },
-];
+import { menuItems, type MenuItem } from "@/constants/navItems.ts";
 
 const MenuItemComponent: React.FC<{ item: MenuItem; depth?: number }> = ({
   item,

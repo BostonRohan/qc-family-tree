@@ -2,6 +2,7 @@ import * as React from "react";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import { cva } from "class-variance-authority";
 import { ChevronDownIcon } from "lucide-react";
+import { sections, menuItems } from "../../constants/navItems.ts";
 
 import { cn } from "@/lib/utils";
 import { donateLink } from "constants.ts";
@@ -176,41 +177,6 @@ function ListItem({
   );
 }
 
-const about: { title: string; href: string; description: string }[] = [
-  {
-    title: "Who we are",
-    href: "#about",
-    description: "Learn about our mission and the people behind it.",
-  },
-  {
-    title: "What we do",
-    href: "/",
-    description:
-      "See how we cultivate community, creativity, and justice together.",
-  },
-];
-
-const getInvolved: { title: string; href: string; description: string }[] = [
-  {
-    title: "Contribute",
-    href: "/",
-    description:
-      "Give your time, skills, or resources to support the community.",
-  },
-  {
-    title: "Events",
-    href: "/",
-    description:
-      "Join gatherings that celebrate, connect, and strengthen our community.",
-  },
-  {
-    title: "Sponsor a Community Meal",
-    href: "/",
-    description:
-      "Help provide a shared meal that nourishes bodies and relationships.",
-  },
-];
-
 export default function NavComponent() {
   return (
     <NavigationMenu viewport={false} className="p-1">
@@ -224,7 +190,7 @@ export default function NavComponent() {
           <NavigationMenuTrigger>About Us</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-2 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              {about.map((aboutItem) => (
+              {sections.about.map((aboutItem) => (
                 <ListItem
                   key={aboutItem.title}
                   title={aboutItem.title}
@@ -240,7 +206,7 @@ export default function NavComponent() {
           <NavigationMenuTrigger>Get Involved</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-2 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              {getInvolved.map((getInvolvedItem) => (
+              {sections.getInvolved.map((getInvolvedItem) => (
                 <ListItem
                   key={getInvolvedItem.title}
                   title={getInvolvedItem.title}
