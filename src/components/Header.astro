@@ -1,0 +1,62 @@
+---
+import { Image } from "astro:assets";
+import { Link } from "@/components/ui/link";
+
+interface CTA {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  title: string;
+  tagline: string;
+  image?: string;
+  imageAlt?: string;
+  primaryCta: CTA;
+  secondaryCta?: CTA;
+}
+
+const {
+  title,
+  tagline,
+  image = "https://placehold.co/900x400.jpg",
+  imageAlt = "",
+  primaryCta,
+  secondaryCta,
+} = Astro.props;
+---
+
+<header class="max-w-[900px] h-[400px] mt-24 relative w-full mx-auto">
+  <Image
+    src={image}
+    alt={imageAlt}
+    width={900}
+    height={400}
+    class="absolute inset-0 w-full h-full object-cover rounded-2xl"
+  />
+  <div
+    class="absolute bottom-0 left-0 z-10 p-6 text-white bg-gradient-to-t from-black/60 to-transparent rounded-b-2xl w-full flex justify-between items-center flex-wrap gap-4"
+  >
+    <hgroup class="font-ubuntu">
+      <h1 class="text-4xl font-bold text-white">{title}</h1>
+      <p class="text-lg text-neutral-300">{tagline}</p>
+    </hgroup>
+    <Link
+      size="lg"
+      className="rounded-2xl lg:w-sm w-full"
+      href={primaryCta.href}>{primaryCta.label}</Link
+    >
+    {
+      secondaryCta && (
+        <Link
+          size="lg"
+          variant="outline"
+          className="rounded-2xl sm:w-fit w-full"
+          href={secondaryCta.href}
+        >
+          {secondaryCta.label}
+        </Link>
+      )
+    }
+  </div>
+</header>
