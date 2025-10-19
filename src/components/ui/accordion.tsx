@@ -98,10 +98,6 @@ function RhizomeFAQ() {
       content: "The 2026 annual Rhizome Membership fee is $40.",
     },
     {
-      title: "How much does it cost to join?",
-      content: "The 2026 annual Rhizome Membership fee is $40.",
-    },
-    {
       title: "Who can join the coalition?",
       content:
         "Any artist or cultural worker aligned with our mission and values—committed to fairness, justice, and community impact—is welcome to apply.",
