@@ -39,6 +39,9 @@ export default defineConfig({
   vite: {
     plugins: [tailwind()],
   },
+  image: {
+    domains: ["placehold.co"],
+  },
   experimental: {
     fonts: [
       {
