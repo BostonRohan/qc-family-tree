@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
 import SocialIcons from "../SocialIcons.tsx";
+import { donateLink } from "constants.ts";
 
 type MenuItem = {
   title: string;
@@ -44,7 +45,7 @@ const menuItems: MenuItem[] = [
   {
     title: "Get Involved",
     submenu: [
-      { title: "Contribute", href: "/" },
+      { title: "Contribute", href: "/get-involved/contribute" },
       { title: "Events", href: "/" },
       {
         title: "Sponsor a Community Meal",
@@ -55,7 +56,7 @@ const menuItems: MenuItem[] = [
   { title: "Blog", href: "/" },
   {
     title: "Donate",
-    href: "https://www.paypal.com/donate?hosted_button_id=5CZWHCA4YRQLW",
+    href: donateLink,
     target: "_blank",
   },
 ];
