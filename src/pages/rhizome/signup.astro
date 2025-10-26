@@ -1,0 +1,25 @@
+---
+import { RhizomeMembershipForm } from "@/components/ui/forms/rhizome-membership";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+---
+
+<Layout
+  description="We are a group of aligned artists and cultural workers who design, present and promote art experiences and creations for the purpose of supporting the work of member artists, and providing benefit to the communities we serve."
+  slug="/rhizome/signup"
+  title="Rhizome Coalition Signup"
+>
+  <div class="space-y-4 pb-24 px-4 max-w-[900px] mx-auto">
+    <Header
+      className="!mt-16"
+      title="Sign Up for Rhizome Coalition"
+      tagline="Artists united for community and creativity."
+      image="https://placehold.co/900x400.jpg"
+      primaryCta={{
+        label: "Learn more",
+        href: "/rhizome",
+      }}
+    />
+    <RhizomeMembershipForm client:load />
+  </div>
+</Layout>
