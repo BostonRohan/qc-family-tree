@@ -1,7 +1,7 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import Layout from "@/layouts/Layout.astro";
 import { Image } from "astro:assets";
-import Header from "../components/Header.astro";
+import Header from "@/components/Header.astro";
 import { CustomTooltip } from "@/components/ui/tooltip";
 import { RhizomeFAQ } from "@/components/ui/accordion";
 ---
@@ -18,7 +18,7 @@ import { RhizomeFAQ } from "@/components/ui/accordion";
       image="https://placehold.co/900x400.jpg"
       primaryCta={{
         label: "Sign up",
-        href: "https://docs.google.com/forms/d/e/1FAIpQLSeD4BU6eoBbDB3y75jp9Sete8vEhDunNNE-o4-P46VtvGMGGA/viewform",
+        href: "/rhizome/signup",
       }}
     />
   </div>

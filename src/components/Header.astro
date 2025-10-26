@@ -14,6 +14,7 @@ interface Props {
   imageAlt?: string;
   primaryCta: CTA;
   secondaryCta?: CTA;
+  className?: string;
 }
 
 const {
@@ -23,10 +24,13 @@ const {
   imageAlt = "",
   primaryCta,
   secondaryCta,
+  className = "",
 } = Astro.props;
 ---
 
-<header class="max-w-[900px] h-[400px] mt-24 relative w-full mx-auto">
+<header
+  class={`max-w-[900px] h-[400px] mt-24 relative w-full mx-auto ${className}`}
+>
   <Image
     src={image}
     alt={imageAlt}
