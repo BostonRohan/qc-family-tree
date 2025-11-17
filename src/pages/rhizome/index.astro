@@ -4,6 +4,14 @@ import { Image } from "astro:assets";
 import Header from "@/components/Header.astro";
 import { CustomTooltip } from "@/components/ui/tooltip";
 import { RhizomeFAQ } from "@/components/ui/accordion";
+import headerImage from "@/assets/rhizome/header.jpg";
+import PhotoCarousel from "@/components/photo-carousel";
+import { Link } from "@/components/ui/link";
+
+import slide_1 from "@/assets/rhizome/slide_1.jpg";
+import slide_2 from "@/assets/rhizome/slide_2.jpg";
+import slide_3 from "@/assets/rhizome/slide_3.jpg";
+import slide_4 from "@/assets/rhizome/slide_4.jpg";
 ---
 
 <Layout
@@ -11,53 +19,89 @@ import { RhizomeFAQ } from "@/components/ui/accordion";
   slug="/rhizome"
   title="Rhizome Coalition"
 >
-  <div class="space-y-24 pb-24 px-4">
+  <div class="pb-16 px-4">
     <Header
       title="Rhizome Coalition"
       tagline="Artists united for community and creativity."
-      image="https://placehold.co/900x400.jpg"
+      image={headerImage.src}
       primaryCta={{
         label: "Sign up",
         href: "/rhizome/signup",
       }}
     />
   </div>
-  <section id="about" class="bg-accent px-4 py-16 text-neutral-100 space-y-4">
+  <section
+    id="about"
+    class="bg-accent lg:p-16 md:p-8 p-4 text-neutral-100 space-y-4"
+  >
     <div
-      class="dark bg-accent-foreground-hover border border-secondary-dark p-8 rounded-xl space-y-4"
+      class="dark bg-accent-foreground-hover border border-secondary-dark p-8 rounded-xl space-y-4 w-full"
     >
-      <Image
-        src="https://placehold.co/900x400.jpg"
-        alt="Rhizome Coalition photo"
-        width={900}
-        height={400}
-        class="mx-auto rounded-md"
-      />
-      <div class="mx-auto max-w-[900px] space-y-3">
-        <h2 class="sm:text-3xl text-xl font-bold font-ubuntu">
-          What is the
-          <CustomTooltip
-            content="Specialized underground stems that have nodes and internodes from which NEW ROOTS emerge."
-            label="Rhizome"
-            underlineLabel
-            client:media="(min-width: 40rem)"
+      <div
+        class="max-w-[932px] mx-auto flex justify-center gap-6 flex-wrap-reverse"
+      >
+        <div class="px-6 w-full">
+          <PhotoCarousel
+            images={[
+              {
+                src: slide_1.src,
+                alt: "People gathered around park listening to speaker",
+              },
+              {
+                src: slide_2.src,
+                alt: "3 people in front of mural painting",
+              },
+              {
+                src: slide_3.src,
+                alt: "People gathered at park listening to speakder with flowers in front of them",
+              },
+              {
+                src: slide_4.src,
+                alt: "People sitting at table during meeting with art supplies on counter",
+              },
+            ]}
+            client:load
           />
-          Coalition?
-        </h2>
-        <p class="leading-7">
-          We are a group of aligned artists and cultural workers who design,
-          present and promote art experiences and creations for the purpose of
-          supporting the work of member artists, and providing benefit to the
-          communities we serve. We stand for fairness, justice, and equality,
-          and we work to end all types of oppression everywhere. QCFT Rhizome
-          members meet regularly to share our art, learn from each other, and
-          build a strong support system for our work and our collective
-          progress.
-        </p>
+        </div>
+        <div class="space-y-3">
+          <h2 class="sm:text-3xl text-xl font-bold font-ubuntu">
+            What is the
+            <CustomTooltip
+              content="Specialized underground stems that have nodes and internodes from which NEW ROOTS emerge."
+              label="Rhizome"
+              underlineLabel
+              client:media="(min-width: 40rem)"
+            />
+            Coalition?
+          </h2>
+          <p class="leading-7">
+            We are a group of aligned artists and cultural workers who design,
+            present and promote art experiences and creations for the purpose of
+            supporting the work of member artists, and providing benefit to the
+            communities we serve. We stand for fairness, justice, and equality,
+            and we work to end all types of oppression everywhere. QCFT Rhizome
+            members meet regularly to share our art, learn from each other, and
+            build a strong support system for our work and our collective
+            progress.
+          </p>
+          <div class="flex gap-4 w-full md:flex-row flex-col">
+            <Link
+              size="sm"
+              className="rounded-xl w-full md:max-w-xs"
+              href="/rhizome/signup">Sign up</Link
+            >
+            <Link
+              size="sm"
+              className="rounded-xl md:max-w-xs w-full"
+              href="#faqs"
+              variant="outline">View FAQs</Link
+            >
+          </div>
+        </div>
       </div>
     </div>
   </section>
-  <section id="benefits" class="max-w-[900px] mx-auto py-16 px-4">
+  <section id="benefits" class="max-w-[932px] mx-auto py-16 px-4">
     <h2 class="sm:text-3xl text-xl font-semibold mb-6 font-ubuntu">
       Membership Benefits
     </h2>
@@ -304,8 +348,8 @@ import { RhizomeFAQ } from "@/components/ui/accordion";
       </li>
     </ul>
   </section>
-  <section id="faqs" class="bg-secondary py-16 px-4 text-white">
-    <div class="max-w-[900px] mx-auto">
+  <section id="faqs" class="bg-secondary py-16 px-4 text-white w-full">
+    <div class="max-w-[932px] mx-auto">
       <h2 class="sm:text-3xl text-xl font-semibold font-ubuntu">FAQs</h2>
       <RhizomeFAQ client:load />
     </div>
