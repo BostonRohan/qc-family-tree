@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import { useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -22,13 +22,11 @@ const formSchema = z.object({
       error: "Full name is required.",
     })
     .min(2, { error: "Full name must be at least 2 characters long." })
-    .max(100, { error: "Full name must be under 100 characters." })
-    .nonoptional(),
+    .max(100, { error: "Full name must be under 100 characters." }),
 
   email: z
     .email({ error: "Please enter a valid email address." })
-    .max(200, { error: "Email must be under 200 characters." })
-    .nonoptional(),
+    .max(200, { error: "Email must be under 200 characters." }),
 
   pronouns: z
     .string()
@@ -49,10 +47,11 @@ const formSchema = z.object({
     .optional(),
 
   phone_number: z
-    .string()
+    .string({
+      error: "Phone number is required.",
+    })
     .min(10, { error: "Phone number must be at least 10 digits." })
-    .max(20, { error: "Phone number must be under 20 characters." })
-    .nonoptional(),
+    .max(20, { error: "Phone number must be under 20 characters." }),
 
   additional_comments: z
     .string()
@@ -66,7 +65,12 @@ export function RhizomeMembershipForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       full_name: "",
+      email: "",
       phone_number: "",
+      pronouns: "",
+      artist_name: "",
+      instagram_handle: "",
+      additional_comments: "",
     },
   });
 
