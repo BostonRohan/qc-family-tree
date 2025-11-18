@@ -1,22 +1,15 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, type Resolver } from "react-hook-form";
+import { Controller, useForm, type Resolver } from "react-hook-form";
 import { useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Field, FieldError, FieldGroup, FieldLabel } from "../field";
 import { Input } from "@/components/ui/input";
+import { InputGroup, InputGroupTextarea } from "../input-group";
 
-const formSchema = z.object({
+const schema = z.object({
   full_name: z
     .string({
       error: "Full name is required.",
@@ -61,35 +54,26 @@ const formSchema = z.object({
 });
 
 export function RhizomeMembershipForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      full_name: "",
-      email: "",
-      phone_number: "",
-      pronouns: "",
-      artist_name: "",
-      instagram_handle: "",
-      additional_comments: "",
-    },
+  const { register, handleSubmit, control, trigger } = useForm({
+    resolver: zodResolver(schema),
   });
 
   const [step, setStep] = useState(1);
   const totalSteps = 4;
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof schema>) {
     console.log(values);
   }
 
   async function nextStep() {
-    const fieldsByStep: Record<number, (keyof z.infer<typeof formSchema>)[]> = {
+    const fieldsByStep: Record<number, (keyof z.infer<typeof schema>)[]> = {
       1: ["full_name", "email", "pronouns"],
       2: ["artist_name", "instagram_handle", "phone_number"],
       3: ["additional_comments"],
     };
 
     const currentFields = fieldsByStep[step];
-    const isValid = await form.trigger(currentFields, { shouldFocus: true });
+    const isValid = await trigger(currentFields, { shouldFocus: true });
 
     if (isValid) {
       setStep((s) => Math.min(s + 1, totalSteps));
@@ -101,165 +85,196 @@ export function RhizomeMembershipForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {step === 1 && (
-          <>
-            <FormField
-              control={form.control}
-              name="full_name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Full Name<span className="text-red-500">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input placeholder="John Doe" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Email<span className="text-red-500">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="you@example.com"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="pronouns"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Pronouns</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="he/him, she/her, they/them"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </>
-        )}
-
-        {step === 2 && (
-          <>
-            <FormField
-              control={form.control}
-              name="artist_name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Artist Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Stage name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="instagram_handle"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Instagram</FormLabel>
-                  <FormControl>
-                    <Input placeholder="@handle" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="phone_number"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Phone Number <span className="text-red-500">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input type="tel" placeholder="(555) 123-4567" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </>
-        )}
-
-        {step === 3 && (
-          <FormField
-            control={form.control}
-            name="additional_comments"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  What are you most excited for this upcoming year, in terms of
-                  Rhizome membership?
-                </FormLabel>
-                <FormControl>
-                  <textarea
-                    className="w-full min-h-[100px] border rounded-md p-2"
-                    placeholder="Anything you'd like to share?"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+    <form
+      onSubmit={handleSubmit((data) => {
+        console.log(data);
+      })}
+      className="space-y-6"
+    >
+      {step === 1 && (
+        <FieldGroup>
+          <Controller
+            name="full_name"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel>
+                  Full Name<span className="text-red-500">*</span>
+                </FieldLabel>
+                <Input
+                  {...field}
+                  placeholder="John Doe"
+                  aria-invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
             )}
           />
-        )}
-        {step === 4 && (
-          <p className="text-sm font-bold">
-            If you’re not able to pay right now, you can still submit your
-            application. We’ll review it and reach out to you about next steps.
-          </p>
-        )}
 
-        {/* Step Navigation */}
-        <div className="flex justify-between">
-          {step > 1 ? (
-            <Button type="button" variant="outline" onClick={prevStep}>
-              Back
-            </Button>
-          ) : (
-            <div />
-          )}
+          <Controller
+            name="email"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel>
+                  Email<span className="text-red-500">*</span>
+                </FieldLabel>
+                <Input
+                  type="email"
+                  {...field}
+                  placeholder="you@example.com"
+                  aria-invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
 
-          {step < totalSteps ? (
-            <Button type="button" onClick={nextStep}>
-              Next
-            </Button>
-          ) : (
-            <Button type="submit">Submit</Button>
-          )}
-        </div>
+          <Controller
+            name="pronouns"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel>Pronouns</FieldLabel>
+                <Input
+                  {...field}
+                  placeholder="he/him, she/her, they/them"
+                  aria-invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+        </FieldGroup>
+      )}
 
-        <p className="text-sm text-muted-foreground text-center">
-          Step {step} of {totalSteps}
+      {step === 2 && (
+        <FieldGroup>
+          <Controller
+            name="artist_name"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel>Artist Name</FieldLabel>
+                <Input
+                  {...field}
+                  placeholder="Stage name"
+                  aria-invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+
+          <Controller
+            name="instagram_handle"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel>Instagram</FieldLabel>
+                <Input
+                  {...field}
+                  placeholder="@handle"
+                  aria-invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+
+          <Controller
+            name="phone_number"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel>
+                  Phone Number <span className="text-red-500">*</span>
+                </FieldLabel>
+                <Input
+                  type="tel"
+                  {...field}
+                  placeholder="(555) 123-4567"
+                  aria-invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+        </FieldGroup>
+      )}
+
+      {step === 3 && (
+        <FieldGroup>
+          <Controller
+            name="additional_comments"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel>
+                  What are you most excited for this upcoming year, in terms of
+                  Rhizome membership?
+                </FieldLabel>
+
+                <InputGroup>
+                  <InputGroupTextarea
+                    {...field}
+                    rows={6}
+                    placeholder="Anything you'd like to share?"
+                    className="min-h-24 resize-none"
+                    aria-invalid={fieldState.invalid}
+                  />
+                </InputGroup>
+
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+        </FieldGroup>
+      )}
+
+      {step === 4 && (
+        <p className="text-sm font-bold">
+          If you’re not able to pay right now, you can still submit your
+          application. We’ll review it and reach out to you about next steps.
         </p>
-      </form>
-    </Form>
+      )}
+
+      {/* Step Navigation */}
+      <div className="flex justify-between">
+        {step > 1 ? (
+          <Button type="button" variant="outline" onClick={prevStep}>
+            Back
+          </Button>
+        ) : (
+          <div />
+        )}
+
+        {step < totalSteps ? (
+          <Button type="button" onClick={nextStep}>
+            Next
+          </Button>
+        ) : (
+          <Button type="submit">Submit</Button>
+        )}
+      </div>
+
+      <p className="text-sm text-muted-foreground text-center">
+        Step {step} of {totalSteps}
+      </p>
+    </form>
   );
 }
