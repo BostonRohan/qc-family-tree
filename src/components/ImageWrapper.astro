@@ -1,0 +1,17 @@
+---
+import { SanityImage, type WrapperProps } from "sanity-image";
+
+export type ImageProps<T extends React.ElementType = "img"> =
+  WrapperProps<T> & {
+    alt: string;
+  };
+
+const { id, className, alt } = Astro.props;
+---
+
+<SanityImage
+  baseUrl={`https://cdn.sanity.io/images/${import.meta.env.PUBLIC_SANITY_PROJECT_ID}/${import.meta.env.PUBLIC_SANITY_DATASET}/`}
+  id={id}
+  className={className}
+  alt={alt}
+/>

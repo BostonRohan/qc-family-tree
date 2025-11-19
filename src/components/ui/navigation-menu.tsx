@@ -1,14 +1,10 @@
 import * as React from "react";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import { cva } from "class-variance-authority";
-import {
-  ChevronDownIcon,
-  CircleCheckIcon,
-  CircleHelpIcon,
-  CircleIcon,
-} from "lucide-react";
+import { ChevronDownIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { donateLink } from "constants.ts";
 
 function NavigationMenu({
   className,
@@ -263,10 +259,7 @@ export default function NavComponent() {
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <a
-              href="https://www.paypal.com/donate?hosted_button_id=5CZWHCA4YRQLW"
-              target="_blank"
-            >
+            <a href={donateLink} target="_blank">
               Donate
             </a>
           </NavigationMenuLink>
