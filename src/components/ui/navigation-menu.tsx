@@ -2,7 +2,6 @@ import * as React from "react";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import { cva } from "class-variance-authority";
 import { ChevronDownIcon } from "lucide-react";
-import { sections, menuItems } from "../../constants/navItems.ts";
 
 import { cn } from "@/lib/utils";
 import { donateLink } from "constants.ts";

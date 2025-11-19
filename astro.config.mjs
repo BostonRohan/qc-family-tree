@@ -23,7 +23,7 @@ import tailwind from "@tailwindcss/vite";
 
 import icon from "astro-icon";
 
-import { donateLink } from "./constants";
+import { donateLink } from "constants.ts";
 
 // https://astro.build/config
 export default defineConfig({
