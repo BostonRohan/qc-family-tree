@@ -1,0 +1,147 @@
+---
+import { phoneNumber, emailAddress } from "@constants";
+import { Phone, Mail, Clock, MapPin } from "@lucide/astro";
+
+const h3Class = "sm:text-xl text-lg mb-1 font-semibold";
+const iconClass = "sm:w-6 sm:h-6 w-4 h-4";
+const quickContactIconClass = "sm:w-7 sm:h-7 w-5 h-5";
+---
+
+<section id="contact" class="min-h-screen bg-secondary/35">
+  <div class="max-w-7xl mx-auto px-4 pt-16 pb-24 sm:px-6 lg:px-8">
+    {/* Header */}
+    <hgroup class="text-center mb-12">
+      <h1 class="mb-4 sm:text-5xl text-3xl font-bold font-ubuntu">
+        Get In Touch
+      </h1>
+      <p class="text-slate-600 max-w-2xl mx-auto">
+        Have a question or want to work together? We'd love to hear from you.
+        <br />
+        Reach out to us using any of the methods below.
+      </p>
+    </hgroup>
+
+    <div class="max-w-4xl mx-auto">
+      {/* Contact Information */}
+      <div class="space-y-8">
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+          <h2 class="sm:text-3xl font-semibold text-xl mb-6">
+            Contact Information
+          </h2>
+
+          <div class="space-y-6">
+            {/* Phone */}
+            <div class="flex items-start gap-4">
+              <div
+                class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center"
+              >
+                <Phone class={`text-blue-600 ${iconClass}`} />
+              </div>
+              <div>
+                <h3 class={h3Class}>Phone</h3>
+                <a
+                  href={`tel:${phoneNumber}`}
+                  class="text-blue-600 hover:text-blue-700 transition-colors"
+                >
+                  {phoneNumber}
+                </a>
+                <p class="text-slate-500 text-sm mt-1">
+                  Mon-Fri from 9am to 6pm
+                </p>
+              </div>
+            </div>
+
+            {/* Email */}
+            <div class="flex items-start gap-4">
+              <div
+                class="flex-shrink-0 w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center"
+              >
+                <Mail class={`text-indigo-600 ${iconClass}`} />
+              </div>
+              <div>
+                <h3 class={h3Class}>Email</h3>
+                <a
+                  href={`mailto:${emailAddress}`}
+                  class="text-blue-600 hover:text-blue-700 transition-colors"
+                >
+                  {emailAddress}
+                </a>
+                <p class="text-slate-500 text-sm mt-1">
+                  We'll respond within 24 hours
+                </p>
+              </div>
+            </div>
+
+            {/* Address */}
+            <div class="flex items-start gap-4">
+              <div
+                class="flex-shrink-0 w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center"
+              >
+                <MapPin class={`text-purple-600 ${iconClass}`} />
+              </div>
+              <div>
+                <h3 class={h3Class}>Office</h3>
+                <p class="text-slate-600">
+                  2910 Parkway Avenue<br />
+                  Charlotte, North Carolina 28208
+                </p>
+              </div>
+            </div>
+
+            {/* Business Hours */}
+            <div class="flex items-start gap-4">
+              <div
+                class="flex-shrink-0 w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center"
+              >
+                <Clock class={`text-green-600 ${iconClass}`} />
+              </div>
+              <div>
+                <h3 class={h3Class}>Business Hours</h3>
+                <div class="text-slate-600 space-y-1">
+                  <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
+                  <p>Saturday: 10:00 AM - 4:00 PM</p>
+                  <p>Sunday: Closed</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Contact Cards */}
+        <div class="grid sm:grid-cols-2 gap-4">
+          <a
+            href={`tel:${phoneNumber}`}
+            class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow group"
+          >
+            <div class="flex items-center justify-between mb-3">
+              <Phone class={`${quickContactIconClass} text-blue-600`} />
+              <span
+                class="text-accent group-hover:text-accent-foreground-hover transition-colors"
+                >→</span
+              >
+            </div>
+            <h3 class={h3Class}>Call Us</h3>
+            <p class="text-slate-600 text-sm">
+              Quick response during business hours
+            </p>
+          </a>
+
+          <a
+            href={`mailto:${emailAddress}`}
+            class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow group"
+          >
+            <div class="flex items-center justify-between mb-3">
+              <Mail class={`text-indigo-600 ${quickContactIconClass}`} />
+              <span
+                class="text-accent group-hover:text-accent-foreground-hover transition-colors"
+                >→</span
+              >
+            </div>
+            <h3 class={h3Class}>Email Us</h3>
+            <p class="text-slate-600 text-sm">Get a response within 24 hours</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
