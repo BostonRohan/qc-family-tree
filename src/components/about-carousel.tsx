@@ -13,7 +13,7 @@ export default function AboutCarousel({
 }) {
   const slides = slidesContent.map((slide) => (
     <div className="space-y-4">
-      <img src={slide.image} alt="" className="rounded-2xl" />
+      <img src={slide.image} alt="" className="rounded-2xl aspect-[350/234]" />
       <div>
         <h2 className="sm:text-lg font-ubuntu font-semibold">{slide.title}</h2>
         <p className="opacity-80 sm:text-base text-sm">{slide.description}</p>
