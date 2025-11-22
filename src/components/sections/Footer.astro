@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
-import logoImage from "../assets/logo-fullcolor-white-tag.png";
+import logoImage from "@/assets/logo-fullcolor-white-tag.png";
+import { phoneNumber, emailAddress } from "@constants";
 ---
 
 <footer>
@@ -24,11 +25,12 @@ import logoImage from "../assets/logo-fullcolor-white-tag.png";
           />
         </a>
         <div>
-          <a href="tel:9805057147" class="block hover:text-accent-foreground"
-            >(980)-505-7147</a
+          <a
+            href={`tel:${phoneNumber}`}
+            class="block hover:text-accent-foreground">{phoneNumber}</a
           >
           <a
-            href="mailto:greg@qcfamilytree.org"
+            href={`mailto:${emailAddress}`}
             class="block hover:text-accent-foreground">Email Us</a
           >
           <a

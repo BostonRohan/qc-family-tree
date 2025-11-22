@@ -1,10 +1,10 @@
 ---
-import NavComponent from "@/components/ui/navigation-menu";
+import DesktopNav from "@/components/ui/nav/desktop";
 import "../styles/global.css";
-import HamburgerMenu from "@/components/ui/mobile-navigation-menu";
+import MobileNav from "@/components/ui/nav/mobile";
 import SocialIcons from "@/components/SocialIcons.tsx";
 import { Font } from "astro:assets";
-import Footer from "@/components/Footer.astro";
+import Footer from "@/components/sections/Footer.astro";
 
 interface Props {
   title: string;
@@ -67,7 +67,7 @@ const navWrapperClassName =
     <main class="w-full h-full">
       <div class="md:block hidden">
         <div class={navWrapperClassName}>
-          <NavComponent client:visible />
+          <DesktopNav client:visible />
           <SocialIcons
             iconClassName="w-5 h-5 hover:fill-accent"
             wrapperClassName="absolute right-0 gap-4 inset-y-0 p-3 flex items-center"
@@ -75,7 +75,7 @@ const navWrapperClassName =
         </div>
       </div>
       <div class="md:hidden block">
-        <HamburgerMenu client:visible wrapperClassName={navWrapperClassName} />
+        <MobileNav client:visible wrapperClassName={navWrapperClassName} />
       </div>
       <slot />
     </main>
