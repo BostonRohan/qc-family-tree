@@ -65,6 +65,41 @@ export const nav: NavItem[] = [
     ],
   },
   {
+    title: "Programs",
+    children: [
+      {
+        title: "Featured Programs or Services",
+        href: "/#programs",
+        description:
+          "Explore our featured programs and services that support the community.",
+      },
+      {
+        title: "Housing Justice",
+        href: "/#programs",
+        description:
+          "QCFT is an affordable housing provider and is actively involved in affordable housing advocacy, partnering with organizations like the West Side Community Land Trust to prevent displacement and ensure stable living conditions for residents.",
+      },
+      {
+        title: "Cultural Organizing",
+        href: "/#programs",
+        description:
+          "QCFT is known for its cultural organizing initiatives, like the Rhizome Coalition, which brings together artists and cultural workers to create art that is rooted in communities of place, tradition, or spirit.",
+      },
+      {
+        title: "Community Programming",
+        href: "/#programs",
+        description:
+          "QC Family Tree creates inclusive programs that focus on reducing disparities in access to resources and opportunities.",
+      },
+      {
+        title: "Here for Good Business Cooperative",
+        href: "/#programs",
+        description:
+          "MISSION: To cultivate a thriving, just, and culturally rich economy in the Freedom-Wilkinson Corridor grounded in community-driven development, equity, and collective empowerment.",
+      },
+    ],
+  },
+  {
     title: "Donate",
     href: donateLink,
     target: "_blank",
