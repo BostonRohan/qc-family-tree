@@ -4,7 +4,7 @@ import { cva } from "class-variance-authority";
 import { ChevronDownIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { donateLink } from "constants.ts";
+import { nav } from "./nav.config";
 
 function NavigationMenu({
   className,

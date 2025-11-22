@@ -8,66 +8,16 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
-import SocialIcons from "../SocialIcons.tsx";
-import { donateLink } from "constants.ts";
+import SocialIcons from "../../SocialIcons";
+import { nav, type NavItem } from "./nav.config";
 
-type MenuItem = {
-  title: string;
-  href?: string;
-  target?: string;
-  submenu?: MenuItem[];
-};
-
-const menuItems: MenuItem[] = [
-  {
-    title: "Home",
-    href: "/",
-    submenu: [
-      {
-        title: "Contact",
-        href: "/#contact",
-      },
-    ],
-  },
-  {
-    title: "About Us",
-    submenu: [
-      {
-        title: "Who we are",
-        href: "#about",
-      },
-      {
-        title: "What we do",
-        href: "/",
-      },
-    ],
-  },
-  {
-    title: "Get Involved",
-    submenu: [
-      { title: "Contribute", href: "/get-involved/contribute" },
-      { title: "Events", href: "/" },
-      {
-        title: "Sponsor a Community Meal",
-        href: "/",
-      },
-    ],
-  },
-  { title: "Blog", href: "/" },
-  {
-    title: "Donate",
-    href: donateLink,
-    target: "_blank",
-  },
-];
-
-const MenuItemComponent: React.FC<{ item: MenuItem; depth?: number }> = ({
+const MenuItemComponent: React.FC<{ item: NavItem; depth?: number }> = ({
   item,
   depth = 0,
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
-  if (item.submenu) {
+  if (item.children) {
     return (
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleTrigger asChild>
@@ -86,7 +36,7 @@ const MenuItemComponent: React.FC<{ item: MenuItem; depth?: number }> = ({
           </button>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          {item.submenu.map((subItem) => (
+          {item.children.map((subItem) => (
             <MenuItemComponent
               key={subItem.title}
               item={subItem}
@@ -137,7 +87,7 @@ export default function HamburgerMenu({
         </SheetTrigger>
         <SheetContent side="left" className="w-full">
           <div className="flex flex-col space-y-4 pt-8 px-4">
-            {menuItems.map((item) => (
+            {nav.map((item) => (
               <MenuItemComponent key={item.title} item={item} />
             ))}
           </div>
