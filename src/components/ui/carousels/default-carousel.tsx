@@ -14,7 +14,7 @@ import {
 
 export function DefaultCarousel({ slides }: { slides: Slide[] }) {
   return (
-    <Carousel className="w-full max-w-[90%] mx-auto">
+    <Carousel className="w-full md:max-w-[90%] max-w-[80%] mx-auto">
       <CarouselContent className="-ml-1">
         {slides.map((slide, index) => (
           <CarouselItem key={index} className="pl-1 md:basis-1/2 lg:basis-1/3">
