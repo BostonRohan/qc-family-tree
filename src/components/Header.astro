@@ -12,7 +12,7 @@ interface Props {
   tagline: string;
   image?: string;
   imageAlt?: string;
-  primaryCta: CTA;
+  primaryCta?: CTA;
   secondaryCta?: CTA;
   className?: string;
 }
@@ -45,11 +45,17 @@ const {
       <h1 class="text-4xl font-bold text-white">{title}</h1>
       <p class="text-lg text-neutral-300">{tagline}</p>
     </hgroup>
-    <Link
-      size="lg"
-      className="rounded-2xl lg:w-sm w-full"
-      href={primaryCta.href}>{primaryCta.label}</Link
-    >
+    {
+      primaryCta && (
+        <Link
+          size="lg"
+          className="rounded-2xl lg:w-sm w-full"
+          href={primaryCta.href}
+        >
+          {primaryCta.label}
+        </Link>
+      )
+    }
     {
       secondaryCta && (
         <Link

@@ -9,7 +9,7 @@ import { type FeaturedSection } from "sanity.types";
 import { Link } from "@/components/ui/link";
 
 const FEATURED_SECTION_QUERY = defineQuery(`*[
-  _type == "featuredSection"]{_id, title, publishedAt, description, ctaLink, ctaLabel,
+  _type == "featuredSection"]{_id, title, publishedAt, description, primaryCtaLink, primaryCtaLabel, secondaryCtaLabel, secondaryCtaLink,
   image {
     asset,
   }}`);
@@ -46,14 +46,22 @@ const featuredSection = featuredSectionData[0];
     <Link
       size="sm"
       className="rounded-xl w-full md:max-w-xs"
-      href="/rhizome/signup">Sign up</Link
+      variant="default"
+      href={featuredSection.primaryCtaLink}
+      >{featuredSection.primaryCtaLabel}</Link
     >
-    <Link
-      size="sm"
-      className="rounded-xl md:max-w-xs w-full"
-      href="/rhizome"
-      variant="outline">Learn more</Link
-    >
+    {
+      featuredSection.secondaryCtaLabel && featuredSection.secondaryCtaLink && (
+        <Link
+          size="sm"
+          className="rounded-xl md:max-w-xs w-full"
+          href={featuredSection.secondaryCtaLink}
+          variant="outline"
+        >
+          {featuredSection.secondaryCtaLabel}
+        </Link>
+      )
+    }
     <ImageWrapper
       id={featuredSection.image?.asset?._ref}
       alt={featuredSection.title}
