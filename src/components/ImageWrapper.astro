@@ -10,7 +10,7 @@ const { id, className, alt } = Astro.props;
 ---
 
 <SanityImage
-  baseUrl={`https://cdn.sanity.io/images/${import.meta.env.PUBLIC_SANITY_PROJECT_ID}/${import.meta.env.PUBLIC_SANITY_DATASET}/`}
+  baseUrl={`https://cdn.sanity.io/images/${import.meta.env.PUBLIC_SANITY_STUDIO_PROJECT_ID}/${import.meta.env.PUBLIC_SANITY_STUDIO_DATASET}/`}
   id={id}
   className={className}
   alt={alt}
