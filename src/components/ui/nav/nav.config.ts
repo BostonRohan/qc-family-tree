@@ -46,13 +46,13 @@ export const nav: NavItem[] = [
     children: [
       {
         title: "Contribute",
-        href: "/",
+        href: donateLink,
         description:
           "Give your time, skills, or resources to support the community.",
       },
       {
         title: "Events",
-        href: "/",
+        href: "/events",
         description:
           "Join gatherings that celebrate, connect, and strengthen our community.",
       },

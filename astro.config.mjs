@@ -34,6 +34,7 @@ export default defineConfig({
   redirects: {
     "/get-involved/contribute": "/donate",
     "/donate": donateLink,
+    "/events": "https://www.eventbrite.com/o/qc-family-tree-15926567999",
   },
   adapter: vercel({ imageService: true }),
   vite: {
