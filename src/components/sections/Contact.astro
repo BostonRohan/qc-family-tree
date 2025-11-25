@@ -4,7 +4,6 @@ import { Phone, Mail, Clock, MapPin } from "@lucide/astro";
 
 const h3Class = "sm:text-xl text-lg mb-1 font-semibold";
 const iconClass = "sm:w-6 sm:h-6 w-4 h-4";
-const quickContactIconClass = "sm:w-7 sm:h-7 w-5 h-5";
 ---
 
 <section id="contact" class="min-h-screen bg-secondary/35">
@@ -45,9 +44,6 @@ const quickContactIconClass = "sm:w-7 sm:h-7 w-5 h-5";
                 >
                   {phoneNumber}
                 </a>
-                <p class="text-slate-500 text-sm mt-1">
-                  Mon-Sun from 9am to 9pm
-                </p>
               </div>
             </div>
 
@@ -66,9 +62,6 @@ const quickContactIconClass = "sm:w-7 sm:h-7 w-5 h-5";
                 >
                   {emailAddress}
                 </a>
-                <p class="text-slate-500 text-sm mt-1">
-                  We'll respond within 2 business days
-                </p>
               </div>
             </div>
 
@@ -80,66 +73,26 @@ const quickContactIconClass = "sm:w-7 sm:h-7 w-5 h-5";
                 <MapPin class={`text-purple-600 ${iconClass}`} />
               </div>
               <div>
-                <h3 class={h3Class}>Office</h3>
-                <p class="text-slate-600">
-                  2910 Parkway Avenue<br />
-                  Charlotte, North Carolina 28208
-                </p>
-              </div>
-            </div>
-
-            {/* Business Hours */}
-            <div class="flex items-start gap-4">
-              <div
-                class="flex-shrink-0 w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center"
-              >
-                <Clock class={`text-green-600 ${iconClass}`} />
-              </div>
-              <div>
-                <h3 class={h3Class}>Business Hours</h3>
-                <div class="text-slate-600 space-y-1">
-                  <p>Monday - Sunday: 9:00 AM - 9:00 PM</p>
+                <h3 class={h3Class}>Address</h3>
+                <div class="flex flex-wrap gap-4">
+                  <div>
+                    <h4 class="font-medium">Mailing Address</h4>
+                    <p class="text-slate-600">
+                      2910 Parkway Avenue<br />
+                      Charlotte, North Carolina 28208
+                    </p>
+                  </div>
+                  <div>
+                    <h4 class="font-medium">Physical Address</h4>
+                    <p class="text-slate-600">
+                      2916 Parkway Avenue<br />
+                      Charlotte, North Carolina 28208
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Quick Contact Cards */}
-        <div class="grid sm:grid-cols-2 gap-4">
-          <a
-            href={`tel:${phoneNumber}`}
-            class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow group"
-          >
-            <div class="flex items-center justify-between mb-3">
-              <Phone class={`${quickContactIconClass} text-blue-600`} />
-              <span
-                class="text-accent group-hover:text-accent-foreground-hover transition-colors"
-                >→</span
-              >
-            </div>
-            <h3 class={h3Class}>Call Us</h3>
-            <p class="text-slate-600 text-sm">
-              Quick response during business hours
-            </p>
-          </a>
-
-          <a
-            href={`mailto:${emailAddress}`}
-            class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow group"
-          >
-            <div class="flex items-center justify-between mb-3">
-              <Mail class={`text-indigo-600 ${quickContactIconClass}`} />
-              <span
-                class="text-accent group-hover:text-accent-foreground-hover transition-colors"
-                >→</span
-              >
-            </div>
-            <h3 class={h3Class}>Email Us</h3>
-            <p class="text-slate-600 text-sm">
-              Get a response within 2 business days
-            </p>
-          </a>
         </div>
       </div>
     </div>
