@@ -9,10 +9,11 @@ const singletonTypes = new Set(["featuredSection"]);
 
 export default defineConfig({
   projectId:
-    import.meta.env?.PUBLIC_SANITY_PROJECT_ID ??
-    process.env.PUBLIC_SANITY_PROJECT_ID,
+    import.meta.env?.PUBLIC_SANITY_STUDIO_PROJECT_ID ??
+    process.env.PUBLIC_SANITY_STUDIO_PROJECT_ID,
   dataset:
-    import.meta.env?.PUBLIC_SANITY_DATASET ?? process.env.PUBLIC_SANITY_DATASET,
+    import.meta.env?.PUBLIC_SANITY_STUDIO_DATASET ??
+    process.env.PUBLIC_SANITY_STUDIO_DATASET,
   plugins: [
     structureTool({
       structure: (S) =>
