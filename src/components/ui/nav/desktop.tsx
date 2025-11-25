@@ -180,55 +180,37 @@ export default function NavComponent() {
   return (
     <NavigationMenu viewport={false} className="p-1">
       <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <a href="/">Home</a>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>About Us</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-2 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              {sections.about.map((aboutItem) => (
-                <ListItem
-                  key={aboutItem.title}
-                  title={aboutItem.title}
-                  href={aboutItem.href}
-                >
-                  {aboutItem.description}
-                </ListItem>
-              ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Get Involved</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-2 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              {sections.getInvolved.map((getInvolvedItem) => (
-                <ListItem
-                  key={getInvolvedItem.title}
-                  title={getInvolvedItem.title}
-                  href={getInvolvedItem.href}
-                >
-                  {getInvolvedItem.description}
-                </ListItem>
-              ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <a href="/">Blog</a>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <a href={donateLink} target="_blank">
-              Donate
-            </a>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
+        {nav.map((item) => (
+          <NavigationMenuItem key={item.title}>
+            {item.children ? (
+              <>
+                <NavigationMenuTrigger>{item.title}</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[400px] gap-2 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                    {item.children.map((child) => (
+                      <ListItem
+                        key={child.title}
+                        title={child.title}
+                        href={child.href}
+                      >
+                        {child.description}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </>
+            ) : (
+              <NavigationMenuLink
+                asChild
+                className={navigationMenuTriggerStyle()}
+              >
+                <a href={item.href} target={item.target}>
+                  {item.title}
+                </a>
+              </NavigationMenuLink>
+            )}
+          </NavigationMenuItem>
+        ))}
       </NavigationMenuList>
     </NavigationMenu>
   );
