@@ -1,0 +1,63 @@
+---
+import { Megaphone } from "@lucide/astro";
+
+import type { SanityDocument } from "@sanity/client";
+import { sanityClient } from "sanity:client";
+import ImageWrapper from "../ImageWrapper.astro";
+import { defineQuery } from "groq";
+import { type FeaturedSection } from "sanity.types";
+import { Link } from "@/components/ui/link";
+
+const FEATURED_SECTION_QUERY = defineQuery(`*[
+  _type == "featuredSection"]{_id, title, publishedAt, description, ctaLink, ctaLabel,
+  image {
+    asset,
+  }}`);
+
+const featuredSectionData = await sanityClient
+  .fetch<FeaturedSection[]>(FEATURED_SECTION_QUERY)
+  .catch((error: unknown) => {
+    console.error("Error fetching featured section:", error);
+
+    return null;
+  });
+
+if (!featuredSectionData || featuredSectionData.length !== 1) {
+  console.error("Featured section not found or invalid");
+  return null;
+}
+
+const featuredSection = featuredSectionData[0];
+---
+
+<section
+  id="featured"
+  class="py-12 sm:px-8 px-4 w-full bg-accent/65 text-accent-foreground"
+>
+  <div class="max-w-6xl space-y-2 mx-auto w-full">
+    <span class="flex gap-2 items-center"
+      ><h1 class="font-ubuntu sm:text-4xl text-xl">
+        {featuredSection.title}
+      </h1><Megaphone
+        class="text-yellow-500 sm:w-[40px] sm:h-[40px] h-[28px] w-[28px]"
+      /></span
+    >
+    <p class="opacity-80 max-w-3xl">{featuredSection.description}</p>
+    <Link
+      size="sm"
+      className="rounded-xl w-full md:max-w-xs"
+      href="/rhizome/signup">Sign up</Link
+    >
+    <Link
+      size="sm"
+      className="rounded-xl md:max-w-xs w-full"
+      href="/rhizome"
+      variant="outline">Learn more</Link
+    >
+    <ImageWrapper
+      id={featuredSection.image?.asset?._ref}
+      alt={featuredSection.title}
+      className="h-full w-full object-cover rounded-lg"
+    />
+  </div>
+</section>

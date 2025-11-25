@@ -1,3 +1,3 @@
-import { eventType } from "./event";
+import { featuredSectionType } from "./featured_section";
 
-export const schemaTypes = [eventType];
+export const schemaTypes = [featuredSectionType];
