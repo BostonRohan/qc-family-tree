@@ -5,20 +5,14 @@ import featuredProgramsImage from "@/assets/featured-programs.jpg";
 import housingJusticeImage from "@/assets/housing-justice.jpg";
 import hereForGoodBusinessImage from "@/assets/here-for-good-business.jpg";
 
-import AboutCarousel from "../about-carousel";
+import { DefaultCarousel } from "../ui/carousels/default-carousel";
 ---
 
 <section id="programs" class="px-4 w-full space-y-24">
   <div class="sm:space-y-8 space-y-4">
-    <h1 class="sm:text-5xl text-2xl font-ubuntu font-bold">Programs</h1>
-    <AboutCarousel
-      slidesContent={[
-        {
-          title: "Featured Programs or Services",
-          description:
-            "Explore our flagship initiatives that support community growth, justice, and creativity.",
-          image: featuredProgramsImage.src,
-        },
+    <h1 class="sm:text-5xl text-2xl font-ubuntu font-bold pl-2">Programs</h1>
+    <DefaultCarousel
+      slides={[
         {
           title: "Housing Justice",
           description:
