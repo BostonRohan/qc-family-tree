@@ -35,6 +35,8 @@ export default defineConfig({
     "/get-involved/contribute": "/donate",
     "/donate": donateLink,
     "/events": "https://www.eventbrite.com/o/qc-family-tree-15926567999",
+    "/rhizome/signup":
+      "https://docs.google.com/forms/d/e/1FAIpQLSd9mO-WHTH4Of0eUVY_V0dZXBxUAhAdRJ2-tvPI99RsP6_uJQ/viewform?usp=header",
   },
   adapter: vercel({ imageService: true }),
   vite: {
