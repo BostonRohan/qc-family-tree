@@ -1,0 +1,30 @@
+---
+import { Compass, Star } from "@lucide/astro";
+---
+
+<section id="about" class="px-4 w-full space-y-24">
+  <div class="flex md:flex-row flex-col gap-4 max-w-6xl mx-auto w-full">
+    <div
+      class="w-full bg-gradient-to-br from-secondary/50 to-secondary/10 rounded-lg p-4 space-y-2"
+    >
+      <Compass />
+      <h2 class="text-secondary font-ubuntu sm:text-4xl text-xl">
+        Our mission
+      </h2>
+      <p class="opacity-80">
+        QCFT practices cultural organizing to cultivate community for the common
+        good.
+      </p>
+    </div>
+    <div
+      class="w-full rounded-lg p-4 space-y-2 bg-gradient-to-br from-accent/60 to-accent/10"
+    >
+      <Star />
+      <h2 class="text-accent font-ubuntu sm:text-4xl text-xl">Our vision</h2>
+      <p class="opacity-80">
+        QCFT envisions thriving communities of abundance, justice, imagination,
+        and mutual care for all.
+      </p>
+    </div>
+  </div>
+</section>

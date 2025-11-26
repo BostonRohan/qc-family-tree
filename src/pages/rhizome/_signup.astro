@@ -1,0 +1,23 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import headerImage from "@/assets/rhizome/header.jpg";
+---
+
+<Layout
+  description="We are a group of aligned artists and cultural workers who design, present and promote art experiences and creations for the purpose of supporting the work of member artists, and providing benefit to the communities we serve."
+  slug="/rhizome/signup"
+  title="Rhizome Coalition Signup"
+>
+  <div class="space-y-4 px-4 max-w-[900px] mx-auto">
+    <Header
+      title="Sign Up for Rhizome Coalition"
+      tagline="Artists united for community and creativity."
+      image={headerImage.src}
+      primaryCta={{
+        label: "Learn more",
+        href: "/rhizome",
+      }}
+    />
+  </div>
+</Layout>

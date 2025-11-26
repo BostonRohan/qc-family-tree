@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
-import logoImage from "../assets/logo-fullcolor-white-tag.png";
+import logoImage from "@/assets/logo-fullcolor-white-tag.png";
+import { phoneNumber, emailAddress } from "@constants";
 ---
 
 <footer>
@@ -24,22 +25,14 @@ import logoImage from "../assets/logo-fullcolor-white-tag.png";
           />
         </a>
         <div>
-          <a href="tel:9805057147" class="block hover:text-accent-foreground"
-            >(980)-505-7147</a
+          <a
+            href={`tel:${phoneNumber}`}
+            class="block w-fit hover:text-accent-foreground">{phoneNumber}</a
           >
           <a
-            href="mailto:greg@qcfamilytree.org"
-            class="block hover:text-accent-foreground">Email Us</a
+            href={`mailto:${emailAddress}`}
+            class="block w-fit hover:text-accent-foreground">Email Us</a
           >
-          <a
-            href="https://goo.gl/maps/jr6zh85UM9G2"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="block hover:text-accent-foreground"
-          >
-            2910 Parkway Avenue<br />
-            Charlotte, North Carolina 28208
-          </a>
         </div>
       </div>
 
@@ -49,34 +42,17 @@ import logoImage from "../assets/logo-fullcolor-white-tag.png";
         <div>
           <h4 class="font-semibold mb-2">
             <a
-              href="#about"
+              href="#contact"
               class="hover:text-accent-foreground"
-              class="hover:text-accent-foreground">About Us</a
+              class="hover:text-accent-foreground">Contact</a
             >
           </h4>
-          <ul class="space-y-1">
-            <li>
-              <a href="/" class="hover:text-accent-foreground">Who We Are</a>
-            </li>
-            <li>
-              <a href="/" class="hover:text-accent-foreground">What We Do</a>
-            </li>
-            <li>
-              <a href="/" class="hover:text-accent-foreground">Contact</a>
-            </li>
-            <li>
-              <a class="hover:text-accent-foreground" href="/">Resources</a>
-            </li>
-            <li>
-              <a class="hover:text-accent-foreground" href="/">FAQ</a>
-            </li>
-          </ul>
         </div>
 
         {/* Column 2 */}
         <div>
           <h4 class="font-semibold mb-2">
-            <a class="hover:text-accent-foreground" href="/">Get Involved</a>
+            <span>Get Involved</span>
           </h4>
           <ul class="space-y-1">
             <li>
@@ -87,25 +63,23 @@ import logoImage from "../assets/logo-fullcolor-white-tag.png";
               >
             </li>
             <li>
-              <a class="hover:text-accent-foreground" href="/">Calendar</a>
+              <a class="hover:text-accent-foreground" href="/events">Events</a>
             </li>
             <li>
-              <a class="hover:text-accent-foreground" href="/"
-                >Sponsor a Community Meal</a
+              <a class="hover:text-accent-foreground" href="/rhizome"
+                >Membership</a
               >
             </li>
           </ul>
         </div>
-
-        {/* Column 3 */}
         <div>
           <h4 class="font-semibold mb-2">
-            <a class="hover:text-accent-foreground" href="/">Blog</a>
+            <a class="hover:text-accent-foreground" href="#programs">Programs</a
+            >
           </h4>
         </div>
       </div>
     </div>
-
     {/* Footer bottom */}
     <div class="container mx-auto px-4 mt-8 text-center text-sm">
       <p>Copyright © 2025 QC Family Tree</p>

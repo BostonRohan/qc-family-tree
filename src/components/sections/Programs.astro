@@ -1,0 +1,44 @@
+---
+import culturalOrganizingImage from "@/assets/cultural-organizing.jpg";
+import cultivateCommunityImage from "@/assets/cultivate-community.jpg";
+import featuredProgramsImage from "@/assets/featured-programs.jpg";
+import housingJusticeImage from "@/assets/housing-justice.jpg";
+import hereForGoodBusinessImage from "@/assets/here-for-good-business.jpg";
+
+import { DefaultCarousel } from "../ui/carousels/default-carousel";
+---
+
+<section id="programs" class="px-4 w-full space-y-24">
+  <div class="sm:space-y-8 space-y-4">
+    <h1 class="sm:text-5xl text-3xl font-ubuntu font-bold pl-2">Programs</h1>
+    <DefaultCarousel
+      slides={[
+        {
+          title: "Housing Justice",
+          description:
+            "We provide affordable housing and advocate for stable, equitable living conditions for all residents.",
+          image: housingJusticeImage.src,
+        },
+        {
+          title: "Cultural Organizing",
+          description:
+            "We unite communities through art and cultural projects to inspire connection and social change.",
+          image: culturalOrganizingImage.src,
+        },
+        {
+          title: "Community Programming",
+          description:
+            "We design inclusive programs that reduce disparities and empower neighborhoods to thrive.",
+          image: cultivateCommunityImage.src,
+        },
+        {
+          title: "Here for Good Business Cooperative",
+          description:
+            "We cultivate a just, sustainable economy where creativity, business, and community flourish together.",
+          image: hereForGoodBusinessImage.src,
+        },
+      ]}
+      client:visible
+    />
+  </div>
+</section>

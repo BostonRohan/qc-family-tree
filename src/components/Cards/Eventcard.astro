@@ -1,0 +1,31 @@
+---
+import ImageWrapper from "../ImageWrapper.astro";
+import { format, formatDistance } from "date-fns";
+
+const { title, ctaLink, description, endDateTime, image, startDateTime } =
+  Astro.props;
+
+const startDate = new Date(startDateTime);
+
+const formattedStartDateTime = format(startDate, "MMMM d, yyyy h:mm a");
+
+const duration = formatDistance(new Date(endDateTime), startDate, {
+  includeSeconds: false,
+});
+---
+
+<a
+  href={ctaLink}
+  class="border-accent border-4 rounded-2xl p-4 space-y-2 h-fit max-h-[500px] max-w-[500px] w-full"
+>
+  <ImageWrapper
+    id={image.id}
+    alt={`Event: ${title}`}
+    className="h-80 w-full object-cover"
+  />
+  <h2 class="font-ubuntu font-semibold sm:text-lg">{title}</h2>
+  <div class="flex flex-col gap-2">
+    <p>{formattedStartDateTime}</p>
+    <p class="opacity-80">Lasts approx. {duration}</p>
+  </div>
+</a>
