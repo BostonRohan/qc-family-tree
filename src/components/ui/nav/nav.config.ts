@@ -66,7 +66,7 @@ export const nav: NavItem[] = [
   },
   {
     title: "Programs",
-    href: "#programs",
+    href: "/#programs",
     // children: [
     //   {
     //     title: "Featured Programs or Services",
