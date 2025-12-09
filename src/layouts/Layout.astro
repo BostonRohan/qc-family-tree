@@ -6,6 +6,7 @@ import SocialIcons from "@/components/SocialIcons.tsx";
 import { Font } from "astro:assets";
 import Footer from "@/components/sections/Footer.astro";
 import SpeedInsights from "@vercel/speed-insights/astro";
+import Analytics from "@vercel/analytics/astro";
 
 interface Props {
   title: string;
@@ -78,7 +79,14 @@ const navWrapperClassName =
       <div class="md:hidden block">
         <MobileNav client:visible wrapperClassName={navWrapperClassName} />
       </div>
-      {import.meta.env.PROD && <SpeedInsights />}
+      {
+        import.meta.env.PROD && (
+          <>
+            <SpeedInsights />
+            <Analytics />
+          </>
+        )
+      }
       <slot />
     </main>
     <Footer />
