@@ -20,3 +20,14 @@ export function getEnvVar(key: string): string | undefined {
   }
   return import.meta.env?.[key];
 }
+
+export function getRequiredEnvVar(key: string): string {
+  const value = getEnvVar(key);
+  if (!value) {
+    throw new Error(
+      `Missing required environment variable: ${key}\n` +
+        `Please add ${key} to your .env file or environment configuration.`,
+    );
+  }
+  return value;
+}
