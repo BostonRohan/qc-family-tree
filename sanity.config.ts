@@ -5,7 +5,7 @@ import { getEnvVar, getRequiredEnvVar } from "@/utils/sanity";
 
 export default defineConfig({
   projectId: getRequiredEnvVar("PUBLIC_SANITY_STUDIO_PROJECT_ID"),
-  dataset: getRequiredEnvVar("PUBLIC_SANITY_DATASET"),
+  dataset: getRequiredEnvVar("PUBLIC_SANITY_STUDIO_DATASET"),
   plugins: [
     structureTool({
       structure: (S) =>
