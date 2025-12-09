@@ -23,6 +23,20 @@ export default defineConfig({
             ),
           ]),
     }),
+    structureTool({
+      structure: (S) =>
+        S.list()
+          .title("Banner")
+          .items([
+            // Our singleton type has a list item with a custom child
+            S.listItem().title("Banner").id("banner").child(
+              // Instead of rendering a list of documents, we render a single
+              // document, specifying the `documentId` manually to ensure
+              // that we're editing the single instance of the document
+              S.document().schemaType("banner").documentId("banner"),
+            ),
+          ]),
+    }),
   ],
   schema: {
     types: schemaTypes,

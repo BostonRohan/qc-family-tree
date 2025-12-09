@@ -13,6 +13,19 @@
  */
 
 // Source: schema.json
+export type Banner = {
+  _id: string;
+  _type: "banner";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  subtitle: string;
+  primaryCtaLink: string;
+  primaryCtaLabel: string;
+  primaryCtaType: string;
+};
+
 export type FeaturedSection = {
   _id: string;
   _type: "featuredSection";
@@ -39,6 +52,22 @@ export type FeaturedSection = {
   secondaryCtaLabel?: string;
 };
 
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+};
+
 export type SanityImagePaletteSwatch = {
   _type: "sanity.imagePaletteSwatch";
   background?: string;
@@ -60,25 +89,20 @@ export type SanityImagePalette = {
 
 export type SanityImageDimensions = {
   _type: "sanity.imageDimensions";
-  height?: number;
-  width?: number;
-  aspectRatio?: number;
+  height: number;
+  width: number;
+  aspectRatio: number;
 };
 
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
-};
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
+export type SanityImageMetadata = {
+  _type: "sanity.imageMetadata";
+  location?: Geopoint;
+  dimensions?: SanityImageDimensions;
+  palette?: SanityImagePalette;
+  lqip?: string;
+  blurHash?: string;
+  hasAlpha?: boolean;
+  isOpaque?: boolean;
 };
 
 export type SanityFileAsset = {
@@ -101,6 +125,13 @@ export type SanityFileAsset = {
   path?: string;
   url?: string;
   source?: SanityAssetSourceData;
+};
+
+export type SanityAssetSourceData = {
+  _type: "sanity.assetSourceData";
+  name?: string;
+  id?: string;
+  url?: string;
 };
 
 export type SanityImageAsset = {
@@ -126,17 +157,6 @@ export type SanityImageAsset = {
   source?: SanityAssetSourceData;
 };
 
-export type SanityImageMetadata = {
-  _type: "sanity.imageMetadata";
-  location?: Geopoint;
-  dimensions?: SanityImageDimensions;
-  palette?: SanityImagePalette;
-  lqip?: string;
-  blurHash?: string;
-  hasAlpha?: boolean;
-  isOpaque?: boolean;
-};
-
 export type Geopoint = {
   _type: "geopoint";
   lat?: number;
@@ -150,12 +170,40 @@ export type Slug = {
   source?: string;
 };
 
-export type SanityAssetSourceData = {
-  _type: "sanity.assetSourceData";
-  name?: string;
-  id?: string;
-  url?: string;
-};
-
-export type AllSanitySchemaTypes = FeaturedSection | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = Banner | FeaturedSection | SanityImageCrop | SanityImageHotspot | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint | Slug;
 export declare const internalGroqTypeReferenceTo: unique symbol;
+// Source: src/components/banner.astro
+// Variable: BANNER_QUERY
+// Query: *[_type == "banner" && defined(slug.current)] | order(_createdAt desc)
+export type BANNER_QUERYResult = Array<never>;
+
+// Source: src/components/sections/Featured.astro
+// Variable: FEATURED_SECTION_QUERY
+// Query: *[  _type == "featuredSection"]{_id, title, publishedAt, description, primaryCtaLink, primaryCtaLabel, secondaryCtaLabel, secondaryCtaLink,  image {    asset,  }}
+export type FEATURED_SECTION_QUERYResult = Array<{
+  _id: string;
+  title: string;
+  publishedAt: null;
+  description: string;
+  primaryCtaLink: string;
+  primaryCtaLabel: string;
+  secondaryCtaLabel: string | null;
+  secondaryCtaLink: string | null;
+  image: {
+    asset: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    } | null;
+  } | null;
+}>;
+
+// Query TypeMap
+import "@sanity/client";
+declare module "@sanity/client" {
+  interface SanityQueries {
+    "*[_type == \"banner\" && defined(slug.current)] | order(_createdAt desc)": BANNER_QUERYResult;
+    "*[\n  _type == \"featuredSection\"]{_id, title, publishedAt, description, primaryCtaLink, primaryCtaLabel, secondaryCtaLabel, secondaryCtaLink,\n  image {\n    asset,\n  }}": FEATURED_SECTION_QUERYResult;
+  }
+}

@@ -7,6 +7,7 @@ import { Font } from "astro:assets";
 import Footer from "@/components/sections/Footer.astro";
 import SpeedInsights from "@vercel/speed-insights/astro";
 import Analytics from "@vercel/analytics/astro";
+import Banner from "@/components/banner.astro";
 
 interface Props {
   title: string;
@@ -66,7 +67,8 @@ const navWrapperClassName =
     <title>{title}</title>
   </head>
   <body class="h-full w-full">
-    <main class="w-full h-full">
+    <main class="w-full h-full pt-16">
+      <Banner />
       <div class="md:block hidden">
         <div class={navWrapperClassName}>
           <DesktopNav client:visible />
