@@ -1,29 +1,22 @@
-// import { sanityClient } from "sanity:client";
-// import type { PortableTextBlock } from "@portabletext/types";
-// import type { ImageAsset, Slug } from "@sanity/types";
-// import groq from "groq";
-
-// export async function getPosts(): Promise<Post[]> {
-//   return await sanityClient.fetch(
-//     groq`*[_type == "post" && defined(slug.current)] | order(_createdAt desc)`
-//   );
-// }
-
-// export async function getPost(slug: string): Promise<Post> {
-//   return await sanityClient.fetch(
-//     groq`*[_type == "post" && slug.current == $slug][0]`,
-//     {
-//       slug,
-//     }
-//   );
-// }
-
-// export interface Post {
-//   _type: "post";
-//   _createdAt: string;
-//   title?: string;
-//   slug: Slug;
-//   excerpt?: string;
-//   mainImage?: ImageAsset & { alt?: string };
-//   body: PortableTextBlock[];
-// }
+/**
+ * Safely retrieves environment variables across different JavaScript contexts.
+ *
+ * This helper is necessary because Sanity Studio needs to work in two environments:
+ *
+ * 1. **Node.js (CLI context)**: When running Sanity CLI commands, we're in a Node.js
+ *    environment where `process.env` is available and contains environment variables.
+ *
+ * 2. **Browser (Astro island hydration)**: When Astro hydrates components on the client-side,
+ *    we're in a browser environment where `process` is not defined. Accessing `process`
+ *    directly throws a ReferenceError. In this context, Astro/Vite exposes environment
+ *    variables through `import.meta.env`.
+ *
+ * Without this safe check, the code would crash during client-side hydration with:
+ * "ReferenceError: process is not defined"
+ */
+export function getEnvVar(key: string): string | undefined {
+  if (typeof process !== "undefined") {
+    return process.env[key];
+  }
+  return import.meta.env?.[key];
+}
