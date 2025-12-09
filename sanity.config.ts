@@ -1,19 +1,11 @@
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { schemaTypes } from "studio/schemaTypes/index";
-
-// Define the actions that should be available for singleton documents
-const singletonActions = new Set(["publish", "discardChanges", "restore"]);
-
-const singletonTypes = new Set(["featuredSection"]);
+import { getEnvVar, getRequiredEnvVar } from "@/utils/sanity";
 
 export default defineConfig({
-  projectId:
-    import.meta.env?.PUBLIC_SANITY_STUDIO_PROJECT_ID ??
-    process.env.PUBLIC_SANITY_STUDIO_PROJECT_ID,
-  dataset:
-    import.meta.env?.PUBLIC_SANITY_STUDIO_DATASET ??
-    process.env.PUBLIC_SANITY_STUDIO_DATASET,
+  projectId: getRequiredEnvVar("PUBLIC_SANITY_STUDIO_PROJECT_ID"),
+  dataset: getRequiredEnvVar("PUBLIC_SANITY_DATASET"),
   plugins: [
     structureTool({
       structure: (S) =>
