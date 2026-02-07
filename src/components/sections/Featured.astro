@@ -41,15 +41,17 @@ const featuredSection = featuredSectionData?.at(0);
           </div>
         </span>
         <p class="opacity-80 max-w-3xl">{featuredSection.description}</p>
-        <Link
-          size="sm"
-          className="rounded-xl w-full md:max-w-xs"
-          variant="default"
-          href={featuredSection.primaryCtaLink}
-        >
-          {featuredSection.primaryCtaLabel}
-        </Link>
-        {featuredSection.secondaryCtaLabel &&
+        {featuredSection?.primaryCtaLink && featuredSection.primaryCtaLabel && (
+          <Link
+            size="sm"
+            className="rounded-xl w-full md:max-w-xs"
+            variant="default"
+            href={featuredSection.primaryCtaLink}
+          >
+            {featuredSection.primaryCtaLabel}
+          </Link>
+        )}
+        {featuredSection?.secondaryCtaLabel &&
           featuredSection.secondaryCtaLink && (
             <Link
               size="sm"
