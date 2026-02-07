@@ -29,5 +29,12 @@ export const bannerType = defineType({
       type: "string",
       validation: (rule) => rule.required().min(1).max(25),
     }),
+    defineField({
+      name: "showBanner",
+      title: "Show Banner",
+      type: "boolean",
+      validation: (rule) => rule.required(),
+      initialValue: true,
+    }),
   ],
 });

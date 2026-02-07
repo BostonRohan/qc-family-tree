@@ -19,11 +19,11 @@ export type Banner = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title: string;
-  subtitle: string;
-  primaryCtaLink: string;
-  primaryCtaLabel: string;
-  primaryCtaType: string;
+  title?: string;
+  subtitle?: string;
+  primaryCtaLink?: string;
+  primaryCtaLabel?: string;
+  showBanner?: boolean;
 };
 
 export type FeaturedSection = {
@@ -32,8 +32,8 @@ export type FeaturedSection = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   image?: {
     asset?: {
       _ref: string;
@@ -46,26 +46,26 @@ export type FeaturedSection = {
     crop?: SanityImageCrop;
     _type: "image";
   };
-  primaryCtaLink: string;
-  primaryCtaLabel: string;
+  primaryCtaLink?: string;
+  primaryCtaLabel?: string;
   secondaryCtaLink?: string;
   secondaryCtaLabel?: string;
 };
 
 export type SanityImageCrop = {
   _type: "sanity.imageCrop";
-  top: number;
-  bottom: number;
-  left: number;
-  right: number;
+  top?: number;
+  bottom?: number;
+  left?: number;
+  right?: number;
 };
 
 export type SanityImageHotspot = {
   _type: "sanity.imageHotspot";
-  x: number;
-  y: number;
-  height: number;
-  width: number;
+  x?: number;
+  y?: number;
+  height?: number;
+  width?: number;
 };
 
 export type SanityImagePaletteSwatch = {
@@ -89,9 +89,9 @@ export type SanityImagePalette = {
 
 export type SanityImageDimensions = {
   _type: "sanity.imageDimensions";
-  height: number;
-  width: number;
-  aspectRatio: number;
+  height?: number;
+  width?: number;
+  aspectRatio?: number;
 };
 
 export type SanityImageMetadata = {
@@ -166,7 +166,7 @@ export type Geopoint = {
 
 export type Slug = {
   _type: "slug";
-  current: string;
+  current?: string;
   source?: string;
 };
 
@@ -174,19 +174,30 @@ export type AllSanitySchemaTypes = Banner | FeaturedSection | SanityImageCrop | 
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: src/components/banner.astro
 // Variable: BANNER_QUERY
-// Query: *[_type == "banner" && defined(slug.current)] | order(_createdAt desc)
-export type BANNER_QUERYResult = Array<never>;
+// Query: *[_type == "banner"]
+export type BANNER_QUERYResult = Array<{
+  _id: string;
+  _type: "banner";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  subtitle?: string;
+  primaryCtaLink?: string;
+  primaryCtaLabel?: string;
+  showBanner?: boolean;
+}>;
 
 // Source: src/components/sections/Featured.astro
 // Variable: FEATURED_SECTION_QUERY
 // Query: *[  _type == "featuredSection"]{_id, title, publishedAt, description, primaryCtaLink, primaryCtaLabel, secondaryCtaLabel, secondaryCtaLink,  image {    asset,  }}
 export type FEATURED_SECTION_QUERYResult = Array<{
   _id: string;
-  title: string;
+  title: string | null;
   publishedAt: null;
-  description: string;
-  primaryCtaLink: string;
-  primaryCtaLabel: string;
+  description: string | null;
+  primaryCtaLink: string | null;
+  primaryCtaLabel: string | null;
   secondaryCtaLabel: string | null;
   secondaryCtaLink: string | null;
   image: {
@@ -203,7 +214,7 @@ export type FEATURED_SECTION_QUERYResult = Array<{
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    "*[_type == \"banner\" && defined(slug.current)] | order(_createdAt desc)": BANNER_QUERYResult;
+    "*[_type == \"banner\"]": BANNER_QUERYResult;
     "*[\n  _type == \"featuredSection\"]{_id, title, publishedAt, description, primaryCtaLink, primaryCtaLabel, secondaryCtaLabel, secondaryCtaLink,\n  image {\n    asset,\n  }}": FEATURED_SECTION_QUERYResult;
   }
 }
