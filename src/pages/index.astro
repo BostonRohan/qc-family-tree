@@ -4,6 +4,7 @@ import Contact from "@/components/sections/Contact.astro";
 import Layout from "@/layouts/Layout.astro";
 import Programs from "@/components/sections/Programs.astro";
 import Featured from "@/components/sections/Featured.astro";
+import Events from "@/components/sections/events/index.astro";
 ---
 
 <Layout
@@ -16,5 +17,6 @@ import Featured from "@/components/sections/Featured.astro";
     <Programs />
   </div>
   <Featured />
+  <Events maxDays={7} />
   <Contact />
 </Layout>

@@ -1,0 +1,188 @@
+---
+// src/components/EventListView.astro
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  ChevronRight,
+  BookOpen,
+  Palette,
+  Users,
+  Coffee,
+  CalendarPlus,
+} from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/components/ui/link";
+
+interface Event {
+  id: string;
+  title: string;
+  start: Date;
+  end: Date;
+  location: string;
+  description: string;
+  category: "Workshop" | "Meeting" | "Community" | "Social";
+}
+
+interface Props {
+  events: Event[];
+}
+
+const { events } = Astro.props;
+
+const getCategoryIcon = (category: string) => {
+  switch (category) {
+    case "Workshop":
+      return Palette;
+    case "Meeting":
+      return BookOpen;
+    case "Community":
+      return Users;
+    case "Social":
+      return Coffee;
+    default:
+      return Calendar;
+  }
+};
+
+const formatTime = (date: Date) => {
+  return date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
+
+const formatDateHeader = (date: Date) => {
+  return date.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};
+
+// Group events by date
+const groupedEvents = events.reduce(
+  (groups, event) => {
+    const dateKey = event.start.toDateString();
+    if (!groups[dateKey]) {
+      groups[dateKey] = [];
+    }
+    groups[dateKey].push(event);
+    return groups;
+  },
+  {} as Record<string, Event[]>,
+);
+
+const sortedDates = Object.keys(groupedEvents).sort(
+  (a, b) => new Date(a).getTime() - new Date(b).getTime(),
+);
+
+// Helper to generate Google Calendar link
+const generateCalendarLink = (event: Event) => {
+  const startFormatted = event.start.toISOString().replace(/-|:|\.\d\d\d/g, "");
+  const endFormatted = event.end.toISOString().replace(/-|:|\.\d\d\d/g, "");
+
+  return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${startFormatted}/${endFormatted}&details=${encodeURIComponent(event.description)}&location=${encodeURIComponent(event.location)}`;
+};
+---
+
+<div class="space-y-12 max-w-5xl mx-auto px-4 py-6">
+  {
+    sortedDates.map((dateKey) => {
+      const dateEvents = groupedEvents[dateKey];
+      const dateObj = new Date(dateKey);
+
+      return (
+        <div class="space-y-6">
+          <div class="sticky top-10 w-fit bg-white/95 backdrop-blur-sm p-4 z-10 border-b border-slate-100">
+            <h3 class="text-sm font-bold text-slate-900 uppercase tracking-widest flex items-center gap-2">
+              <span class="w-8 h-px bg-secondary" />
+              {formatDateHeader(dateObj)}
+            </h3>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {dateEvents.map((event) => {
+              const CategoryIcon = getCategoryIcon(event.category);
+
+              return (
+                <Card className="hover:shadow-md transition-all group flex flex-col h-full border-slate-100">
+                  <div class="p-5 flex flex-col h-full space-y-4">
+                    <div class="flex justify-between items-start gap-4">
+                      <h4 class="font-bold text-slate-900 group-hover:text-accent transition-colors leading-snug">
+                        {event.title}
+                      </h4>
+                      <div class="shrink-0 p-2 bg-slate-50 rounded-lg text-slate-400 group-hover:text-accent group-hover:bg-accent/20 transition-colors">
+                        <CategoryIcon className="w-4 h-4" />
+                      </div>
+                    </div>
+
+                    <div class="space-y-2 text-sm text-slate-500">
+                      <div class="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-accent/70" />
+                        <span class="font-medium text-slate-700">
+                          {formatTime(event.start)}
+                        </span>
+                      </div>
+                      <div class="flex items-start gap-2">
+                        <MapPin className="w-4 h-4 text-accen/70 mt-0.5" />
+                        <span class="leading-tight">{event.location}</span>
+                      </div>
+                    </div>
+
+                    <p class="text-sm text-slate-600 line-clamp-3 flex-1 leading-relaxed">
+                      {event.description}
+                    </p>
+
+                    <div class="pt-2 flex items-center justify-between gap-3">
+                      <Badge variant="secondary" className="bg-slate-100">
+                        {event.category}
+                      </Badge>
+
+                      <Button
+                        asChild
+                        variant="outline"
+                        size="sm"
+                        className="text-xs gap-1.5"
+                        data-event-id={event.id}
+                        data-event-title={event.title}
+                        data-event-start={event.start.toISOString()}
+                        data-event-end={event.end.toISOString()}
+                        data-event-location={event.location}
+                        data-event-description={event.description}
+                      >
+                        <Link
+                          href={generateCalendarLink(event)}
+                          variant="outline"
+                        >
+                          <CalendarPlus className="w-3.5 h-3.5" />
+                          Add to Calendar
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      );
+    })
+  }
+
+  {
+    sortedDates.length === 0 && (
+      <div class="text-center py-20 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
+        <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+        <p class="text-slate-600 font-bold">No upcoming events found.</p>
+        <p class="text-sm text-slate-400">
+          Check back later for new workshops!
+        </p>
+      </div>
+    )
+  }
+</div>
