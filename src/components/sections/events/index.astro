@@ -11,6 +11,7 @@ import EventListView from "./list/index.astro";
 // import EventCalendarView from "../components/EventCalendarView.astro";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import SectionHeading from "@/components/ui/SectionHeading.astro";
 import { getUpcomingEvents } from "@/lib/calendar";
 
 interface Props {
@@ -50,10 +51,26 @@ const events = await getUpcomingEvents({ maxDays, maxResults });
 </div>
 
 <!-- Main Content -->
-<main class="max-w-6xl mx-auto py-12">
+<main class="max-w-6xl mx-auto pt-4 pb-12">
+  <header class="mx-auto max-w-5xl px-4 mb-4 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+    <div class="flex-1">
+      <SectionHeading
+        title="Upcoming Events"
+        subtitle="Join us at our next community gathering"
+        titleClass="mb-4 sm:text-5xl text-3xl font-ubuntu font-bold text-slate-900 text-left"
+        subtitleClass="text-lg text-slate-600 max-w-full whitespace-normal text-left"
+      />
+    </div>
+    <a
+      href="/events"
+      class="text-sm font-semibold text-slate-700 hover:text-slate-900 underline"
+    >
+      View all events
+    </a>
+  </header>
   <!-- Toolbar -->
   <div
-    class="px-4 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between"
+    class="px-4 mb-4 flex flex-col md:flex-row gap-4 items-center justify-between"
   >
     {
       includeFilters && (
