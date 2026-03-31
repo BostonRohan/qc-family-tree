@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import headerImage from "@/assets/homepage-header.jpg";
 import logoImage from "@/assets/logo-fullcolor-white-tag.png";
+import { Link } from "@/components/ui/link";
 ---
 
 <section class="w-full sm:h-[750px] h-[650px] relative max-w-[1280px] mx-auto">
@@ -29,11 +30,32 @@ import logoImage from "@/assets/logo-fullcolor-white-tag.png";
         <h1
           class="flex flex-col font-semibold text-center sm:gap-4 font-ubuntu"
         >
-          <span class="sm:text-6xl text-5xl">Cultivating Community</span>
-          <span class="sm:text-5xl text-4xl text-secondary"
+          <span class="text-5xl sm:text-6xl leading-tight">Cultivating Community</span>
+          <span class="text-5xl sm:text-6xl text-secondary leading-tight"
             >For The Common Good</span
           >
+          <span class="text-lg sm:text-xl text-white/70 mt-2 tracking-tight"
+            >Housing, cultural organizing, and mutual aid in Charlotte.</span
+          >
         </h1>
+        <div class="mt-6 flex flex-col sm:flex-row sm:justify-center gap-3">
+          <Link
+            href="/donate"
+            size="lg"
+            className="rounded-xl sm:px-10 px-8"
+            variant="default"
+          >
+            Donate
+          </Link>
+          <Link
+            href="/rhizome"
+            size="lg"
+            className="rounded-xl sm:px-10 px-8"
+            variant="outline"
+          >
+            Join the Rhizome
+          </Link>
+        </div>
       </div>
       <div
         class="h-full z-10 absolute bottom-0 sm:from-20% from-white bg-linear-to-t to-transparent w-full"
