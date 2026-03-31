@@ -12,14 +12,14 @@ import type { FeaturedSection, Hero } from "sanity.types";
 
 const HOME_PAGE_QUERY = defineQuery(`
 {
-  hero: *[_type == "hero" && showHero == true] | order(_updatedAt desc)[0] {
+  "hero": *[_type == "hero" && showHero == true] | order(_updatedAt desc)[0] {
     descriptor,
     primaryCtaLabel,
     primaryCtaLink,
     secondaryCtaLabel,
     secondaryCtaLink
   },
-  featuredSection: *[_type == "featuredSection"][0] {
+  "featuredSection": *[_type == "featuredSection"][0] {
     _id,
     title,
     description,
