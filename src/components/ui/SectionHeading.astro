@@ -1,0 +1,27 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  containerClass?: string;
+  titleClass?: string;
+  subtitleClass?: string;
+}
+
+const {
+  title,
+  subtitle,
+  containerClass = "text-center",
+  titleClass = "mb-4 sm:text-5xl text-[24px] font-bold font-ubuntu",
+  subtitleClass =
+    "text-slate-600 max-w-2xl mx-auto whitespace-pre-line leading-relaxed sm:text-[18px] text-[16px]",
+} = Astro.props;
+---
+
+<hgroup class={`${containerClass}`}>
+  <h1 class={`${titleClass}`}>{title}</h1>
+  {subtitle && (
+    <p class={`${subtitleClass}`}>
+      {subtitle}
+    </p>
+  )}
+</hgroup>

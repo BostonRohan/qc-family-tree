@@ -5,6 +5,7 @@ import Layout from "@/layouts/Layout.astro";
 import Programs from "@/components/sections/Programs.astro";
 import Featured from "@/components/sections/Featured.astro";
 import Events from "@/components/sections/events/index.astro";
+import Vision from "@/components/sections/Vision.astro";
 ---
 
 <Layout
@@ -14,9 +15,12 @@ import Events from "@/components/sections/events/index.astro";
 >
   <div class="space-y-24 pb-24">
     <Welcome />
+    <div class="space-y-4">
+      <Vision />
+      <Events maxDays={7} />
+    </div>
     <Programs />
   </div>
   <Featured />
-  <Events maxDays={7} />
   <Contact />
 </Layout>
