@@ -1,32 +1,18 @@
 ---
 import { Megaphone } from "@lucide/astro";
-
-import type { SanityDocument } from "@sanity/client";
-import { sanityClient } from "sanity:client";
-import ImageWrapper from "../ImageWrapper.astro";
-import { defineQuery } from "groq";
-import { type FeaturedSection } from "sanity.types";
 import { Link } from "@/components/ui/link";
+import ImageWrapper from "../ImageWrapper.astro";
+import type { FeaturedSection } from "sanity.types";
 
-const FEATURED_SECTION_QUERY = defineQuery(`*[
-  _type == "featuredSection"]{_id, title, publishedAt, description, primaryCtaLink, primaryCtaLabel, secondaryCtaLabel, secondaryCtaLink,
-  image {
-    asset,
-  }}`);
+interface Props {
+  section?: FeaturedSection | null;
+}
 
-const featuredSectionData = await sanityClient
-  .fetch<FeaturedSection[]>(FEATURED_SECTION_QUERY)
-  .catch((error: unknown) => {
-    console.error("Error fetching featured section:", error);
-
-    return null;
-  });
-
-const featuredSection = featuredSectionData?.at(0);
+const { section } = Astro.props as Props;
 ---
 
 {
-  featuredSection && (
+  section && (
     <section
       id="featured"
       class="py-12 sm:px-8 px-4 w-full bg-accent/65 text-accent-foreground"
@@ -34,45 +20,40 @@ const featuredSection = featuredSectionData?.at(0);
       <div class="max-w-6xl space-y-6 mx-auto w-full">
         <div class="mx-auto w-full max-w-3xl space-y-3">
           <div class="flex gap-4 items-center">
-            <h1 class="font-ubuntu sm:text-4xl text-xl">
-              {featuredSection.title}
-            </h1>
+            <h1 class="font-ubuntu sm:text-4xl text-xl">{section.title}</h1>
             <Megaphone class="text-yellow-500 sm:w-[40px] sm:h-[40px] h-[28px] w-[28px]" />
           </div>
-          <p class="opacity-80">{featuredSection.description}</p>
-          {(featuredSection?.primaryCtaLink && featuredSection.primaryCtaLabel) ||
-            (featuredSection?.secondaryCtaLabel &&
-              featuredSection.secondaryCtaLink) ? (
+          <p class="opacity-80">{section.description}</p>
+          {(section?.primaryCtaLink && section.primaryCtaLabel) ||
+            (section?.secondaryCtaLabel && section.secondaryCtaLink) ? (
             <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-              {featuredSection?.primaryCtaLink &&
-                featuredSection.primaryCtaLabel && (
-                  <Link
-                    size="sm"
-                    className="rounded-xl w-full sm:max-w-[220px]"
-                    variant="default"
-                    href={featuredSection.primaryCtaLink}
-                  >
-                    {featuredSection.primaryCtaLabel}
-                  </Link>
-                )}
-              {featuredSection?.secondaryCtaLabel &&
-                featuredSection.secondaryCtaLink && (
-                  <Link
-                    size="sm"
-                    className="rounded-xl w-full sm:max-w-[220px]"
-                    href={featuredSection.secondaryCtaLink}
-                    variant="outline"
-                  >
-                    {featuredSection.secondaryCtaLabel}
-                  </Link>
-                )}
+              {section?.primaryCtaLink && section.primaryCtaLabel && (
+                <Link
+                  size="sm"
+                  className="rounded-xl w-full sm:max-w-[220px]"
+                  variant="default"
+                  href={section.primaryCtaLink}
+                >
+                  {section.primaryCtaLabel}
+                </Link>
+              )}
+              {section?.secondaryCtaLabel && section.secondaryCtaLink && (
+                <Link
+                  size="sm"
+                  className="rounded-xl w-full sm:max-w-[220px]"
+                  href={section.secondaryCtaLink}
+                  variant="outline"
+                >
+                  {section.secondaryCtaLabel}
+                </Link>
+              )}
             </div>
           ) : null}
         </div>
         <div class="w-full sm:max-w-3xl mx-auto">
           <ImageWrapper
-            id={featuredSection.image?.asset?._ref}
-            alt={featuredSection.title}
+            id={section.image?.asset?._ref}
+            alt={section.title}
             className="w-full h-auto object-cover rounded-lg"
           />
         </div>

@@ -3,32 +3,22 @@ import { Image } from "astro:assets";
 import headerImage from "@/assets/homepage-header.jpg";
 import logoImage from "@/assets/logo-fullcolor-white-tag.png";
 import { Link } from "@/components/ui/link";
-import { defineQuery } from "groq";
-import { sanityClient } from "sanity:client";
 import type { Hero } from "sanity.types";
 
-const HERO_QUERY = defineQuery(
-  `*[_type == "hero" && showHero == true] | order(_updatedAt desc)`
-);
+interface Props {
+  hero?: Hero | null;
+}
 
-const heroData = await sanityClient
-  .fetch<Hero[]>(HERO_QUERY)
-  .catch((error: unknown) => {
-    console.error("Error fetching hero document:", error);
-
-    return null;
-  });
-
-const heroDoc = heroData?.at(0);
+const { hero } = Astro.props as Props;
 
 const heroDescriptor =
-  heroDoc?.descriptor ??
+  hero?.descriptor ??
   "Housing, cultural organizing, and mutual aid in Charlotte.";
 
-const primaryCtaLabel = heroDoc?.primaryCtaLabel ?? "Donate";
-const primaryCtaLink = heroDoc?.primaryCtaLink ?? "/donate";
-const secondaryCtaLabel = heroDoc?.secondaryCtaLabel ?? "Join the Rhizome";
-const secondaryCtaLink = heroDoc?.secondaryCtaLink ?? "/rhizome";
+const primaryCtaLabel = hero?.primaryCtaLabel ?? "Donate";
+const primaryCtaLink = hero?.primaryCtaLink ?? "/donate";
+const secondaryCtaLabel = hero?.secondaryCtaLabel ?? "Join the Rhizome";
+const secondaryCtaLink = hero?.secondaryCtaLink ?? "/rhizome";
 ---
 
 <section class="w-full sm:h-[780px] h-[720px] relative max-w-[1280px] mx-auto">

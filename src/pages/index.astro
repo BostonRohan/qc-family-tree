@@ -6,6 +6,41 @@ import Programs from "@/components/sections/Programs.astro";
 import Featured from "@/components/sections/Featured.astro";
 import Events from "@/components/sections/events/index.astro";
 import Vision from "@/components/sections/Vision.astro";
+import { defineQuery } from "groq";
+import { sanityClient } from "sanity:client";
+import type { FeaturedSection, Hero } from "sanity.types";
+
+const HOME_PAGE_QUERY = defineQuery(`
+{
+  hero: *[_type == "hero" && showHero == true] | order(_updatedAt desc)[0] {
+    descriptor,
+    primaryCtaLabel,
+    primaryCtaLink,
+    secondaryCtaLabel,
+    secondaryCtaLink
+  },
+  featuredSection: *[_type == "featuredSection"][0] {
+    _id,
+    title,
+    description,
+    primaryCtaLink,
+    primaryCtaLabel,
+    secondaryCtaLabel,
+    secondaryCtaLink,
+    image {
+      asset->{_ref}
+    }
+  }
+}
+`);
+
+const homepageData = await sanityClient.fetch<{
+  hero?: Hero | null;
+  featuredSection?: FeaturedSection | null;
+}>(HOME_PAGE_QUERY);
+
+const hero = homepageData?.hero ?? null;
+const featuredSection = homepageData?.featuredSection ?? null;
 ---
 
 <Layout
@@ -14,13 +49,13 @@ import Vision from "@/components/sections/Vision.astro";
   title="QC Family Tree"
 >
   <div class="space-y-24 pb-24">
-    <Welcome />
+    <Welcome hero={hero} />
     <div class="space-y-4">
       <Vision />
       <Events maxDays={7} />
     </div>
     <Programs />
   </div>
-  <Featured />
+  <Featured section={featuredSection} />
   <Contact />
 </Layout>
