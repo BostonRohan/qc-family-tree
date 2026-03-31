@@ -21,7 +21,7 @@ const secondaryCtaLabel = hero?.secondaryCtaLabel ?? "Join the Rhizome";
 const secondaryCtaLink = hero?.secondaryCtaLink ?? "/rhizome";
 ---
 
-<section class="w-full sm:h-[780px] h-[720px] relative max-w-[1280px] mx-auto">
+<section class="w-full relative max-w-[1280px] mx-auto min-h-[720px] sm:min-h-[780px]">
   <div class="relative">
     <Image
       src={headerImage}
@@ -30,7 +30,7 @@ const secondaryCtaLink = hero?.secondaryCtaLink ?? "/rhizome";
       fetchpriority="high"
       class="h-[400px] object-cover"
     />
-    <div class="absolute bottom-0 w-full h-full">
+    <div class="absolute inset-x-0 bottom-0 h-[38%] sm:h-[32%]">
       <div
         class="z-20 w-full flex-col justify-center relative flex items-center p-4"
       >
@@ -50,7 +50,7 @@ const secondaryCtaLink = hero?.secondaryCtaLink ?? "/rhizome";
           <span class="text-5xl sm:text-6xl text-secondary leading-tight"
             >For The Common Good</span
           >
-          <span class="text-lg sm:text-xl text-white/70 mt-2 tracking-tight"
+          <span class="text-lg sm:text-xl text-black/70 mt-2 tracking-tight"
             >{heroDescriptor}</span
           >
         </h1>
