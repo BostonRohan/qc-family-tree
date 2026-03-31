@@ -3,9 +3,35 @@ import { Image } from "astro:assets";
 import headerImage from "@/assets/homepage-header.jpg";
 import logoImage from "@/assets/logo-fullcolor-white-tag.png";
 import { Link } from "@/components/ui/link";
+import { defineQuery } from "groq";
+import { sanityClient } from "sanity:client";
+import type { Hero } from "sanity.types";
+
+const HERO_QUERY = defineQuery(
+  `*[_type == "hero" && showHero == true] | order(_updatedAt desc)`
+);
+
+const heroData = await sanityClient
+  .fetch<Hero[]>(HERO_QUERY)
+  .catch((error: unknown) => {
+    console.error("Error fetching hero document:", error);
+
+    return null;
+  });
+
+const heroDoc = heroData?.at(0);
+
+const heroDescriptor =
+  heroDoc?.descriptor ??
+  "Housing, cultural organizing, and mutual aid in Charlotte.";
+
+const primaryCtaLabel = heroDoc?.primaryCtaLabel ?? "Donate";
+const primaryCtaLink = heroDoc?.primaryCtaLink ?? "/donate";
+const secondaryCtaLabel = heroDoc?.secondaryCtaLabel ?? "Join the Rhizome";
+const secondaryCtaLink = heroDoc?.secondaryCtaLink ?? "/rhizome";
 ---
 
-<section class="w-full sm:h-[750px] h-[650px] relative max-w-[1280px] mx-auto">
+<section class="w-full sm:h-[780px] h-[720px] relative max-w-[1280px] mx-auto">
   <div class="relative">
     <Image
       src={headerImage}
@@ -35,25 +61,25 @@ import { Link } from "@/components/ui/link";
             >For The Common Good</span
           >
           <span class="text-lg sm:text-xl text-white/70 mt-2 tracking-tight"
-            >Housing, cultural organizing, and mutual aid in Charlotte.</span
+            >{heroDescriptor}</span
           >
         </h1>
         <div class="mt-6 flex flex-col sm:flex-row sm:justify-center gap-3">
           <Link
-            href="/donate"
+            href={primaryCtaLink}
             size="lg"
             className="rounded-xl sm:px-10 px-8"
             variant="default"
           >
-            Donate
+            {primaryCtaLabel}
           </Link>
           <Link
-            href="/rhizome"
+            href={secondaryCtaLink}
             size="lg"
             className="rounded-xl sm:px-10 px-8"
             variant="outline"
           >
-            Join the Rhizome
+            {secondaryCtaLabel}
           </Link>
         </div>
       </div>
