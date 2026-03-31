@@ -31,42 +31,51 @@ const featuredSection = featuredSectionData?.at(0);
       id="featured"
       class="py-12 sm:px-8 px-4 w-full bg-accent/65 text-accent-foreground"
     >
-      <div class="max-w-6xl space-y-2 mx-auto w-full">
-        <span class="flex gap-2 items-center">
-          <div>
+      <div class="max-w-6xl space-y-6 mx-auto w-full">
+        <div class="mx-auto w-full max-w-3xl space-y-3">
+          <div class="flex gap-4 items-center">
             <h1 class="font-ubuntu sm:text-4xl text-xl">
               {featuredSection.title}
             </h1>
             <Megaphone class="text-yellow-500 sm:w-[40px] sm:h-[40px] h-[28px] w-[28px]" />
           </div>
-        </span>
-        <p class="opacity-80 max-w-3xl">{featuredSection.description}</p>
-        {featuredSection?.primaryCtaLink && featuredSection.primaryCtaLabel && (
-          <Link
-            size="sm"
-            className="rounded-xl w-full md:max-w-xs"
-            variant="default"
-            href={featuredSection.primaryCtaLink}
-          >
-            {featuredSection.primaryCtaLabel}
-          </Link>
-        )}
-        {featuredSection?.secondaryCtaLabel &&
-          featuredSection.secondaryCtaLink && (
-            <Link
-              size="sm"
-              className="rounded-xl md:max-w-xs w-full"
-              href={featuredSection.secondaryCtaLink}
-              variant="outline"
-            >
-              {featuredSection.secondaryCtaLabel}
-            </Link>
-          )}
-        <ImageWrapper
-          id={featuredSection.image?.asset?._ref}
-          alt={featuredSection.title}
-          className="h-full w-full object-cover rounded-lg"
-        />
+          <p class="opacity-80">{featuredSection.description}</p>
+          {(featuredSection?.primaryCtaLink && featuredSection.primaryCtaLabel) ||
+            (featuredSection?.secondaryCtaLabel &&
+              featuredSection.secondaryCtaLink) ? (
+            <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              {featuredSection?.primaryCtaLink &&
+                featuredSection.primaryCtaLabel && (
+                  <Link
+                    size="sm"
+                    className="rounded-xl w-full sm:max-w-[220px]"
+                    variant="default"
+                    href={featuredSection.primaryCtaLink}
+                  >
+                    {featuredSection.primaryCtaLabel}
+                  </Link>
+                )}
+              {featuredSection?.secondaryCtaLabel &&
+                featuredSection.secondaryCtaLink && (
+                  <Link
+                    size="sm"
+                    className="rounded-xl w-full sm:max-w-[220px]"
+                    href={featuredSection.secondaryCtaLink}
+                    variant="outline"
+                  >
+                    {featuredSection.secondaryCtaLabel}
+                  </Link>
+                )}
+            </div>
+          ) : null}
+        </div>
+        <div class="w-full sm:max-w-3xl mx-auto">
+          <ImageWrapper
+            id={featuredSection.image?.asset?._ref}
+            alt={featuredSection.title}
+            className="w-full h-auto object-cover rounded-lg"
+          />
+        </div>
       </div>
     </section>
   )
