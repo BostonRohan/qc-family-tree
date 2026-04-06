@@ -9,13 +9,15 @@ interface Props {
 }
 
 const { section } = Astro.props as Props;
+const imageAsset = section?.image?.asset as { _id?: string; _ref?: string } | undefined;
+const imageId = imageAsset?._id ?? imageAsset?._ref;
 ---
 
 {
   section && (
     <section
       id="featured"
-      class="py-12 sm:px-8 px-4 w-full bg-accent/65 text-accent-foreground"
+      class="py-12 px-4 w-full bg-accent/65 text-accent-foreground"
     >
       <div class="max-w-6xl space-y-6 mx-auto w-full">
         <div class="mx-auto w-full max-w-3xl space-y-3">
@@ -50,13 +52,15 @@ const { section } = Astro.props as Props;
             </div>
           ) : null}
         </div>
-        <div class="w-full sm:max-w-3xl mx-auto">
-          <ImageWrapper
-            id={section.image?.asset?._id}
-            alt={section.title}
-            className="w-full h-auto object-cover rounded-lg"
-          />
-        </div>
+        {imageId && (
+          <div class="w-full sm:max-w-3xl mx-auto">
+            <ImageWrapper
+              id={imageId}
+              alt={section.title}
+              className="w-full h-auto object-cover rounded-lg"
+            />
+          </div>
+        )}
       </div>
     </section>
   )

@@ -2,80 +2,43 @@
 import { Image } from "astro:assets";
 import headerImage from "@/assets/homepage-header.jpg";
 import logoImage from "@/assets/logo-fullcolor-white-tag.png";
-import { Link } from "@/components/ui/link";
-import type { Hero } from "sanity.types";
-
-interface Props {
-  hero?: Hero | null;
-}
-
-const { hero } = Astro.props as Props;
-
-const heroDescriptor =
-  hero?.descriptor ??
-  "Housing, cultural organizing, and mutual aid in Charlotte.";
-
-const primaryCtaLabel = hero?.primaryCtaLabel ?? "Donate";
-const primaryCtaLink = hero?.primaryCtaLink ?? "/donate";
-const secondaryCtaLabel = hero?.secondaryCtaLabel ?? "Join the Rhizome";
-const secondaryCtaLink = hero?.secondaryCtaLink ?? "/rhizome";
 ---
 
-<section class="w-full relative max-w-[1280px] mx-auto min-h-[720px] sm:min-h-[780px]">
-  <div class="relative">
-    <Image
-      src={headerImage}
-      sizes="100vw"
-      alt=""
-      fetchpriority="high"
-      class="h-[400px] object-cover"
-    />
-    <div class="absolute inset-x-0 bottom-0 h-[38%] sm:h-[32%]">
-      <div
-        class="z-20 w-full flex-col justify-center relative flex items-center p-4"
-      >
+<section
+  id="hero"
+  data-hero-section
+  class="w-full relative min-h-[650px] flex items-center justify-center overflow-hidden"
+>
+  <Image
+    src={headerImage}
+    sizes="100vw"
+    alt="QC Family Tree community"
+    fetchpriority="high"
+    class="absolute inset-0 w-full h-full object-cover"
+  />
+  <div class="absolute inset-0 bg-black/30"></div>
+  <div class="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col items-center lg:items-start lg:flex-row lg:gap-12 gap-8">
+      <div class="flex flex-col items-center lg:items-start gap-6 lg:gap-8">
         <Image
-          width={400}
-          height={400}
+          width={180}
+          height={180}
           format="png"
           src={logoImage}
           alt="QC Family Tree"
           fetchpriority="high"
-          class="sm:w-[400px] sm:h-[400px] w-[250px] h-[250px]"
+          class="w-32 h-32 sm:w-40 sm:h-40 drop-shadow-lg"
         />
-        <h1
-          class="flex flex-col font-semibold text-center sm:gap-4 font-ubuntu"
-        >
-          <span class="text-5xl sm:text-6xl leading-tight">Cultivating Community</span>
-          <span class="text-5xl sm:text-6xl text-secondary leading-tight"
-            >For The Common Good</span
-          >
-          <span class="text-lg sm:text-xl text-black/70 mt-2 tracking-tight"
-            >{heroDescriptor}</span
-          >
-        </h1>
-        <div class="mt-6 flex flex-col sm:flex-row sm:justify-center gap-3">
-          <Link
-            href={primaryCtaLink}
-            size="lg"
-            className="rounded-xl sm:px-10 px-8"
-            variant="default"
-          >
-            {primaryCtaLabel}
-          </Link>
-          <Link
-            href={secondaryCtaLink}
-            size="lg"
-            className="rounded-xl sm:px-10 px-8"
-            variant="outline"
-          >
-            {secondaryCtaLabel}
-          </Link>
+        <div>
+          <h1 class="flex flex-col font-semibold text-center lg:text-left gap-1 font-ubuntu">
+            <span class="text-4xl sm:text-5xl lg:text-6xl text-white drop-shadow-lg">
+              Cultivating Community
+            </span>
+            <span class="text-2xl sm:text-3xl lg:text-4xl text-secondary drop-shadow-lg">
+              For The Common Good
+            </span>
+          </h1>
         </div>
-      </div>
-      <div
-        class="h-full z-10 absolute bottom-0 sm:from-20% from-white bg-linear-to-t to-transparent w-full"
-      >
       </div>
     </div>
   </div>
