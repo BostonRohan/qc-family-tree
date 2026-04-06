@@ -1,0 +1,62 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import { Image } from "astro:assets";
+import freedomFridgeImage from "@/assets/freedom-fridge.jpeg";
+
+const otherWays = [
+  "In-kind gifts of food, supplies, and artwork help keep the Freedom Fridge + Pantry stocked for everyone.",
+  "Amazon Wishlist donations keep community meals and feast days full of fresh ingredients.",
+  "Bring unsold produce from your business for evening drop-offs—our coolers stay open 24/7.",
+];
+
+---
+
+<Layout
+  title="Freedom Fridge"
+  description="Learn how Freedom Fridge & Pantry keeps Charlotte neighbors fed and how to support it."
+  slug="freedom-fridge"
+>
+  <section class="space-y-8 pt-24 px-4 text-center">
+    <div class="mx-auto max-w-4xl space-y-8">
+      <SectionHeading
+        title="Freedom Fridge & Pantry"
+        subtitle="Neighbors stock and shop anytime for groceries, meals, and shared care."
+        subtitleClass="text-slate-700 leading-relaxed sm:text-[18px] text-[16px]"
+      />
+      <div class="mx-auto w-full sm:max-w-3xl overflow-hidden rounded-3xl">
+        <div class="aspect-[16/9]">
+          <Image
+            src={freedomFridgeImage}
+            alt="Volunteers stocking the Freedom Fridge"
+            width={960}
+            height={540}
+            class="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+      <p class="text-slate-700 max-w-4xl mx-auto">
+        The Fridge is a community resource on 24-hour rotation, run by volunteers who honor collective care,
+        dignity, and abundance. Food, hygiene items, and culturally-rooted meals stay available through
+        faithful donations from neighbors, partners, and friends across Charlotte.
+      </p>
+    </div>
+  </section>
+
+  <div class="space-y-10 pt-16 pb-16 px-4 text-center">
+    <section class="space-y-6 rounded-3xl bg-white/80 p-8 text-center">
+      <SectionHeading title="Other ways to give" />
+      <div class="grid gap-3 sm:grid-cols-2 justify-items-center max-w-[700px] mx-auto">
+        {otherWays.map((item) => (
+          <article class="mx-auto w-full max-w-[320px] rounded-xl border border-slate-200 bg-slate-50/70 p-4 text-left text-sm text-slate-700">
+            <p>{item}</p>
+          </article>
+        ))}
+      </div>
+      <p class="text-sm text-slate-500 max-w-2xl mx-auto">
+        Drop-offs are welcome at 2916 Parkway Avenue—just swing by, ring the bell, and someone will help you
+        share food, art, or supplies with the neighborhood.
+      </p>
+    </section>
+  </div>
+</Layout>

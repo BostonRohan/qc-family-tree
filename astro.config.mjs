@@ -32,12 +32,11 @@ export default defineConfig({
   output: "server",
   site: "https://qcfamilytree.org",
   redirects: {
-    "/get-involved/contribute": "/donate",
-    "/donate": donateLink,
+    "/get-involved/contribute": "/freedom-fridge",
+    "/donate": "/freedom-fridge",
     "/events": "https://www.eventbrite.com/o/qc-family-tree-15926567999",
     "/rhizome/signup":
       "https://docs.google.com/forms/d/e/1FAIpQLSfYTyfmmSAruH8YgHCJ_dt-wKt9T13bfYXJyEls6bhCy3wwdg/viewform?usp=dialog",
-    "/about": "/#programs",
   },
   adapter: vercel({ imageService: true }),
   vite: {
