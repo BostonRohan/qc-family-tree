@@ -23,8 +23,6 @@ import tailwind from "@tailwindcss/vite";
 
 import icon from "astro-icon";
 
-import { donateLink } from "./constants";
-
 // https://astro.build/config
 export default defineConfig({
   // server is required to support embedded Sanity Studio
