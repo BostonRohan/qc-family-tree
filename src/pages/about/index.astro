@@ -1,0 +1,114 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import Programs from "@/components/sections/Programs.astro";
+
+const values = [
+  "We believe liberation from Imperial Death Culture is wrapped up in the liberation of the poor and marginalized of our place and society.",
+  "We strive to prioritize the full liberation of Black people, believing that their liberation ushers in freedom for all.",
+  "We practice collective action, accountability, anti-racism, decentralized wealth, and mutual aid.",
+  "We honor land, elders, and stories, celebrating the assets, gifts, and resources of people and place.",
+  "We commit to healing practices that sustain our work, knowing repair and reconciliation are part of the journey.",
+];
+
+const cultivationPractices = [
+  {
+    title: "Demonstration",
+    summary:
+      "We embody what we believe through hallowed placemaking, affordable housing, and reciprocal campus care.",
+  },
+  {
+    title: "Co-Creation & Honoring",
+    summary:
+      "Deep listening to land, history, and neighbors shows up through walkabouts, chicken care, and gardening.",
+  },
+  {
+    title: "Cultural experiences and expressions",
+    summary:
+      "Art, food, music, and public installations become commons for storytelling, care, and resistance.",
+  },
+  {
+    title: "Nourishing Interdependence",
+    summary:
+      "Trust, belonging, and fulfillment grow through mutual aid, free pantries, and shared community events.",
+  },
+  {
+    title: "Organizing and Catalyzing",
+    summary:
+      "People power builds via mutual aid, advocacy, and coalitions like WSCLT, ROOTS, and the Southern Movement Assembly.",
+  },
+  {
+    title: "Prophetic Imagination & Intentionality",
+    summary:
+      "Storytelling, strategic communication, and disciplined study chart new possibilities while staying rooted in truth.",
+  },
+  {
+    title: "Public Witness",
+    summary:
+      "Solidarity actions, political education, and public presentations declare our commitments in the shared sphere.",
+  },
+];
+
+
+
+
+---
+
+<Layout
+  title="About QC Family Tree"
+  description="Learn about QCFT's mission, theory of change, values, and long-term goals."
+  slug="about"
+>
+  <div class="space-y-16 pt-28 pb-16 px-4">
+    <section id="mission" class="space-y-6 sm:space-y-8 max-w-5xl mx-auto">
+      <SectionHeading title="Mission & Vision" />
+      <p class="text-slate-700">
+        QCFT is rooted in the Freedom-Wilkinson Corridor of West Charlotte and centers affordable housing,
+        cultural organizing, community education, and neighborhood revitalization. Our work is guided by
+        resilience, adaptability, and a commitment to racial and gender equity. QC Family Tree is a
+        community-rooted organization cultivating spaces of belonging, mutual care, and economic resilience by
+        supporting local creatives, entrepreneurs, and neighbors in building a more just and connected Charlotte.
+      </p>
+      <p class="text-sm text-slate-600">
+        <span class="text-secondary font-semibold">Mission:</span> Cultivate community for the common good.
+        <br />
+        <span class="text-accent font-semibold">Vision:</span> Thriving communities of abundance, justice, imagination, and mutual care for all.
+      </p>
+      <div class="grid gap-4 sm:grid-cols-2">
+        {values.map((value) => (
+          <p class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+            {value}
+          </p>
+        ))}
+      </div>
+    </section>
+
+    <Programs sectionId="programs-about" showLearnMore={false} />
+
+    <section id="cultivation" class="space-y-6 sm:space-y-8 max-w-5xl mx-auto">
+      <SectionHeading title="How we cultivate the common good" />
+      <div class="grid gap-4 sm:grid-cols-2">
+        {cultivationPractices.map((practice) => (
+          <article class="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm">
+            <h3 class="font-semibold">{practice.title}</h3>
+            <p class="text-sm text-slate-600">{practice.summary}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section id="sustainability" class="space-y-6 sm:space-y-8 max-w-5xl mx-auto">
+      <SectionHeading title="Sustainability & accountability" />
+      <p class="text-slate-700">
+        The board is focused on revenue growth, fundraising education, staff sustainability, and shared accountability.
+        Staff and co-conspirators assess ownership, engagement, and equitable leadership in every initiative. The
+        organization also runs community engagement audits, documents our history in pictures and narratives, and
+        reports findings to supporters so the journey toward justice is transparent.
+      </p>
+      <p class="text-slate-600 text-sm">
+        Our financial documents (IRS name + EIN + Form 990) are available by request—reach out through the contact page
+        to get them directly.
+      </p>
+    </section>
+  </div>
+</Layout>

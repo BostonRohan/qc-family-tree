@@ -1,0 +1,79 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import ContactSection from "@/components/sections/Contact.astro";
+import { Facebook, Instagram } from "lucide-react";
+
+type SocialLink = {
+  label: string;
+  href: string;
+  network: "instagram" | "facebook" | "twitter";
+  borderColor: string;
+};
+
+const socialLinks: SocialLink[] = [
+  {
+    label: "Instagram",
+    href: "https://instagram.com/qcfamilytree",
+    network: "instagram",
+    borderColor: "#E1306C",
+  },
+  {
+    label: "Facebook",
+    href: "https://facebook.com/qcfamilytree",
+    network: "facebook",
+    borderColor: "#1877F2",
+  },
+  {
+    label: "X (formerly Twitter)",
+    href: "https://twitter.com/qcfamilytree",
+    network: "twitter",
+    borderColor: "#000",
+  },
+];
+---
+
+<Layout title="Contact" description="Get in touch with QC Family Tree." slug="contact">
+  <div class="space-y-16 pt-20 pb-16 px-4">
+    <ContactSection />
+
+    <section class="space-y-6 sm:space-y-8 rounded-3xl bg-white/80 p-8 text-center">
+      <SectionHeading title="Follow us" />
+      <div class="flex flex-col items-center gap-4">
+        <div class="flex flex-wrap justify-center gap-4 text-sm">
+          {socialLinks.map((link) => (
+            <a
+              href={link.href}
+              class="flex items-center gap-2 rounded-xl border-2 bg-slate-100/70 px-4 py-2 transition"
+              style={`border-color:${link.borderColor}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {link.network === "instagram" && (
+                <Instagram className="h-4 w-4" />
+              )}
+              {link.network === "facebook" && (
+                <Facebook className="h-4 w-4" />
+              )}
+              {link.network === "twitter" && (
+                <svg
+                  viewBox="0 0 24 24"
+                  class="h-4 w-4"
+                  role="img"
+                  aria-label="Twitter"
+                >
+                  <title>X</title>
+                  <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+                </svg>
+              )}
+              <span>{link.label}</span>
+            </a>
+          ))}
+        </div>
+        <p class="text-sm text-slate-500 mx-auto max-w-xl">
+          Sign up for the general newsletter or tag your mail with Rhizome, Cultural Programming, or HFGBC updates.
+        </p>
+      </div>
+    </section>
+  </div>
+</Layout>
