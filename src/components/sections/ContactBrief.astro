@@ -32,5 +32,56 @@ import { phoneNumber, emailAddress } from '@constants';
         Contact us directly →
       </Link>
     </div>
+    <div class="mt-8 flex flex-col items-center gap-4 border-t border-slate-200 pt-8">
+      <form
+        id="homepage-subscribe-form"
+        class="flex flex-col gap-2 sm:flex-row sm:items-center"
+      >
+        <input
+          type="email"
+          name="email"
+          placeholder="Enter your email"
+          required
+          class="rounded-xl border border-slate-200 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+        />
+        <button
+          type="submit"
+          class="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/90"
+        >
+          Subscribe
+        </button>
+      </form>
+      <p class="text-xs text-slate-500">Get QCFT updates, event announcements, and opportunities.</p>
+      <p class="text-xs text-slate-500" id="homepage-form-message"></p>
+    </div>
   </div>
 </section>
+
+<script>
+  const form = document.getElementById("homepage-subscribe-form");
+  const messageEl = document.getElementById("homepage-form-message");
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form as HTMLFormElement);
+    const email = formData.get("email");
+
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, list: "qcft" }),
+      });
+
+      if (res.ok) {
+        messageEl!.textContent = "Thanks for subscribing!";
+        (form as HTMLFormElement).reset();
+      } else {
+        const data = await res.json();
+        messageEl!.textContent = data.message || "Something went wrong. Try again.";
+      }
+    } catch {
+      messageEl!.textContent = "Something went wrong. Try again.";
+    }
+  });
+</script>

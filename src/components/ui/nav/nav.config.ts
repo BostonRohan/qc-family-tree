@@ -20,12 +20,14 @@ export const nav: NavItem[] = [
       {
         title: "Mission & Values",
         href: "/about#mission",
-        description: "Cultivating community for the common good with justice, imagination, and mutual care.",
+        description:
+          "Cultivating community for the common good with justice, imagination, and mutual care.",
       },
       {
         title: "Programs & Pillars",
         href: "/about#programs-about",
-        description: "Our four program pillars and how they translate the mission into housing, culture, and care.",
+        description:
+          "Our four program pillars and how they translate the mission into housing, culture, and care.",
       },
     ],
   },
@@ -35,7 +37,8 @@ export const nav: NavItem[] = [
       {
         title: "Events",
         href: "/#events",
-        description: "Upcoming gatherings that celebrate, connect, and strengthen community.",
+        description:
+          "Upcoming gatherings that celebrate, connect, and strengthen community.",
       },
       {
         title: "Membership",
@@ -46,6 +49,12 @@ export const nav: NavItem[] = [
         title: "Freedom Fridge",
         href: "/freedom-fridge",
         description: "See how mutual aid keeps food flowing 24/7.",
+      },
+      {
+        title: "Here for Good Business Cooperative",
+        href: "/here-for-good",
+        description:
+          "Learn about HFGB, our corridor revitalization initiative.",
       },
     ],
   },

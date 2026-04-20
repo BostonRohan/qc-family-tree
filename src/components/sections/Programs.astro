@@ -12,12 +12,16 @@ interface Props {
   sectionId?: string;
   showPillars?: boolean;
   showLearnMore?: boolean;
+  showDivider?: boolean;
+  dividerSrc?: string;
 }
 
 const {
   sectionId = "programs",
   showPillars = true,
   showLearnMore = true,
+  showDivider = true,
+  dividerSrc,
 } = Astro.props as Props;
 ---
 
@@ -67,6 +71,15 @@ const {
         client:visible
       />
     </div>
+    {showDivider && (
+    <div class="mx-auto max-w-5xl">
+      <img
+        src={dividerSrc || "https://placehold.co/1200x400"}
+        alt=""
+        class="aspect-[21/9] w-full object-cover"
+      />
+    </div>
+    )}
   {showPillars && (
     <div class="mx-auto grid max-w-5xl grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
       {[

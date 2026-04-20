@@ -4,10 +4,11 @@ import SectionHeading from "@/components/ui/SectionHeading.astro";
 import { Image } from "astro:assets";
 import freedomFridgeImage from "@/assets/freedom-fridge.jpeg";
 
-const otherWays = [
-  "In-kind gifts of food, supplies, and artwork help keep the Freedom Fridge + Pantry stocked for everyone.",
-  "Amazon Wishlist donations keep community meals and feast days full of fresh ingredients.",
-  "Bring unsold produce from your business for evening drop-offs—our coolers stay open 24/7.",
+const waysToHelp = [
+  "Donate extra food and supplies to help keep the Freedom Fridge & Pantry stocked for the community.",
+  "Shop our Amazon Wishlist to provide fresh ingredients for community meals and special events.",
+  "Businesses can safely donate unsold food. Fresh produce, packaged items, and properly handled prepared foods are all welcome.",
+  "Make a financial donation to support free food access and community care.",
 ];
 
 ---
@@ -36,27 +37,30 @@ const otherWays = [
         </div>
       </div>
       <p class="text-slate-700 max-w-4xl mx-auto">
-        The Fridge is a community resource on 24-hour rotation, run by volunteers who honor collective care,
-        dignity, and abundance. Food, hygiene items, and culturally-rooted meals stay available through
-        faithful donations from neighbors, partners, and friends across Charlotte.
+        The Freedom Fridge and Pantry is a community resource open 24 hours a day at 2916 Parkway Avenue, just off Tuckaseegee Road. Located outdoors for easy access, it provides free food, meals, fresh refrigerated items, pantry staples, and hygiene supplies for anyone in need.
+      </p>
+      <p class="text-slate-700 max-w-4xl mx-auto">
+        Stocked by volunteers, the fridge and pantry are built on concepts of community care, dignity, and shared wellbeing. All items are supplied and available on a first-come, first-served basis—no sign-up or requirements needed.
       </p>
     </div>
   </section>
 
   <div class="space-y-10 pt-16 pb-16 px-4 text-center">
     <section class="space-y-6 rounded-3xl bg-white/80 p-8 text-center">
-      <SectionHeading title="Other ways to give" />
+      <SectionHeading title="Ways To Help" />
       <div class="grid gap-3 sm:grid-cols-2 justify-items-center max-w-[700px] mx-auto">
-        {otherWays.map((item) => (
-          <article class="mx-auto w-full max-w-[320px] rounded-xl border border-slate-200 bg-slate-50/70 p-4 text-left text-sm text-slate-700">
-            <p>{item}</p>
-          </article>
+        {waysToHelp.map((item, index) => (
+          index === waysToHelp.length - 1 ? (
+            <a href="/donate" class="mx-auto w-full max-w-[320px] rounded-xl border border-slate-200 bg-slate-50/70 p-4 text-left text-sm text-slate-700 hover:bg-slate-100 transition">
+              <p>Make a <span class="underline">donation</span> to support free food access and community care.</p>
+            </a>
+          ) : (
+            <article class="mx-auto w-full max-w-[320px] rounded-xl border border-slate-200 bg-slate-50/70 p-4 text-left text-sm text-slate-700">
+              <p>{item}</p>
+            </article>
+          )
         ))}
       </div>
-      <p class="text-sm text-slate-500 max-w-2xl mx-auto">
-        Drop-offs are welcome at 2916 Parkway Avenue—just swing by, ring the bell, and someone will help you
-        share food, art, or supplies with the neighborhood.
-      </p>
     </section>
   </div>
 </Layout>

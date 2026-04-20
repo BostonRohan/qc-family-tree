@@ -1,14 +1,17 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import SectionHeading from "@/components/ui/SectionHeading.astro";
+import { Image } from "astro:assets";
 import Programs from "@/components/sections/Programs.astro";
+import aboutBorder1 from "@/assets/about_border_1.jpeg";
+import aboutBorder2 from "@/assets/about_border_2.jpeg";
 
 const values = [
-  "We believe liberation from Imperial Death Culture is wrapped up in the liberation of the poor and marginalized of our place and society.",
+  "We believe that our freedom is connected to the freedom of people who are struggling the most.",
   "We strive to prioritize the full liberation of Black people, believing that their liberation ushers in freedom for all.",
   "We practice collective action, accountability, anti-racism, decentralized wealth, and mutual aid.",
-  "We honor land, elders, and stories, celebrating the assets, gifts, and resources of people and place.",
   "We commit to healing practices that sustain our work, knowing repair and reconciliation are part of the journey.",
+  "We honor land, elders, and history, celebrating the assets, gifts, and resources of people and place.",
 ];
 
 const cultivationPractices = [
@@ -63,52 +66,67 @@ const cultivationPractices = [
     <section id="mission" class="space-y-6 sm:space-y-8 max-w-5xl mx-auto">
       <SectionHeading title="Mission & Vision" />
       <p class="text-slate-700">
-        QCFT is rooted in the Freedom-Wilkinson Corridor of West Charlotte and centers affordable housing,
-        cultural organizing, community education, and neighborhood revitalization. Our work is guided by
-        resilience, adaptability, and a commitment to racial and gender equity. QC Family Tree is a
-        community-rooted organization cultivating spaces of belonging, mutual care, and economic resilience by
-        supporting local creatives, entrepreneurs, and neighbors in building a more just and connected Charlotte.
+        QC Family Tree is a community-rooted non-profit organization cultivating spaces of belonging, mutual care, and economic resilience by supporting local creatives, entrepreneurs, and neighbors. Our work building a more just and connected Charlotte is guided by resilience, adaptability, and a commitment to racial and gender equity.
       </p>
       <p class="text-sm text-slate-600">
         <span class="text-secondary font-semibold">Mission:</span> Cultivate community for the common good.
         <br />
         <span class="text-accent font-semibold">Vision:</span> Thriving communities of abundance, justice, imagination, and mutual care for all.
       </p>
+      <SectionHeading title="Values" />
       <div class="grid gap-4 sm:grid-cols-2">
         {values.map((value) => (
           <p class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
             {value}
-          </p>
+</p>
         ))}
       </div>
     </section>
 
-    <Programs sectionId="programs-about" showLearnMore={false} />
+    <Programs sectionId="programs-about" showLearnMore={false} dividerSrc={aboutBorder1.src} />
 
     <section id="cultivation" class="space-y-6 sm:space-y-8 max-w-5xl mx-auto">
       <SectionHeading title="How we cultivate the common good" />
-      <div class="grid gap-4 sm:grid-cols-2">
+      <div class="grid gap-3 sm:grid-cols-2">
         {cultivationPractices.map((practice) => (
-          <article class="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm">
-            <h3 class="font-semibold">{practice.title}</h3>
-            <p class="text-sm text-slate-600">{practice.summary}</p>
-          </article>
+          <div class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 font-semibold text-slate-700">
+            {practice.title}
+          </div>
         ))}
       </div>
     </section>
+
+    <div class="aspect-[21/9] mx-auto max-w-5xl">
+      <Image
+        src={aboutBorder2}
+        alt=""
+        class="h-full w-full object-cover"
+      />
+    </div>
 
     <section id="sustainability" class="space-y-6 sm:space-y-8 max-w-5xl mx-auto">
       <SectionHeading title="Sustainability & accountability" />
       <p class="text-slate-700">
-        The board is focused on revenue growth, fundraising education, staff sustainability, and shared accountability.
-        Staff and co-conspirators assess ownership, engagement, and equitable leadership in every initiative. The
-        organization also runs community engagement audits, documents our history in pictures and narratives, and
-        reports findings to supporters so the journey toward justice is transparent.
+        QC Family Tree is guided by a team of staff, board members, and community partners who are dedicated to the long-term wellbeing of West Charlotte. We are committed to being open, responsible, and accountable to our community.
       </p>
-      <p class="text-slate-600 text-sm">
-        Our financial documents (IRS name + EIN + Form 990) are available by request—reach out through the contact page
-        to get them directly.
-      </p>
+      <div class="space-y-6 pt-4">
+        <div>
+          <h3 class="font-semibold text-slate-900 mb-2">Annual Reports</h3>
+          <ul class="flex flex-wrap gap-3">
+            <li><a href="https://drive.google.com/file/d/1IBK84-g3meMXCCtYt0trhv0DN1Ud2C0g/view?usp=sharing" target="_blank" rel="noreferrer" class="text-blue-600 hover:underline">2025</a></li>
+            <li><a href="https://drive.google.com/file/d/1obkW2SGpPdGztWhuNIfRWrGKMsCNSD7e/view?ts=69dfb735" target="_blank" rel="noreferrer" class="text-blue-600 hover:underline">2024</a></li>
+            <li><a href="https://drive.google.com/file/d/1dyT6Sn5XYs9uibEl5XQNaeutBs-xa7Ly/view?ts=69dfb756" target="_blank" rel="noreferrer" class="text-blue-600 hover:underline">2023</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-semibold text-slate-900 mb-2">Form 990s</h3>
+          <ul class="flex flex-wrap gap-3">
+            <li><a href="https://projects.propublica.org/nonprofits/organizations/204091165/202503149349305480/full" target="_blank" rel="noreferrer" class="text-blue-600 hover:underline">2024</a></li>
+            <li><a href="https://projects.propublica.org/nonprofits/organizations/204091165/202313039349301436/full" target="_blank" rel="noreferrer" class="text-blue-600 hover:underline">2022</a></li>
+            <li><a href="https://projects.propublica.org/nonprofits/organizations/204091165/202440729349301409/full" target="_blank" rel="noreferrer" class="text-blue-600 hover:underline">2023</a></li>
+          </ul>
+        </div>
+      </div>
     </section>
   </div>
 </Layout>
