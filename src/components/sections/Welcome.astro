@@ -8,9 +8,11 @@ import logoImage from "@/assets/logo-fullcolor-white-tag.png";
   <div class="relative">
     <Image
       src={headerImage}
+      widths={[400, 800, 1200, 1600]}
       sizes="100vw"
       alt=""
       fetchpriority="high"
+      loading="eager"
       class="h-[400px] object-cover"
     />
     <div class="absolute bottom-0 w-full h-1/3">
@@ -24,6 +26,7 @@ import logoImage from "@/assets/logo-fullcolor-white-tag.png";
           src={logoImage}
           alt="QC Family Tree"
           fetchpriority="high"
+          loading="eager"
           class="sm:w-[400px] sm:h-[400px] w-[250px] h-[250px]"
         />
         <h1

@@ -4,9 +4,12 @@ import { SanityImage, type WrapperProps } from "sanity-image";
 export type ImageProps<T extends React.ElementType = "img"> =
   WrapperProps<T> & {
     alt: string;
+    width?: number;
+    height?: number;
+    loading?: "eager" | "lazy";
   };
 
-const { id, className, alt } = Astro.props;
+const { id, className, alt, width, height, loading = "lazy" } = Astro.props;
 ---
 
 <SanityImage
@@ -14,4 +17,7 @@ const { id, className, alt } = Astro.props;
   id={id}
   className={className}
   alt={alt}
+  width={width}
+  height={height}
+  loading={loading}
 />
