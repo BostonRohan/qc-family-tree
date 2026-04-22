@@ -16,6 +16,7 @@ const dataset = PUBLIC_SANITY_STUDIO_DATASET || PUBLIC_SANITY_DATASET;
 
 import sanity from "@sanity/astro";
 import react from "@astrojs/react";
+import sitemap from "@astrojs/sitemap";
 
 import vercel from "@astrojs/vercel";
 
@@ -63,5 +64,6 @@ export default defineConfig({
     }),
     react(),
     icon(),
+    sitemap(),
   ],
 });
