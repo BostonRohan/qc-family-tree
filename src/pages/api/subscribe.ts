@@ -1,16 +1,21 @@
 import type { APIRoute } from "astro";
+import { checkBotId } from "botid/server";
 
-const MAILCHIMP_API_KEY = import.meta.env.MAILCHIMP_API_KEY;
-const MAILCHIMP_SERVER = import.meta.env.MAILCHIMP_SERVER;
+const MAILCHIMP_QCFT_API_KEY = import.meta.env.MAILCHIMP_QCFT_API_KEY;
+const MAILCHIMP_QCFT_SERVER = import.meta.env.MAILCHIMP_QCFT_SERVER;
 const QCFT_LIST_ID = import.meta.env.MAILCHIMP_QCFT_LIST_ID;
+
+const MAILCHIMP_HFGBC_API_KEY = import.meta.env.MAILCHIMP_HFGBC_API_KEY;
+const MAILCHIMP_HFGBC_SERVER = import.meta.env.MAILCHIMP_HFGBC_SERVER;
 const HFGBC_LIST_ID = import.meta.env.MAILCHIMP_HFGBC_LIST_ID;
 
 export const POST: APIRoute = async ({ request }) => {
-  if (!MAILCHIMP_API_KEY || !MAILCHIMP_SERVER) {
-    return new Response(
-      JSON.stringify({ message: "Mailchimp not configured" }),
-      { status: 500 },
-    );
+  const verification = await checkBotId();
+
+  if (verification.isBot) {
+    return new Response(JSON.stringify({ message: "Access denied" }), {
+      status: 403,
+    });
   }
 
   try {
@@ -23,20 +28,26 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    const listId = list === "hfgb" ? HFGBC_LIST_ID : QCFT_LIST_ID;
+    const isHfgb = list === "hfgb";
+    const apiKey = isHfgb ? MAILCHIMP_HFGBC_API_KEY : MAILCHIMP_QCFT_API_KEY;
+    const server = isHfgb ? MAILCHIMP_HFGBC_SERVER : MAILCHIMP_QCFT_SERVER;
+    const listId = isHfgb ? HFGBC_LIST_ID : QCFT_LIST_ID;
 
-    if (!listId) {
-      return new Response(JSON.stringify({ message: "List not configured" }), {
-        status: 500,
-      });
+    if (!apiKey || !server || !listId) {
+      return new Response(
+        JSON.stringify({ message: "Mailchimp not configured" }),
+        {
+          status: 500,
+        },
+      );
     }
 
     const response = await fetch(
-      `https://${MAILCHIMP_SERVER}.api.mailchimp.com/3.0/lists/${listId}/members`,
+      `https://${server}.api.mailchimp.com/3.0/lists/${listId}/members`,
       {
         method: "POST",
         headers: {
-          Authorization: `apikey ${MAILCHIMP_API_KEY}`,
+          Authorization: `apikey ${apiKey}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({

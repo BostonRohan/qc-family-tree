@@ -75,13 +75,16 @@ import { phoneNumber, emailAddress } from '@constants';
 
       if (res.ok) {
         messageEl!.textContent = "Thanks for subscribing!";
+        messageEl!.className = "text-xs text-green-600 font-medium";
         (form as HTMLFormElement).reset();
       } else {
         const data = await res.json();
         messageEl!.textContent = data.message || "Something went wrong. Try again.";
+        messageEl!.className = "text-xs text-red-600 font-medium";
       }
     } catch {
       messageEl!.textContent = "Something went wrong. Try again.";
+      messageEl!.className = "text-xs text-red-600 font-medium";
     }
   });
 </script>

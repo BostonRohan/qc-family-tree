@@ -81,13 +81,16 @@ const messageId = `${list}-form-message`;
 
       if (res.ok) {
         messageEl.textContent = "Thanks for subscribing!";
+        messageEl.className = "text-xs text-center text-green-600 font-medium";
         form.reset();
       } else {
         const data = await res.json();
         messageEl.textContent = data.message || "Something went wrong. Try again.";
+        messageEl.className = "text-xs text-center text-red-600 font-medium";
       }
     } catch {
       messageEl.textContent = "Something went wrong. Try again.";
+      messageEl.className = "text-xs text-center text-red-600 font-medium";
     }
   });
 </script>
