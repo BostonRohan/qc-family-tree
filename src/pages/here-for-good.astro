@@ -8,6 +8,7 @@ import hgfcArt from "@/assets/hgfc_art.jpeg";
 import hgfcCelebrate from "@/assets/hgfc_celebrate.jpeg";
 import hgfcConference from "@/assets/hgfc_conference.jpeg";
 import hgfcPlanning from "@/assets/hgfc_planning.jpeg";
+import hfbcLogo from "@/assets/hfgbc_transparent.png";
 
 const goals = [
   { text: "Radical Stewardship", icon: Recycle },
@@ -31,13 +32,6 @@ const in2025 = [
   "Coordinated seven free skills workshops in the Corridor",
   "Initiated a Mural Apprenticeship Program + trained two new muralists",
 ];
-
-const waysToHelp = [
-  "Donate extra food and supplies to help keep the Freedom Fridge & Pantry stocked for the community.",
-  "Shop our Amazon Wishlist to provide fresh ingredients for community meals and special events.",
-  "Businesses can safely donate unsold food. Fresh produce, packaged items, and properly handled prepared foods are all welcome.",
-  "Make a financial donation to support free food access and community care.",
-];
 ---
 
 <Layout
@@ -46,19 +40,23 @@ const waysToHelp = [
   slug="here-for-good"
 >
   <div class="space-y-16 pt-28 pb-16 px-4">
-    <section class="mx-auto max-w-5xl space-y-8 text-center">
-      <SectionHeading
-        title="Here for Good Business Cooperative"
-        subtitle="Strengthening the Freedom-Wilkinson Corridor through revitalization, identity, advocacy, and coordination."
-        titleClass="mb-1 sm:mb-3"
+    <section class="mx-auto max-w-5xl text-center">
+      <Image
+        src={hfbcLogo}
+        alt="Here for Good Business Cooperative"
+        width={448}
+        height={448}
+        class="h-auto w-full max-w-md mx-auto object-contain"
+        loading="eager"
+        fetchpriority="high"
       />
-      <p class="text-slate-700 max-w-4xl mx-auto text-lg">
+      <p class="max-w-4xl mx-auto">
         QC Family Tree has been tasked by the City of Charlotte to strengthen the Freedom-Wilkinson Corridor
         by driving job creation, supporting business growth, and improving quality of life. To complete
         this mission, we've established the <span class="font-semibold">Here for Good Business Cooperative</span>, an organization focused
         on revitalization, identity, advocacy, and coordination of the corridor.
       </p>
-      <p class="text-slate-700 max-w-4xl mx-auto text-lg">
+      <p class="max-w-4xl mx-auto mt-4 sm:mt-6">
         <span class="font-semibold">Our Vision</span> is a joyful, regenerative economy in the Freedom-Wilkinson
         Corridor where business, creativity, and community evolve sustainably together.
       </p>
@@ -70,8 +68,8 @@ const waysToHelp = [
         {goals.map((goal) => {
           const Icon = goal.icon;
           return (
-            <div class="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700">
-              <Icon className="w-5 h-5 text-black shrink-0" />
+            <div class="flex items-center gap-3 rounded-xl border border-border bg-muted px-4 py-3">
+              <Icon className="w-5 h-5 text-foreground shrink-0" />
               <span>{goal.text}</span>
             </div>
           );
@@ -83,7 +81,7 @@ const waysToHelp = [
       <SectionHeading title="Currently We Are…" />
       <div class="grid gap-4 sm:grid-cols-2">
         {currently.map((item) => (
-          <article class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <article class="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
             <div class="aspect-[3/2]">
               <Image
                 src={item.image}
@@ -91,7 +89,7 @@ const waysToHelp = [
                 class="h-full w-full object-cover"
               />
             </div>
-            <p class="p-4 text-sm text-slate-700">
+            <p class="p-4 text-sm">
               {item.linkText ? (
                 <>
                   {item.text.split(item.linkText)[0]}
@@ -113,7 +111,7 @@ const waysToHelp = [
             <span class="absolute -left-[9px] top-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent">
               <CheckCircle2 className="h-2.5 w-2.5 text-white" />
             </span>
-            <p class="text-slate-700">{item}</p>
+            <p>{item}</p>
           </div>
         ))}
       </div>
