@@ -7,6 +7,9 @@ import Footer from "@/components/sections/Footer.astro";
 import SpeedInsights from "@vercel/speed-insights/astro";
 import Analytics from "@vercel/analytics/astro";
 import Banner from "@/components/banner.astro";
+import BotIdClient from "@/components/BotIdClient";
+import BotIdInit from "@/components/BotIdInit";
+
 import logoImage from "@/assets/logo-fullcolor-white-tag.png";
 import LogoToggle from "@/components/LogoToggle.tsx";
 
@@ -76,6 +79,7 @@ const isHome = slug === "";
     <Font cssVariable="--font-ubuntu" />
 
     <title>{title}</title>
+    <BotIdClient client:only="react" />
   </head>
   <body class="h-full w-full">
     <main class="w-full h-full">

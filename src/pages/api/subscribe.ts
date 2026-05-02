@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import { checkBotId } from "botid/server";
 
 const MAILCHIMP_QCFT_API_KEY = import.meta.env.MAILCHIMP_QCFT_API_KEY;
 const MAILCHIMP_QCFT_SERVER = import.meta.env.MAILCHIMP_QCFT_SERVER;
@@ -12,6 +13,14 @@ export const POST: APIRoute = async ({ request }) => {
   console.log("[Subscribe] Request received");
 
   try {
+    const botVerification = await checkBotId();
+
+    if (botVerification.isBot) {
+      console.log("[Subscribe] Bot detected - blocking request");
+      return new Response(JSON.stringify({ message: "Access denied" }), {
+        status: 403,
+      });
+    }
     const body = await request.json();
     const { email, list } = body;
     console.log("[Subscribe] Email:", email, "| List:", list);
