@@ -92,7 +92,7 @@ export default function HamburgerMenu({
   const currentYear = new Date().getFullYear();
   const closedWrapperClassName = cn(
     wrapperClassName,
-    "!max-w-full mx-0 text-left flex items-center px-4",
+    "!max-w-full mx-0 text-left flex items-center px-4 max-w-2xl",
   );
 
   return (
@@ -101,7 +101,7 @@ export default function HamburgerMenu({
         !open
           ? closedWrapperClassName
           : "h-[44px] invisible fixed inset-x-0 top-4 p-1"
-      } justify-start p-1 !w-[90%]`}
+      } justify-start p-1 !w-[90%] max-w-2xl mx-auto`}
     >
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
