@@ -18,11 +18,11 @@ export default function PhotoCarousel({
       <CarouselContent className="w-full">
         {images.map(({ src, alt }, index) => (
           <CarouselItem key={index}>
-            <div className="flex items-center justify-center w-full h-full">
+            <div className="flex items-center justify-center w-full h-full max-w-3xl mx-auto">
               <img
                 src={src}
                 alt={alt}
-                className="object-cover rounded-2xl aspect-[4/3]"
+                className="object-cover rounded-2xl w-full h-full aspect-[4/3]"
               />
             </div>
           </CarouselItem>

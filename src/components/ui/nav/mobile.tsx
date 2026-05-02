@@ -53,7 +53,22 @@ const MenuItemComponent: React.FC<{ item: NavItem; depth?: number }> = ({
     );
   }
 
-  return (
+  const hasAnchor = item.href?.includes("#");
+
+  return hasAnchor ? (
+    <SheetClose asChild>
+      <a
+        href={item.href}
+        target={item.target ?? "_self"}
+        className={cn(
+          "block py-2 text-lg font-medium transition-colors hover:text-primary",
+          depth > 0 && "pl-4",
+        )}
+      >
+        {item.title}
+      </a>
+    </SheetClose>
+  ) : (
     <a
       href={item.href}
       target={item.target ?? "_self"}
@@ -83,7 +98,9 @@ export default function HamburgerMenu({
   return (
     <div
       className={`${
-        !open ? closedWrapperClassName : "h-[44px] invisible fixed inset-x-0 top-4 p-1"
+        !open
+          ? closedWrapperClassName
+          : "h-[44px] invisible fixed inset-x-0 top-4 p-1"
       } justify-start p-1 !w-[90%]`}
     >
       <Sheet open={open} onOpenChange={setOpen}>
@@ -110,9 +127,7 @@ export default function HamburgerMenu({
                 className="h-full w-auto object-contain"
               />
             </a>
-            <SheetClose
-              className="rounded-full p-2 text-slate-700 transition hover:bg-slate-100 focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            >
+            <SheetClose className="rounded-full p-2 text-slate-700 transition hover:bg-slate-100 focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
               <X className="h-6 w-6" />
               <span className="sr-only">Close menu</span>
             </SheetClose>
