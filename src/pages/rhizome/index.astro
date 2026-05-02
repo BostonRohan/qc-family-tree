@@ -25,7 +25,7 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
       imageClassName="!object-top"
       title="Rhizome Coalition"
       tagline="Artists united for community and creativity."
-      image={headerImage}
+      image={slide_1}
       primaryCta={{
         label: "Sign up",
         href: "/rhizome/signup",
@@ -42,12 +42,12 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
       <div
         class="max-w-[932px] mx-auto flex justify-center gap-6 flex-wrap-reverse"
       >
-        <div class="px-6 w-full">
+        <div class="px-6 w-full max-w-full">
           <PhotoCarousel
             images={[
               {
-                src: slide_1.src,
-                alt: "People gathered around park listening to speaker",
+                src: headerImage.src,
+                alt: "Rhizome Coalition header image",
               },
               {
                 src: slide_2.src,
@@ -65,7 +65,7 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
             client:load
           />
         </div>
-        <div class="space-y-3">
+        <div class="space-y-3 w-full max-w-2xl">
           <h2 class="sm:text-3xl text-xl font-bold font-ubuntu">
             What is the
             <CustomTooltip
@@ -86,13 +86,13 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
             build a strong support system for our work and our collective
             progress.
           </p>
-<div class="flex gap-4 w-full md:flex-row flex-col max-w-sm">
+<div class="flex gap-4 sm:flex-row flex-col">
 <Link
-              className="rounded-xl w-full"
+              className="flex-1 rounded-xl"
               href="/rhizome/signup">Sign up</Link>
             <Link
-              className="rounded-xl w-full"
-variant="outline"
+              className="flex-1 rounded-xl"
+            variant="outline"
               href="#faqs">View FAQs</Link>
           </div>
         </div>
