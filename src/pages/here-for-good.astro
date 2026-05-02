@@ -5,10 +5,11 @@ import { Image } from "astro:assets";
 import FollowAlong from "@/components/sections/FollowAlong.astro";
 import { Recycle, Palette, Users, MapPin, Briefcase, TrendingUp, CheckCircle2 } from "lucide-react";
 import hgfcArt from "@/assets/hgfc_art.jpeg";
+import rhizomeImage from "@/assets/rhizome.jpg";
 import workshopsImage from "@/assets/workshops.jpg";
 import marketImage from "@/assets/market.jpg";
 import meetingImage from "@/assets/meeting.jpg";
-import headerImage from "@/assets/homepage-header.jpg";
+import headerImage from "@/assets/about page header option oak.png";
 import logoImage from "@/assets/logo-fullcolor-white-tag.png";
 import gwendolyneBrooks from "@/assets/GwendolyneBrooks.png";
 
@@ -23,7 +24,7 @@ const goals = [
 
 const currently = [
   { text: "Hosting monthly free skill-building workshops and networking events", image: workshopsImage },
-  { text: "Celebrating 40 Rhizome Coalition members", image: hgfcArt, linkText: "Rhizome", linkUrl: "/rhizome" },
+  { text: "Celebrating 40 Rhizome Coalition members", image: rhizomeImage, linkText: "Rhizome", linkUrl: "/rhizome" },
   { text: "Providing vending opportunities for Rhizome members through monthly Arts Markets", image: marketImage, linkText: "Rhizome", linkUrl: "/rhizome" },
   { text: "Planning an arts + wellness conference for Fall 2026", image: meetingImage },
 ];
@@ -98,7 +99,7 @@ const in2025 = [
     </div>
 
     <div class="py-8 px-4">
-      <h2 class="font-ubuntu text-center text-2xl sm:text-3xl">
+      <h2 class="font-ubuntu text-center text-2xl sm:text-3xl max-w-3xl mx-auto">
         <span>We are each other's harvest. We are each other's business. We are each other's magnitude.</span>
         <span class="text-accent block text-lg mt-2">— Gwendolyn Brooks</span>
       </h2>
