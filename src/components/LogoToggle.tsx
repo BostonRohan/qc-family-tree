@@ -11,36 +11,40 @@ export default function LogoToggle({
 }: LogoToggleProps) {
   React.useEffect(() => {
     const logo = document.querySelector<HTMLElement>(logoSelector);
+    const mobileLogo = document.querySelector<HTMLElement>(
+      "[data-mobile-nav-logo]",
+    );
+
+    const hide = (el: HTMLElement) => {
+      el.classList.add("opacity-0", "pointer-events-none");
+    };
+    const show = (el: HTMLElement) => {
+      el.classList.remove("opacity-0", "pointer-events-none");
+    };
+
     const hero = document.querySelector<HTMLElement>(heroSelector);
 
-    if (!logo) {
-      return;
-    }
-
-    const hide = () => {
-      logo.classList.add("opacity-0", "pointer-events-none");
-    };
-    const show = () => {
-      logo.classList.remove("opacity-0", "pointer-events-none");
-    };
-
     if (!hero) {
-      show();
+      if (logo) show(logo);
+      if (mobileLogo) show(mobileLogo);
       return;
     }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && entry.intersectionRatio > 0) {
-          hide();
+          if (logo) hide(logo);
+          if (mobileLogo) hide(mobileLogo);
         } else {
-          show();
+          if (logo) show(logo);
+          if (mobileLogo) show(mobileLogo);
         }
       },
       { threshold: 0 },
     );
 
-    hide();
+    if (logo) hide(logo);
+    if (mobileLogo) hide(mobileLogo);
     observer.observe(hero);
 
     return () => observer.disconnect();

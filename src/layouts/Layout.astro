@@ -95,6 +95,7 @@ const isHome = slug === "";
                 width={60}
                 height={60}
                 class="h-10 w-auto object-contain"
+                loading="eager"
                 fetchpriority="low"
               />
             </a>
@@ -114,13 +115,7 @@ const isHome = slug === "";
         )
       }
       <slot />
-      {isHome && (
-        <LogoToggle
-          client:load
-          heroSelector="[data-hero-section]"
-          logoSelector="[data-nav-logo]"
-        />
-      )}
+      <LogoToggle client:load heroSelector="[data-hero-section]" logoSelector="[data-nav-logo]" />
     </main>
     <Footer />
   </body>

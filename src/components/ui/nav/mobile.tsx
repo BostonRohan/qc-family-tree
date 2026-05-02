@@ -116,8 +116,9 @@ export default function HamburgerMenu({
         </SheetTrigger>
         <a
           href="/"
-          className={`md:hidden flex h-10 items-center ml-auto ${open ? "hidden" : ""}`}
+          className={`md:hidden flex h-10 items-center ml-auto transition-opacity duration-200 ${open ? "hidden" : ""}`}
           aria-label="QC Family Tree home"
+          data-mobile-nav-logo
         >
           <img
             src={logoImage.src}
