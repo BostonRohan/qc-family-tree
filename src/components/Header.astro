@@ -22,6 +22,7 @@ interface Props {
   secondaryCta?: CTA;
   className?: string;
   imageClassName?: string;
+  logoClassName?: string;
 }
 
 const {
@@ -34,6 +35,7 @@ const {
   secondaryCta,
   className = "",
   imageClassName = "",
+  logoClassName = "",
 } = Astro.props as Props;
 ---
 
@@ -62,7 +64,7 @@ const {
           src={logoImage}
           alt="QC Family Tree"
           fetchpriority="high"
-          class="w-32 h-32 sm:w-40 sm:h-40 drop-shadow-lg"
+          class={`w-32 h-32 sm:w-40 sm:h-40 drop-shadow-lg ${logoClassName}`}
         />
         <div>
           <h1 class="flex flex-col font-semibold text-center lg:text-left gap-1 font-ubuntu">
