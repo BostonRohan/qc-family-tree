@@ -178,7 +178,7 @@ function ListItem({
 
 export default function NavComponent() {
   return (
-    <NavigationMenu viewport={false} className="p-1">
+    <NavigationMenu viewport={false} delayDuration={0} className="p-1">
       <NavigationMenuList>
         {nav.map((item) => (
           <NavigationMenuItem key={item.title}>
