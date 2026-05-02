@@ -5,8 +5,10 @@ import FollowAlong from "@/components/sections/FollowAlong.astro";
 ---
 
 <Layout title="Contact" description="Get in touch with QC Family Tree." slug="contact">
-  <div class="space-y-16">
+  <div class="pb-8 lg:pb-16 space-y-8 lg:space-y-16">
     <ContactSection />
-    <FollowAlong instagramHandle="qcfamilytree" facebookHandle="qcfamilytree" list="qcft" />
+    <div class="px-4">
+      <FollowAlong instagramHandle="qcfamilytree" facebookHandle="qcfamilytree" list="qcft" />
+    </div>
   </div>
 </Layout>
