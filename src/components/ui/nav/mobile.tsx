@@ -101,7 +101,7 @@ export default function HamburgerMenu({
         !open
           ? closedWrapperClassName
           : "h-[44px] invisible fixed inset-x-0 top-4 p-1"
-      } justify-start p-1 !w-[90%] max-w-2xl mx-auto`}
+      } justify-start p-1 !w-[90%] max-w-2xl mx-auto px-4`}
     >
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
@@ -114,6 +114,17 @@ export default function HamburgerMenu({
             <span className="sr-only">Toggle menu</span>
           </Button>
         </SheetTrigger>
+        <a
+          href="/"
+          className={`md:hidden flex h-10 items-center ml-auto ${open ? "hidden" : ""}`}
+          aria-label="QC Family Tree home"
+        >
+          <img
+            src={logoImage.src}
+            alt="QC Family Tree"
+            className="h-full w-auto object-contain"
+          />
+        </a>
         <SheetContent side="left" className="w-full" hideCloseButton>
           <div className="flex items-center justify-between px-4 pt-6">
             <a
