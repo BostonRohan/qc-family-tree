@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { checkBotId } from "botid/server";
 
 const MAILCHIMP_QCFT_API_KEY = import.meta.env.MAILCHIMP_QCFT_API_KEY;
 const MAILCHIMP_QCFT_SERVER = import.meta.env.MAILCHIMP_QCFT_SERVER;
@@ -10,19 +9,15 @@ const MAILCHIMP_HFGBC_SERVER = import.meta.env.MAILCHIMP_HFGBC_SERVER;
 const HFGBC_LIST_ID = import.meta.env.MAILCHIMP_HFGBC_LIST_ID;
 
 export const POST: APIRoute = async ({ request }) => {
-  const verification = await checkBotId();
-
-  if (verification.isBot) {
-    return new Response(JSON.stringify({ message: "Access denied" }), {
-      status: 403,
-    });
-  }
+  console.log("[Subscribe] Request received");
 
   try {
     const body = await request.json();
     const { email, list } = body;
+    console.log("[Subscribe] Email:", email, "| List:", list);
 
     if (!email) {
+      console.log("[Subscribe] Missing email - returning 400");
       return new Response(JSON.stringify({ message: "Email is required" }), {
         status: 400,
       });
@@ -33,7 +28,22 @@ export const POST: APIRoute = async ({ request }) => {
     const server = isHfgb ? MAILCHIMP_HFGBC_SERVER : MAILCHIMP_QCFT_SERVER;
     const listId = isHfgb ? HFGBC_LIST_ID : QCFT_LIST_ID;
 
+    console.log(
+      "[Subscribe] Using list:",
+      isHfgb ? "HFGB" : "QCFT",
+      "| Server:",
+      server,
+    );
+
     if (!apiKey || !server || !listId) {
+      console.log(
+        "[Subscribe] Missing config - apiKey:",
+        !!apiKey,
+        "server:",
+        !!server,
+        "listId:",
+        !!listId,
+      );
       return new Response(
         JSON.stringify({ message: "Mailchimp not configured" }),
         {
@@ -57,25 +67,32 @@ export const POST: APIRoute = async ({ request }) => {
       },
     );
 
+    console.log("[Subscribe] Mailchimp response status:", response.status);
+
     if (response.status >= 400) {
       const data = await response.json();
+      console.log("[Subscribe] Mailchimp error data:", data);
       if (data.title === "Member Exists") {
+        console.log("[Subscribe] Email already subscribed");
         return new Response(
           JSON.stringify({ message: "You're already subscribed!" }),
           { status: 200 },
         );
       }
+      console.log("[Subscribe] Subscription failed:", data.detail);
       return new Response(
         JSON.stringify({ message: data.detail || "Subscription failed" }),
         { status: 400 },
       );
     }
 
+    console.log("[Subscribe] Success - user subscribed");
     return new Response(
       JSON.stringify({ message: "Successfully subscribed!" }),
       { status: 200 },
     );
   } catch (error) {
+    console.error("[Subscribe] Server error:", error);
     return new Response(JSON.stringify({ message: "Server error" }), {
       status: 500,
     });

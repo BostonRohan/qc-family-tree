@@ -1,6 +1,9 @@
 ---
 import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
 import { Link } from "@/components/ui/link";
+import logoImage from "@/assets/logo-fullcolor-white-tag.png";
+import defaultHeaderImage from "@/assets/homepage-header.jpg";
 
 interface CTA {
   label: string;
@@ -11,62 +14,101 @@ interface CTA {
 
 interface Props {
   title: string;
-  tagline: string;
-  image?: string;
+  tagline?: string;
+  subline?: string;
+  image?: ImageMetadata;
   imageAlt?: string;
   primaryCta?: CTA;
   secondaryCta?: CTA;
   className?: string;
+  imageClassName?: string;
 }
 
 const {
   title,
   tagline,
-  image = "https://placehold.co/900x400.jpg",
+  subline,
+  image = defaultHeaderImage,
   imageAlt = "",
   primaryCta,
   secondaryCta,
   className = "",
-} = Astro.props;
+  imageClassName = "",
+} = Astro.props as Props;
 ---
 
-<header class={`max-w-[900px] h-[400px] mt-24 relative w-full mx-auto ${className}`}>
+<section
+  id="hero"
+  data-hero-section
+  class={`w-full relative min-h-[650px] flex items-center justify-center overflow-hidden pt-16 sm:pt-20 lg:pt-28 ${className}`}
+>
   <Image
     src={image}
+    width={1200}
+    height={650}
+    sizes="100vw"
     alt={imageAlt}
-    width={900}
-    height={400}
-    class="absolute inset-0 w-full h-full object-cover rounded-2xl"
+    fetchpriority="high"
+    class={`absolute inset-0 w-full h-full object-cover ${imageClassName}`}
   />
-  <div class="absolute bottom-0 left-0 z-10 w-full p-6 text-white bg-gradient-to-t from-black/60 to-transparent rounded-b-2xl flex justify-between items-center flex-wrap gap-4">
-    <hgroup class="font-ubuntu">
-      <h1 class="text-4xl font-bold text-white">{title}</h1>
-      <p class="text-lg text-neutral-300">{tagline}</p>
-    </hgroup>
-    <div class="flex flex-wrap gap-3">
-      {primaryCta && (
-        <Link
-          size="lg"
-          className="rounded-2xl lg:w-sm w-full"
-          href={primaryCta.href}
-          target={primaryCta.target}
-          rel={primaryCta.rel}
-        >
-          {primaryCta.label}
-        </Link>
-      )}
-      {secondaryCta && (
-        <Link
-          size="lg"
-          variant="outline"
-          className="rounded-2xl sm:w-fit w-full"
-          href={secondaryCta.href}
-          target={secondaryCta.target}
-          rel={secondaryCta.rel}
-        >
-          {secondaryCta.label}
-        </Link>
-      )}
+  <div class="absolute inset-0 bg-black/30"></div>
+  <div class="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col items-center lg:items-start lg:flex-row lg:gap-12 gap-8">
+      <div class="flex flex-col items-center lg:items-start gap-6 lg:gap-8">
+        <Image
+          width={180}
+          height={180}
+          format="png"
+          src={logoImage}
+          alt="QC Family Tree"
+          fetchpriority="high"
+          class="w-32 h-32 sm:w-40 sm:h-40 drop-shadow-lg"
+        />
+        <div>
+          <h1 class="flex flex-col font-semibold text-center lg:text-left gap-1 font-ubuntu">
+            <span class="text-4xl sm:text-5xl lg:text-6xl text-white drop-shadow-lg">
+              {title}
+            </span>
+            {tagline && (
+              <span class="text-2xl sm:text-3xl lg:text-4xl text-secondary drop-shadow-lg">
+                {tagline}
+              </span>
+            )}
+            {subline && (
+              <span class="text-xl sm:text-2xl lg:text-3xl text-secondary drop-shadow-lg">
+                {subline}
+              </span>
+            )}
+          </h1>
+        </div>
+        {(primaryCta || secondaryCta) && (
+          <div class="flex flex-wrap gap-3">
+            {primaryCta && (
+              <Link
+                size="lg"
+                className="rounded-2xl px-8"
+                href={primaryCta.href}
+                target={primaryCta.target}
+                rel={primaryCta.rel}
+              >
+                {primaryCta.label}
+              </Link>
+            )}
+            {secondaryCta && (
+              <Link
+                size="lg"
+                variant="outline"
+                className="rounded-2xl px-8"
+                href={secondaryCta.href}
+                target={secondaryCta.target}
+                rel={secondaryCta.rel}
+              >
+                {secondaryCta.label}
+              </Link>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   </div>
-</header>
+</section>

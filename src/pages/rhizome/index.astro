@@ -2,7 +2,6 @@
 export const prerender = true;
 
 import Layout from "@/layouts/Layout.astro";
-import { Image } from "astro:assets";
 import Header from "@/components/Header.astro";
 import { CustomTooltip } from "@/components/ui/tooltip";
 import { RhizomeFAQ } from "@/components/ui/accordion";
@@ -21,11 +20,12 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
   slug="/rhizome"
   title="Rhizome Coalition"
 >
-  <div class="pb-16 px-4">
+  <div>
     <Header
+      imageClassName="!object-top"
       title="Rhizome Coalition"
       tagline="Artists united for community and creativity."
-      image={headerImage.src}
+      image={headerImage}
       primaryCta={{
         label: "Sign up",
         href: "/rhizome/signup",
@@ -86,16 +86,14 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
             build a strong support system for our work and our collective
             progress.
           </p>
-          <div class="flex gap-4 w-full md:flex-row flex-col">
+<div class="flex gap-4 w-full md:flex-row flex-col max-w-sm">
+<Link
+              className="rounded-xl w-full"
+              href="/rhizome/signup">Sign up</Link>
             <Link
               className="rounded-xl w-full"
-              href="/rhizome/signup">Sign up</Link
-            >
-            <Link
-              className="rounded-xl w-full"
-              variant="outline"
-              href="#faqs">View FAQs</Link
-            >
+variant="outline"
+              href="#faqs">View FAQs</Link>
           </div>
         </div>
       </div>

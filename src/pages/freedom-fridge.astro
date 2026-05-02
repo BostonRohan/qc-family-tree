@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import SectionHeading from "@/components/ui/SectionHeading.astro";
+import Header from "@/components/Header.astro";
 import { Image } from "astro:assets";
 import freedomFridgeImage from "@/assets/freedom-fridge.jpeg";
 
@@ -10,7 +11,6 @@ const waysToHelp = [
   "Businesses can safely donate unsold food. Fresh produce, packaged items, and properly handled prepared foods are all welcome.",
   "Make a financial donation to support free food access and community care.",
 ];
-
 ---
 
 <Layout
@@ -18,23 +18,17 @@ const waysToHelp = [
   description="Learn how Freedom Fridge & Pantry keeps Charlotte neighbors fed and how to support it."
   slug="freedom-fridge"
 >
-  <section class="space-y-8 pt-28 px-4 text-center">
+  <div class="pb-24">
+    <Header
+      title="Freedom Fridge & Pantry"
+      tagline="Neighbors stock and shop anytime"
+      subline="for groceries, meals, and shared care."
+      image={freedomFridgeImage}
+    />
+  </div>
+
+  <div class="space-y-16 px-4 text-center">
     <div class="mx-auto max-w-4xl space-y-8">
-      <SectionHeading
-        title="Freedom Fridge & Pantry"
-        subtitle="Neighbors stock and shop anytime for groceries, meals, and shared care."
-      />
-      <div class="mx-auto w-full sm:max-w-3xl overflow-hidden rounded-3xl">
-        <div class="aspect-[16/9]">
-          <Image
-            src={freedomFridgeImage}
-            alt="Volunteers stocking the Freedom Fridge"
-            width={960}
-            height={540}
-            class="w-full h-full object-cover"
-          />
-        </div>
-      </div>
       <p class="max-w-4xl mx-auto">
         The Freedom Fridge and Pantry is a community resource open 24 hours a day at 2916 Parkway Avenue, just off Tuckaseegee Road. Located outdoors for easy access, it provides free food, meals, fresh refrigerated items, pantry staples, and hygiene supplies for anyone in need.
       </p>
@@ -42,9 +36,9 @@ const waysToHelp = [
         Stocked by volunteers, the fridge and pantry are built on concepts of community care, dignity, and shared wellbeing. All items are supplied and available on a first-come, first-served basis—no sign-up or requirements needed.
       </p>
     </div>
-  </section>
+  </div>
 
-  <div class="space-y-10 pt-16 pb-16 px-4 text-center">
+  <div class="space-y-16 px-4 text-center">
     <section class="space-y-6 rounded-3xl bg-white/80 p-8 text-center">
       <SectionHeading title="Ways To Help" />
       <div class="grid gap-3 sm:grid-cols-2 justify-items-center max-w-[700px] mx-auto">
