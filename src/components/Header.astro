@@ -23,6 +23,7 @@ interface Props {
   className?: string;
   imageClassName?: string;
   logoClassName?: string;
+  overlayClassName?: string;
 }
 
 const {
@@ -36,6 +37,7 @@ const {
   className = "",
   imageClassName = "",
   logoClassName = "",
+  overlayClassName = "bg-black/30",
 } = Astro.props as Props;
 ---
 
@@ -53,7 +55,7 @@ const {
     fetchpriority="high"
     class={`absolute inset-0 w-full h-full object-cover ${imageClassName}`}
   />
-  <div class="absolute inset-0 bg-black/30"></div>
+  <div class={`absolute inset-0 ${overlayClassName}`}></div>
   <div class="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex flex-col items-center lg:items-start lg:flex-row lg:gap-12 gap-8">
       <div class="flex flex-col items-center lg:items-start gap-6 lg:gap-8">

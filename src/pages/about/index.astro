@@ -1,10 +1,12 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
 import SectionHeading from "@/components/ui/SectionHeading.astro";
 import { Image } from "astro:assets";
 import Programs from "@/components/sections/Programs.astro";
 import aboutBorder1 from "@/assets/about_border_1.jpeg";
 import aboutBorder2 from "@/assets/about_border_2.jpeg";
+import headerImage from "@/assets/about-option.jpg";
 
 const values = [
   "We believe that our freedom is connected to the freedom of people who are struggling the most.",
@@ -62,7 +64,17 @@ const cultivationPractices = [
   description="Learn about QCFT's mission, theory of change, values, and long-term goals."
   slug="about"
 >
-  <div class="space-y-8 lg:space-y-16 px-4 pt-28">
+  <div>
+    <Header
+      title="About QC Family Tree"
+      subline="Rooted in belonging, mutual care, and economic resilience."
+      image={headerImage}
+      imageAlt="Oak tree canopy framing the sky"
+      imageClassName="!object-center"
+      overlayClassName="bg-gradient-to-b from-black/70 via-black/55 to-black/65"
+    />
+  </div>
+  <div class="space-y-8 lg:space-y-16 px-4 py-8 lg:py-16">
     <section id="mission" class="space-y-6 sm:space-y-8 max-w-5xl mx-auto">
       <p>
         QC Family Tree is a community-rooted non-profit organization cultivating spaces of belonging, mutual care, and economic resilience by supporting local creatives, entrepreneurs, and neighbors. Our work building a more just and connected Charlotte is guided by resilience, adaptability, and a commitment to racial and gender equity.
