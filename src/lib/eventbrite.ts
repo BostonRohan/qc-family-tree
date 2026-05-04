@@ -1,6 +1,12 @@
 const EVENTBRITE_API_TOKEN = import.meta.env.EVENTBRITE_API_TOKEN;
 const EVENTBRITE_ORGANIZATION_ID = import.meta.env.EVENTBRITE_ORGANIZATION_ID;
 const EVENTBRITE_API_BASE = "https://www.eventbriteapi.com/v3";
+const EVENTBRITE_CACHE_TTL_MS = 15 * 60 * 1000;
+
+const eventbriteCache = new Map<string, {
+  expiresAt: number;
+  events: EventbriteEvent[];
+}>();
 
 export interface EventbriteEvent {
   id: string;
@@ -61,10 +67,21 @@ export async function getUpcomingEvents(
   options: GetEventsOptions = {},
 ): Promise<EventbriteEvent[]> {
   const { maxDays, maxResults = 50 } = options;
+  const cacheKey = JSON.stringify({ maxDays: maxDays ?? null, maxResults });
 
   if (!EVENTBRITE_API_TOKEN) {
     console.warn("Eventbrite token not configured");
     return [];
+  }
+
+  const cached = eventbriteCache.get(cacheKey);
+  if (cached && cached.expiresAt > Date.now()) {
+    console.log("Eventbrite cache hit", {
+      cacheKey,
+      eventCount: cached.events.length,
+      expiresAt: new Date(cached.expiresAt).toISOString(),
+    });
+    return cached.events;
   }
 
   try {
@@ -162,9 +179,22 @@ export async function getUpcomingEvents(
       }
     }
 
-    return allEvents
+    const events = allEvents
       .map(mapEventbriteEvent)
       .sort((a, b) => a.start.getTime() - b.start.getTime());
+
+    eventbriteCache.set(cacheKey, {
+      expiresAt: Date.now() + EVENTBRITE_CACHE_TTL_MS,
+      events,
+    });
+
+    console.log("Eventbrite cache set", {
+      cacheKey,
+      eventCount: events.length,
+      ttlMs: EVENTBRITE_CACHE_TTL_MS,
+    });
+
+    return events;
   } catch (error) {
     console.error("Error fetching Eventbrite events:", error);
     return [];
