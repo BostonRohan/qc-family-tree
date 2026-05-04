@@ -12,7 +12,7 @@ import EventListView from "./list/index.astro";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import SectionHeading from "@/components/ui/SectionHeading.astro";
-import { getUpcomingEvents } from "@/lib/calendar";
+import { getUpcomingEvents } from "@/lib/eventbrite";
 
 interface Props {
   includeFilters?: boolean;
@@ -62,7 +62,9 @@ const events = await getUpcomingEvents({ maxDays, maxResults });
       />
     </div>
     <a
-      href="/#events"
+      href="https://www.eventbrite.com/o/qc-family-tree-15926567999"
+      target="_blank"
+      rel="noreferrer"
       class="text-sm font-semibold text-primary hover:text-primary/80 underline"
     >
       View all events

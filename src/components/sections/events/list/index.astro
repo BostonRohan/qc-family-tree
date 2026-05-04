@@ -4,14 +4,14 @@ import {
   Calendar,
   Clock,
   MapPin,
-  ChevronRight,
   BookOpen,
   Palette,
   Users,
   Coffee,
   CalendarPlus,
+  Copy,
+  Check,
 } from "lucide-react";
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/components/ui/link";
@@ -24,6 +24,8 @@ interface Event {
   location: string;
   description: string;
   category: "Workshop" | "Meeting" | "Community" | "Social";
+  url?: string;
+  imageUrl?: string;
 }
 
 interface Props {
@@ -88,30 +90,44 @@ const generateCalendarLink = (event: Event) => {
 
   return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${startFormatted}/${endFormatted}&details=${encodeURIComponent(event.description)}&location=${encodeURIComponent(event.location)}`;
 };
+
+const generateMapsLink = (location: string) => {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
+};
 ---
 
-<div class="space-y-12 max-w-5xl mx-auto px-4 pb-4">
+<div class="space-y-8 max-w-5xl mx-auto px-4 pb-4">
   {
     sortedDates.map((dateKey) => {
       const dateEvents = groupedEvents[dateKey];
       const dateObj = new Date(dateKey);
 
       return (
-        <div class="space-y-6">
-          <div class="sticky top-10 w-fit bg-background/95 backdrop-blur-sm p-4 z-10 border-b border-border">
+        <div class="space-y-4">
+          <div class="sticky top-16 w-fit bg-background/95 backdrop-blur-sm py-3 pr-4 z-10 border-b border-border">
             <h3 class="text-sm font-bold uppercase tracking-widest flex items-center gap-2">
               <span class="w-8 h-px bg-secondary" />
               {formatDateHeader(dateObj)}
             </h3>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             {dateEvents.map((event) => {
               const CategoryIcon = getCategoryIcon(event.category);
 
               return (
-                <Card className="hover:shadow-md transition-all group flex flex-col h-full border-border">
-                  <div class="p-5 flex flex-col h-full space-y-4">
+                <div class="bg-card text-card-foreground flex h-full w-full max-w-[28rem] flex-col overflow-hidden rounded-xl border border-border shadow-sm transition-all group hover:shadow-md">
+                  {event.imageUrl && (
+                    <div class="overflow-hidden border-b border-border bg-muted">
+                      <img
+                        src={event.imageUrl}
+                        alt={event.title}
+                        loading="lazy"
+                        class="block h-auto max-h-[240px] min-h-[180px] w-full object-cover"
+                      />
+                    </div>
+                  )}
+                  <div class="p-4 flex flex-col h-full space-y-3">
                     <div class="flex justify-between items-start gap-4">
                       <h4 class="font-bold group-hover:text-accent transition-colors leading-snug">
                         {event.title}
@@ -121,7 +137,7 @@ const generateCalendarLink = (event: Event) => {
                       </div>
                     </div>
 
-                    <div class="space-y-2 text-sm text-muted-foreground">
+                    <div class="space-y-1.5 text-sm text-muted-foreground">
                       <div class="flex items-center gap-2">
                         <Clock className="w-4 h-4 text-accent/70" />
                         <span class="font-medium">
@@ -130,42 +146,76 @@ const generateCalendarLink = (event: Event) => {
                       </div>
                       <div class="flex items-start gap-2">
                         <MapPin className="w-4 h-4 text-accent/70 mt-0.5" />
-                        <span class="leading-tight">{event.location}</span>
+                        <div class="flex items-start gap-2 min-w-0">
+                          {event.location !== "TBD" ? (
+                            <>
+                              <a
+                                href={generateMapsLink(event.location)}
+                                target="_blank"
+                                rel="noreferrer"
+                                class="leading-tight underline-offset-4 hover:underline"
+                              >
+                                {event.location}
+                              </a>
+                              <button
+                                type="button"
+                                class="inline-flex shrink-0 items-center justify-center rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                                data-copy-location={event.location}
+                                aria-label={`Copy address for ${event.title}`}
+                                title="Copy address"
+                              >
+                                <Copy className="w-3.5 h-3.5 copy-icon" />
+                                <Check className="hidden w-3.5 h-3.5 copied-icon text-secondary" />
+                              </button>
+                            </>
+                          ) : (
+                            <span class="leading-tight">{event.location}</span>
+                          )}
+                        </div>
                       </div>
                     </div>
 
-                    <p class="text-sm text-muted-foreground line-clamp-3 flex-1 leading-relaxed">
+                    <p class="text-sm text-muted-foreground line-clamp-2 flex-1 leading-relaxed">
                       {event.description}
                     </p>
 
-                    <div class="pt-2 flex items-center justify-between gap-3">
+                    <div class="pt-1 flex flex-wrap items-center justify-between gap-3">
                       <Badge variant="secondary" className="bg-secondary/10">
                         {event.category}
                       </Badge>
 
-                      <Button
-                        asChild
-                        variant="outline"
-                        size="sm"
-                        className="text-xs gap-1.5"
-                        data-event-id={event.id}
-                        data-event-title={event.title}
-                        data-event-start={event.start.toISOString()}
-                        data-event-end={event.end.toISOString()}
-                        data-event-location={event.location}
-                        data-event-description={event.description}
-                      >
+                      <div class="flex flex-wrap items-center gap-2">
+                        {event.url && (
+                          <Link
+                            href={event.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            variant="default"
+                            size="sm"
+                            className="!rounded-xl text-xs"
+                          >
+                            View event
+                          </Link>
+                        )}
                         <Link
                           href={generateCalendarLink(event)}
                           variant="outline"
+                          size="sm"
+                          className="!rounded-xl text-xs gap-1.5"
+                          data-event-id={event.id}
+                          data-event-title={event.title}
+                          data-event-start={event.start.toISOString()}
+                          data-event-end={event.end.toISOString()}
+                          data-event-location={event.location}
+                          data-event-description={event.description}
                         >
                           <CalendarPlus className="w-3.5 h-3.5" />
                           Add to Calendar
                         </Link>
-                      </Button>
+                      </div>
                     </div>
                   </div>
-                </Card>
+                </div>
               );
             })}
           </div>
@@ -186,3 +236,34 @@ const generateCalendarLink = (event: Event) => {
     )
   }
 </div>
+
+<script>
+  const copyButtons = document.querySelectorAll("[data-copy-location]");
+
+  copyButtons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      const location = button.getAttribute("data-copy-location");
+      if (!location) return;
+
+      try {
+        await navigator.clipboard.writeText(location);
+        const copyIcon = button.querySelector(".copy-icon");
+        const copiedIcon = button.querySelector(".copied-icon");
+        copyIcon?.classList.add("hidden");
+        copiedIcon?.classList.remove("hidden");
+        const existingTimeout = button.getAttribute("data-copy-timeout");
+        if (existingTimeout) {
+          clearTimeout(Number(existingTimeout));
+        }
+        const timeoutId = window.setTimeout(() => {
+          copyIcon?.classList.remove("hidden");
+          copiedIcon?.classList.add("hidden");
+          button.removeAttribute("data-copy-timeout");
+        }, 5000);
+        button.setAttribute("data-copy-timeout", String(timeoutId));
+      } catch (error) {
+        console.error("Failed to copy event location", error);
+      }
+    });
+  });
+</script>
