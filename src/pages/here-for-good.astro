@@ -4,14 +4,12 @@ import SectionHeading from "@/components/ui/SectionHeading.astro";
 import { Image } from "astro:assets";
 import FollowAlong from "@/components/sections/FollowAlong.astro";
 import { Recycle, Palette, Users, MapPin, Briefcase, TrendingUp, CheckCircle2 } from "lucide-react";
-import hgfcArt from "@/assets/hgfc_art.jpeg";
 import rhizomeImage from "@/assets/rhizome/header.jpg";
 import workshopsImage from "@/assets/workshops.jpg";
 import marketImage from "@/assets/market.jpg";
 import meetingImage from "@/assets/meeting.jpg";
 import headerImage from "@/assets/about page header option oak.png";
-import logoImage from "@/assets/hfgbc_transparent.png";
-import gwendolyneBrooks from "@/assets/GwendolyneBrooks.png";
+import logoImage from "@/assets/hfgbc_white_logo.png";
 
 const goals = [
   { text: "Radical Stewardship", icon: Recycle },
@@ -69,11 +67,11 @@ const in2025 = [
               loading="eager"
               class="w-[250px] h-auto drop-shadow-lg"
             />
-            <h1 class="flex flex-col font-semibold text-center lg:text-left gap-1 font-ubuntu -mt-10">
-              <span class="text-4xl sm:text-5xl lg:text-6xl text-white drop-shadow-lg">
+            <h1 class="flex flex-col font-semibold text-center lg:text-left gap-3 font-ubuntu -mt-8">
+              <span class="text-4xl sm:text-5xl lg:text-6xl text-secondary drop-shadow-lg">
                 Honoring Place.
               </span>
-              <span class="text-2xl sm:text-3xl lg:text-4xl text-secondary drop-shadow-lg">
+              <span class="text-2xl sm:text-3xl lg:text-4xl text-white drop-shadow-lg">
                 Growing Possibility.
               </span>
             </h1>
@@ -97,10 +95,14 @@ const in2025 = [
         </p>
       </section>
 
-      <h2 class="font-ubuntu text-center text-2xl sm:text-3xl max-w-3xl mx-auto">
-        <span>We are each other's harvest. We are each other's business. We are each other's magnitude.</span>
-        <span class="text-accent block text-lg mt-2">— Gwendolyn Brooks</span>
-      </h2>
+      <section class="mx-auto max-w-5xl">
+        <div class="rounded-3xl bg-secondary px-6 py-10 text-center text-white shadow-sm sm:px-10">
+          <h2 class="font-ubuntu text-2xl sm:text-3xl max-w-4xl mx-auto">
+            <span>We are each other's harvest. We are each other's business. We are each other's magnitude.</span>
+            <span class="block text-lg mt-3 text-accent">— Gwendolyn Brooks</span>
+          </h2>
+        </div>
+      </section>
 
       <section class="mx-auto max-w-5xl space-y-6">
         <SectionHeading title="Goals" />
