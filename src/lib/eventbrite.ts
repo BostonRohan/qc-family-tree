@@ -112,6 +112,8 @@ export async function getUpcomingEvents(
     const params = new URLSearchParams({
       expand: "venue",
       status: "live,started",
+      order_by: "start_asc",
+      time_filter: "current_future",
     });
 
     if (maxResults) {
@@ -119,22 +121,15 @@ export async function getUpcomingEvents(
     }
 
     let page = 1;
-
     const allEvents: EventbriteApiEvent[] = [];
 
-    while (allEvents.length < maxResults) {
+    while (allEvents.length < (maxResults || 50)) {
       const url = `${EVENTBRITE_API_BASE}/organizations/${organizationId}/events/?${params}&page=${page}`;
       console.log("Eventbrite request", { url, page });
       const response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${EVENTBRITE_API_TOKEN}`,
         },
-      });
-
-      console.log("Eventbrite response", {
-        page,
-        status: response.status,
-        ok: response.ok,
       });
 
       if (!response.ok) {
@@ -144,32 +139,9 @@ export async function getUpcomingEvents(
       }
 
       const data: EventbriteApiResponse = await response.json();
-      console.log("Eventbrite payload", {
-        page,
-        eventCount: data.events.length,
-        hasMoreItems: data.pagination?.has_more_items ?? false,
-        pageCount: data.pagination?.page_count ?? null,
-      });
+      allEvents.push(...data.events);
 
-      for (const event of data.events) {
-        const eventStart = new Date(event.start.utc);
-
-        if (eventStart < now) {
-          continue;
-        }
-
-        if (timeMax && eventStart > new Date(timeMax)) {
-          continue;
-        }
-
-        allEvents.push(event);
-
-        if (allEvents.length >= maxResults) {
-          break;
-        }
-      }
-
-      if (!data.pagination?.has_more_items || !data.events.length) {
+      if (!data.pagination?.has_more_items || allEvents.length >= (maxResults || 50)) {
         break;
       }
 
@@ -180,8 +152,14 @@ export async function getUpcomingEvents(
     }
 
     const events = allEvents
-      .map(mapEventbriteEvent)
-      .sort((a, b) => a.start.getTime() - b.start.getTime());
+      .filter((event) => {
+        if (!maxDays) return true;
+        const eventStart = new Date(event.start.utc);
+        const maxDate = new Date(Date.now() + maxDays * 24 * 60 * 60 * 1000);
+        return eventStart <= maxDate;
+      })
+      .slice(0, maxResults || 50)
+      .map(mapEventbriteEvent);
 
     eventbriteCache.set(cacheKey, {
       expiresAt: Date.now() + EVENTBRITE_CACHE_TTL_MS,
