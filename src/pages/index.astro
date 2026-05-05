@@ -2,10 +2,44 @@
 export const prerender = true;
 
 import Welcome from "@/components/sections/Welcome.astro";
-import Contact from "@/components/sections/Contact.astro";
 import Layout from "@/layouts/Layout.astro";
 import Programs from "@/components/sections/Programs.astro";
 import Featured from "@/components/sections/Featured.astro";
+import Events from "@/components/sections/events/index.astro";
+import ImpactSection from "@/components/sections/Impact.astro";
+import DonateSection from "@/components/sections/DonateSection.astro";
+import ContactBrief from "@/components/sections/ContactBrief.astro";
+import { defineQuery } from "groq";
+import { sanityClient } from "sanity:client";
+import type { FeaturedSection, Hero } from "sanity.types";
+
+const HOME_PAGE_QUERY = defineQuery(`
+{
+  "hero": *[_type == "hero" && showHero == true] | order(_updatedAt desc)[0] {
+    descriptor
+  },
+  "featuredSection": *[_type == "featuredSection"][0] {
+    _id,
+    title,
+    description,
+    primaryCtaLink,
+    primaryCtaLabel,
+    secondaryCtaLabel,
+    secondaryCtaLink,
+    image {
+      asset->{_id}
+    }
+  }
+}
+`);
+
+const homepageData = await sanityClient.fetch<{
+  hero?: Hero | null;
+  featuredSection?: FeaturedSection | null;
+}>(HOME_PAGE_QUERY);
+
+const hero = homepageData?.hero ?? null;
+const featuredSection = homepageData?.featuredSection ?? null;
 ---
 
 <Layout
@@ -13,10 +47,19 @@ import Featured from "@/components/sections/Featured.astro";
   slug=""
   title="QC Family Tree"
 >
-  <div class="space-y-24 pb-24">
-    <Welcome />
-    <Programs />
+  <div>
+    <div>
+      <Welcome hero={hero} />
+    </div>
+    <div class="space-y-8 lg:space-y-16">
+      <ImpactSection />
+      <Programs showPillars={false} showDivider={false} />
+      <Featured section={featuredSection} />
+      <section id="events">
+        <Events includeFilters={false} maxResults={10} maxDays={30} />
+      </section>
+      <DonateSection />
+      <ContactBrief />
+    </div>
   </div>
-  <Featured />
-  <Contact />
 </Layout>

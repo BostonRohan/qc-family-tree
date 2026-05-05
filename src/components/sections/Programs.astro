@@ -1,44 +1,120 @@
 ---
-import culturalOrganizingImage from "@/assets/cultural-organizing.jpg";
+import culturalOrganizingImage from "@/assets/exhibition.jpg";
 import cultivateCommunityImage from "@/assets/cultivate-community.jpg";
 import featuredProgramsImage from "@/assets/featured-programs.jpg";
-import housingJusticeImage from "@/assets/housing-justice.jpg";
+import housingJusticeImage from "@/assets/housing.jpg";
 import hereForGoodBusinessImage from "@/assets/here-for-good-business.jpg";
+import { Briefcase, House, Palette, Users } from "@lucide/astro";
 
 import { DefaultCarousel } from "../ui/carousels/default-carousel";
+
+interface Props {
+  sectionId?: string;
+  showPillars?: boolean;
+  showLearnMore?: boolean;
+  showDivider?: boolean;
+  dividerSrc?: string;
+}
+
+const {
+  sectionId = "programs",
+  showPillars = true,
+  showLearnMore = true,
+  showDivider = true,
+  dividerSrc,
+} = Astro.props as Props;
 ---
 
-<section id="programs" class="px-4 w-full space-y-24">
-  <div class="sm:space-y-8 space-y-4">
-    <h1 class="sm:text-5xl text-3xl font-ubuntu font-bold pl-2">Programs</h1>
-    <DefaultCarousel
-      slides={[
+<section id={sectionId} class="px-4 w-full">
+  <div class="mx-auto w-full max-w-5xl space-y-6">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p class="text-sm uppercase tracking-[0.3em] text-muted-foreground">How we cultivate community</p>
+          <h2 class="sm:text-4xl text-3xl font-bold">Our programs in action</h2>
+        </div>
+        {showLearnMore && (
+          <a
+            href="/about#programs-about"
+            class="text-sm font-semibold text-primary hover:text-primary/80 underline"
+          >
+            Learn more
+          </a>
+        )}
+      </div>
+      <DefaultCarousel
+        slides={[
+          {
+            title: "Housing Justice",
+            description:
+              "Providing affordable units and advocacy with partners like the West Side Community Land Trust keeps neighbors rooted and resilient.",
+            image: housingJusticeImage.src,
+          },
+          {
+            title: "Cultural Organizing",
+            description:
+              "The Rhizome Coalition, Culture Bearer Residency, and public art amplify rooted creativity and call out injustice.",
+            image: culturalOrganizingImage.src,
+          },
+          {
+            title: "Community Programming",
+            description:
+              "Mutual aid, community meals, and neighborhood education programs build trust, belonging, and everyday care.",
+            image: cultivateCommunityImage.src,
+          },
+          {
+            title: "Here for Good Business Cooperative",
+            description:
+              "Co-op services help entrepreneurs, cultural workers, and neighbors imagine a regenerative corridor economy.",
+            image: hereForGoodBusinessImage.src,
+          },
+        ]}
+        client:visible
+      />
+    </div>
+    {showDivider && (
+    <div class="mx-auto max-w-5xl overflow-hidden py-8">
+      <img
+        src={dividerSrc || "https://placehold.co/1200x400"}
+        alt=""
+        class="aspect-[21/9] w-full object-cover rounded-2xl"
+      />
+    </div>
+    )}
+  {showPillars && (
+    <div class="mx-auto grid max-w-5xl grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+      {[
         {
           title: "Housing Justice",
-          description:
-            "We provide affordable housing and advocate for stable, equitable living conditions for all residents.",
-          image: housingJusticeImage.src,
+          detail: "Stable homes + advocacy that prevent displacement and keep people connected to Enderly Park.",
+          icon: House,
         },
         {
           title: "Cultural Organizing",
-          description:
-            "We unite communities through art and cultural projects to inspire connection and social change.",
-          image: culturalOrganizingImage.src,
+          detail: "Arts, performances, and the Rhizome keep Black culture and storytelling at the center of the work.",
+          icon: Palette,
         },
         {
           title: "Community Programming",
-          description:
-            "We design inclusive programs that reduce disparities and empower neighborhoods to thrive.",
-          image: cultivateCommunityImage.src,
+          detail: "Mutual aid pantry, festivals, and education that build practical care networks for everyone.",
+          icon: Users,
         },
         {
           title: "Here for Good Business Cooperative",
-          description:
-            "We cultivate a just, sustainable economy where creativity, business, and community flourish together.",
-          image: hereForGoodBusinessImage.src,
+          detail: "Cooperative business support, training, and shared resources for economic resilience.",
+          icon: Briefcase,
         },
-      ]}
-      client:visible
-    />
-  </div>
+      ].map((pillar) => {
+        const PillarIcon = pillar.icon;
+        return (
+          <article class="rounded-2xl border border-border bg-card p-4 text-sm shadow-sm">
+            <div class="flex items-center gap-2">
+              <PillarIcon class="h-5 w-5 text-primary" />
+              <h3 class="font-semibold">{pillar.title}</h3>
+            </div>
+            <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{pillar.detail}</p>
+          </article>
+        );
+      })}
+    </div>
+  )}
 </section>

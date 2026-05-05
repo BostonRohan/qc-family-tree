@@ -1,0 +1,167 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import { Image } from "astro:assets";
+import FollowAlong from "@/components/sections/FollowAlong.astro";
+import { Recycle, Palette, Users, MapPin, Briefcase, TrendingUp, CheckCircle2 } from "lucide-react";
+import rhizomeImage from "@/assets/rhizome/header.jpg";
+import workshopsImage from "@/assets/workshops.jpg";
+import marketImage from "@/assets/market.jpg";
+import meetingImage from "@/assets/meeting.jpg";
+import headerImage from "@/assets/about page header option oak.png";
+import logoImage from "@/assets/hfgbc_white_logo.png";
+
+const goals = [
+  { text: "Radical Stewardship", icon: Recycle },
+  { text: "Creative Empowerment", icon: Palette },
+  { text: "Community Investment", icon: Users },
+  { text: "Intentional Placemaking", icon: MapPin },
+  { text: "Small Business and Entrepreneurial Development", icon: Briefcase },
+  { text: "Inclusive Economic Growth", icon: TrendingUp },
+];
+
+const currently = [
+  { text: "Hosting monthly free skill-building workshops and networking events", image: workshopsImage },
+  { text: "Celebrating 40 Rhizome Coalition members", image: rhizomeImage, linkText: "Rhizome", linkUrl: "/rhizome" },
+  { text: "Providing vending opportunities for Rhizome members through monthly Arts Markets", image: marketImage, linkText: "Rhizome", linkUrl: "/rhizome" },
+  { text: "Planning an arts + wellness conference for Fall 2026", image: meetingImage },
+];
+
+const in2025 = [
+  "Hosted 26 community listening sessions",
+  "Used that feedback to build out a five-year strategic plan",
+  "Coordinated seven free skills workshops in the Corridor",
+  "Initiated a Mural Apprenticeship Program + trained two new muralists",
+];
+---
+
+<Layout
+  title="Here for Good Business Cooperative"
+  description="Learn about HFGB, our corridor revitalization initiative for the Freedom-Wilkinson Corridor."
+  slug="here-for-good"
+>
+  <div>
+    <div class="pb-8 lg:pb-16">
+      <section
+        id="hero"
+        data-hero-section
+        class="w-full relative min-h-[650px] flex items-center justify-center overflow-hidden"
+      >
+      <Image
+        src={headerImage}
+        sizes="100vw"
+        alt="Here for Good Business Cooperative"
+        fetchpriority="high"
+        class="absolute inset-0 w-full h-full object-cover"
+      />
+      <div class="absolute inset-0 bg-black/50"></div>
+      <div class="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col items-center lg:items-start lg:flex-row lg:gap-12 gap-8">
+          <div class="flex flex-col items-center lg:items-start">
+            <Image
+              width={250}
+              height={250}
+              format="png"
+              src={logoImage}
+              alt="Here for Good"
+              loading="eager"
+              class="w-[250px] h-auto drop-shadow-lg"
+            />
+            <h1 class="flex flex-col font-semibold text-center lg:text-left gap-3 font-ubuntu -mt-8">
+              <span class="text-4xl sm:text-5xl lg:text-6xl text-secondary drop-shadow-lg">
+                Honoring Place.
+              </span>
+              <span class="text-2xl sm:text-3xl lg:text-4xl text-white drop-shadow-lg">
+                Growing Possibility.
+              </span>
+            </h1>
+          </div>
+        </div>
+      </div>
+    </section>
+    </div>
+
+    <div class="pb-8 lg:pb-16 space-y-8 lg:space-y-16 px-4">
+      <section class="mx-auto max-w-5xl text-center space-y-8">
+        <p class="max-w-4xl mx-auto">
+          QC Family Tree has been tasked by the City of Charlotte to strengthen the Freedom-Wilkinson Corridor
+          by driving job creation, supporting business growth, and improving quality of life. To complete
+          this mission, we've established the <span class="font-semibold">Here for Good Business Cooperative</span>, an organization focused
+          on revitalization, identity, advocacy, and coordination of the corridor.
+        </p>
+        <p class="max-w-4xl mx-auto">
+          <span class="font-semibold">Our Vision</span> is a joyful, regenerative economy in the Freedom-Wilkinson
+          Corridor where business, creativity, and community evolve sustainably together.
+        </p>
+      </section>
+
+      <section class="mx-auto max-w-5xl">
+        <div class="rounded-3xl bg-secondary px-6 py-10 text-center text-white shadow-sm sm:px-10">
+          <h2 class="font-ubuntu text-2xl sm:text-3xl max-w-4xl mx-auto">
+            <span>We are each other's harvest. We are each other's business. We are each other's magnitude.</span>
+            <span class="block text-lg mt-3 text-accent">— Gwendolyn Brooks</span>
+          </h2>
+        </div>
+      </section>
+
+      <section class="mx-auto max-w-5xl space-y-6">
+        <SectionHeading title="Goals" />
+        <div class="grid gap-3 sm:grid-cols-2">
+          {goals.map((goal) => {
+            const Icon = goal.icon;
+            return (
+              <div class="flex items-center gap-3 rounded-xl border border-border bg-muted px-4 py-3">
+                <Icon className="w-5 h-5 text-foreground shrink-0" />
+                <span>{goal.text}</span>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      <section class="mx-auto max-w-5xl space-y-6">
+        <SectionHeading title="Currently We Are…" />
+        <div class="grid gap-4 sm:grid-cols-2">
+          {currently.map((item) => (
+            <article class="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+              <div class="aspect-[3/2]">
+                <Image
+                  src={item.image}
+                  alt=""
+                  class="h-full w-full object-cover"
+                />
+              </div>
+              <p class="p-4 text-sm">
+                {item.linkText ? (
+                  <>
+                    {item.text.split(item.linkText)[0]}
+                    <a href={item.linkUrl} class="underline hover:text-primary">{item.linkText}</a>
+                    {item.text.split(item.linkText)[1]}
+                  </>
+                ) : item.text}
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="mx-auto max-w-5xl space-y-6">
+        <SectionHeading title="In 2025 We…" />
+        <div class="relative border-l-2 border-accent/30 ml-4 space-y-6">
+          {in2025.map((item) => (
+            <div class="relative pl-8">
+              <span class="absolute -left-[9px] top-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent">
+                <CheckCircle2 className="h-2.5 w-2.5 text-white" />
+              </span>
+              <p>{item}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+
+    <div class="px-4">
+      <FollowAlong instagramHandle="hereforgoodclt" facebookHandle="hereforgoodclt" list="hfgb" />
+    </div>
+  </div>
+</Layout>

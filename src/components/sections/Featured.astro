@@ -1,75 +1,67 @@
 ---
 import { Megaphone } from "@lucide/astro";
-
-import type { SanityDocument } from "@sanity/client";
-import { sanityClient } from "sanity:client";
-import ImageWrapper from "../ImageWrapper.astro";
-import { defineQuery } from "groq";
-import { type FeaturedSection } from "sanity.types";
 import { Link } from "@/components/ui/link";
+import ImageWrapper from "../ImageWrapper.astro";
+import type { FeaturedSection } from "sanity.types";
 
-const FEATURED_SECTION_QUERY = defineQuery(`*[
-  _type == "featuredSection"]{_id, title, publishedAt, description, primaryCtaLink, primaryCtaLabel, secondaryCtaLabel, secondaryCtaLink,
-  image {
-    asset,
-  }}`);
+interface Props {
+  section?: FeaturedSection | null;
+}
 
-const featuredSectionData = await sanityClient
-  .fetch<FeaturedSection[]>(FEATURED_SECTION_QUERY)
-  .catch((error: unknown) => {
-    console.error("Error fetching featured section:", error);
-
-    return null;
-  });
-
-const featuredSection = featuredSectionData?.at(0);
+const { section } = Astro.props as Props;
+const imageAsset = section?.image?.asset as { _id?: string; _ref?: string } | undefined;
+const imageId = imageAsset?._id ?? imageAsset?._ref;
 ---
 
 {
-  featuredSection && (
+  section && (
     <section
       id="featured"
-      class="py-12 sm:px-8 px-4 w-full bg-accent/65 text-accent-foreground"
+      class="py-8 lg:py-16 px-4 w-full bg-accent/65 text-accent-foreground"
     >
-      <div class="max-w-6xl space-y-2 mx-auto w-full">
-        <span class="flex gap-2 items-center">
-          <div>
-            <h1 class="font-ubuntu sm:text-4xl text-xl">
-              {featuredSection.title}
-            </h1>
+      <div class="max-w-6xl space-y-6 mx-auto w-full">
+        <div class="mx-auto w-full max-w-3xl space-y-3">
+          <div class="flex gap-4 items-center">
+            <h1 class="font-ubuntu sm:text-4xl text-xl">{section.title}</h1>
             <Megaphone class="text-yellow-500 sm:w-[40px] sm:h-[40px] h-[28px] w-[28px]" />
           </div>
-        </span>
-        <p class="opacity-80 max-w-3xl">{featuredSection.description}</p>
-        {featuredSection?.primaryCtaLink && featuredSection.primaryCtaLabel && (
-          <Link
-            size="sm"
-            className="rounded-xl w-full md:max-w-xs"
-            variant="default"
-            href={featuredSection.primaryCtaLink}
-          >
-            {featuredSection.primaryCtaLabel}
-          </Link>
+          <p class="opacity-80">{section.description}</p>
+          {(section?.primaryCtaLink && section.primaryCtaLabel) ||
+            (section?.secondaryCtaLabel && section.secondaryCtaLink) ? (
+            <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              {section?.primaryCtaLink && section.primaryCtaLabel && (
+                <Link
+                  size="sm"
+                  className="rounded-xl w-full sm:max-w-[220px]"
+                  variant="default"
+                  href={section.primaryCtaLink}
+                >
+                  {section.primaryCtaLabel}
+                </Link>
+              )}
+              {section?.secondaryCtaLabel && section.secondaryCtaLink && (
+                <Link
+                  size="sm"
+                  className="rounded-xl w-full sm:max-w-[220px]"
+                  href={section.secondaryCtaLink}
+                  variant="outline"
+                >
+                  {section.secondaryCtaLabel}
+                </Link>
+              )}
+            </div>
+          ) : null}
+        </div>
+        {imageId && (
+          <div class="w-full sm:max-w-3xl mx-auto">
+            <ImageWrapper
+              id={imageId}
+              alt={section.title}
+              className="w-full h-auto object-cover rounded-lg"
+            />
+          </div>
         )}
-        {featuredSection?.secondaryCtaLabel &&
-          featuredSection.secondaryCtaLink && (
-            <Link
-              size="sm"
-              className="rounded-xl md:max-w-xs w-full"
-              href={featuredSection.secondaryCtaLink}
-              variant="outline"
-            >
-              {featuredSection.secondaryCtaLabel}
-            </Link>
-          )}
-        <ImageWrapper
-          id={featuredSection.image?.asset?._ref}
-          alt={featuredSection.title}
-          className="h-full w-full object-cover rounded-lg"
-          width={600}
-          height={400}
-        />
-      </div>
+</div>
     </section>
   )
 }

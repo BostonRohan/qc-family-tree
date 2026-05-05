@@ -26,6 +26,20 @@ export type Banner = {
   showBanner?: boolean;
 };
 
+export type Hero = {
+  _id: string;
+  _type: "hero";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  descriptor?: string;
+  primaryCtaLabel?: string;
+  primaryCtaLink?: string;
+  secondaryCtaLabel?: string;
+  secondaryCtaLink?: string;
+  showHero?: boolean;
+};
+
 export type FeaturedSection = {
   _id: string;
   _type: "featuredSection";
@@ -170,7 +184,7 @@ export type Slug = {
   source?: string;
 };
 
-export type AllSanitySchemaTypes = Banner | FeaturedSection | SanityImageCrop | SanityImageHotspot | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint | Slug;
+export type AllSanitySchemaTypes = Banner | Hero | FeaturedSection | SanityImageCrop | SanityImageHotspot | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint | Slug;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: src/components/banner.astro
 // Variable: BANNER_QUERY
@@ -186,6 +200,20 @@ export type BANNER_QUERYResult = Array<{
   primaryCtaLink?: string;
   primaryCtaLabel?: string;
   showBanner?: boolean;
+}>;
+
+export type HERO_QUERYResult = Array<{
+  _id: string;
+  _type: "hero";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  descriptor?: string;
+  primaryCtaLabel?: string;
+  primaryCtaLink?: string;
+  secondaryCtaLabel?: string;
+  secondaryCtaLink?: string;
+  showHero?: boolean;
 }>;
 
 // Source: src/components/sections/Featured.astro
@@ -215,6 +243,7 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     "*[_type == \"banner\"]": BANNER_QUERYResult;
+    "*[_type == \"hero\" && showHero == true] | order(_updatedAt desc)": HERO_QUERYResult;
     "*[\n  _type == \"featuredSection\"]{_id, title, publishedAt, description, primaryCtaLink, primaryCtaLabel, secondaryCtaLabel, secondaryCtaLink,\n  image {\n    asset,\n  }}": FEATURED_SECTION_QUERYResult;
   }
 }

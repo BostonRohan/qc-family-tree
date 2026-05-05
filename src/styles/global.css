@@ -57,7 +57,7 @@
   --secondary: #b3be35;
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.75 0 0);
+  --muted-foreground: oklch(0.55 0 0);
   --accent: #3d1a52;
   --accent-foreground: oklch(0.97 0 0);
   --accent-foreground-hover: #2f1340;
@@ -92,7 +92,7 @@
   --secondary: #9ea82f;
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
+  --muted-foreground: oklch(0.75 0 0);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
@@ -119,6 +119,14 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground text-base sm:text-lg;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold font-ubuntu;
   }
 }

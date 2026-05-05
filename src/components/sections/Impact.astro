@@ -1,0 +1,30 @@
+---
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import { Link } from '@/components/ui/link';
+---
+
+<section id="identity" class="py-8 lg:py-16 px-4 bg-gradient-to-br from-background to-muted">
+  <div class="mx-auto max-w-5xl space-y-6 sm:space-y-8">
+    <SectionHeading
+      title="Rooted in Enderly Park for over 20 years"
+      subtitle="QC Family Tree stands where culture, housing, and community care meet."
+    />
+    <div class="space-y-4">
+      <p>
+        QC Family Tree has spent over two decades practicing extravagant care, mutual aid, and creativity that rails against scarcity. The work happens in the neighborhood, through carefully tended relationships, collaborative art, and co-created spaces where people can belong.
+      </p>
+      <p>
+        We focus on affordable housing, arts & culture, business support, and neighborhood resources—creating opportunities for people to stay, grow, and thrive in West Charlotte.
+      </p>
+    </div>
+    <div class="flex justify-center">
+      <Link
+        href="/about"
+        variant="outline"
+        className="rounded-xl px-6 py-3"
+      >
+        Read the full story
+      </Link>
+    </div>
+  </div>
+</section>

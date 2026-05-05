@@ -1,0 +1,23 @@
+---
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import { Link } from "@/components/ui/link";
+---
+
+<section class="bg-secondary/35 py-4">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+    <SectionHeading
+      title="What is QC Family Tree?"
+      subtitle="QCFT envisions thriving communities of abundance, justice, imagination, and mutual care for all."
+    />
+    <div>
+      <Link
+        href="/about"
+        variant="default"
+        size="sm"
+        className="rounded-xl w-full sm:max-w-[220px] mx-auto"
+      >
+        Learn more
+      </Link>
+    </div>
+  </div>
+</section>

@@ -16,14 +16,13 @@ const dataset = PUBLIC_SANITY_STUDIO_DATASET || PUBLIC_SANITY_DATASET;
 
 import sanity from "@sanity/astro";
 import react from "@astrojs/react";
+import sitemap from "@astrojs/sitemap";
 
 import vercel from "@astrojs/vercel";
 
 import tailwind from "@tailwindcss/vite";
 
 import icon from "astro-icon";
-
-import { donateLink } from "./constants";
 
 // https://astro.build/config
 export default defineConfig({
@@ -32,8 +31,8 @@ export default defineConfig({
   output: "server",
   site: "https://qcfamilytree.org",
   redirects: {
-    "/get-involved/contribute": "/donate",
-    "/donate": donateLink,
+    "/get-involved/contribute": "/freedom-fridge",
+    "/donate": "/freedom-fridge",
     "/events": "https://www.eventbrite.com/o/qc-family-tree-15926567999",
     "/rhizome/signup":
       "https://docs.google.com/forms/d/e/1FAIpQLSfYTyfmmSAruH8YgHCJ_dt-wKt9T13bfYXJyEls6bhCy3wwdg/viewform?usp=dialog",
@@ -65,5 +64,6 @@ export default defineConfig({
     }),
     react(),
     icon(),
+    sitemap(),
   ],
 });

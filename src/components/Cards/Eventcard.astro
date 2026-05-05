@@ -1,17 +1,8 @@
 ---
 import ImageWrapper from "../ImageWrapper.astro";
-import { format, formatDistance } from "date-fns";
 
 const { title, ctaLink, description, endDateTime, image, startDateTime } =
   Astro.props;
-
-const startDate = new Date(startDateTime);
-
-const formattedStartDateTime = format(startDate, "MMMM d, yyyy h:mm a");
-
-const duration = formatDistance(new Date(endDateTime), startDate, {
-  includeSeconds: false,
-});
 ---
 
 <a
@@ -25,7 +16,53 @@ const duration = formatDistance(new Date(endDateTime), startDate, {
   />
   <h2 class="font-ubuntu font-semibold sm:text-lg">{title}</h2>
   <div class="flex flex-col gap-2">
-    <p>{formattedStartDateTime}</p>
-    <p class="opacity-80">Lasts approx. {duration}</p>
+    <p
+      class="opacity-80"
+      data-main-event-time
+      data-start={startDateTime}
+      data-end={endDateTime}
+    >
+      Loading time...
+    </p>
   </div>
 </a>
+
+<script>
+  const timeFormat = new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+
+  const getApproxDuration = (start: Date, end: Date) => {
+    const minutes = Math.max(0, Math.round((end.getTime() - start.getTime()) / 60000));
+
+    if (minutes < 60) {
+      return `${minutes} min${minutes === 1 ? "" : "s"}`;
+    }
+
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+
+    if (!remainingMinutes) {
+      return `${hours} hr${hours === 1 ? "" : "s"}`;
+    }
+
+    return `${hours} hr${hours === 1 ? "" : "s"} ${remainingMinutes} min${remainingMinutes === 1 ? "" : "s"}`;
+  };
+
+  document.querySelectorAll("[data-main-event-time]").forEach((element) => {
+    const start = element.getAttribute("data-start");
+    const end = element.getAttribute("data-end");
+
+    if (!start || !end) return;
+
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    element.innerHTML = `${timeFormat.format(startDate)} <span class="px-1 opacity-70">•</span> <span class="text-xs opacity-80">${getApproxDuration(startDate, endDate)}</span>`;
+  });
+</script>
