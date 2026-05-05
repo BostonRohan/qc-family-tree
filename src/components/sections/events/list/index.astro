@@ -82,6 +82,7 @@ const groupedEvents = events.reduce(
 const sortedDates = Object.keys(groupedEvents).sort(
   (a, b) => new Date(a).getTime() - new Date(b).getTime(),
 );
+const visibleDates = sortedDates.slice(0, 6);
 
 // Helper to generate Google Calendar link
 const generateCalendarLink = (event: Event) => {
@@ -96,149 +97,231 @@ const generateMapsLink = (location: string) => {
 };
 ---
 
-<div class="space-y-8 max-w-5xl mx-auto px-4 pb-4">
-  {
-    sortedDates.map((dateKey) => {
-      const dateEvents = groupedEvents[dateKey];
-      const dateObj = new Date(dateKey);
+<div class="space-y-6 max-w-5xl mx-auto px-4 pb-4">
+  <div class="mx-auto max-w-2xl rounded-2xl border border-border bg-card/70 p-3 shadow-sm backdrop-blur-sm">
+    <div class="mb-3 flex items-center justify-between gap-3">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+          Upcoming days
+        </p>
+        <p class="text-sm text-muted-foreground">Pick a day to preview the event.</p>
+      </div>
+      <p class="text-xs text-muted-foreground">
+        {visibleDates.length} day{visibleDates.length === 1 ? "" : "s"}
+      </p>
+    </div>
 
-      return (
-        <div class="space-y-4">
-          <div class="sticky top-16 w-fit bg-background/95 backdrop-blur-sm py-3 pr-4 z-10 border-b border-border">
-            <h3 class="text-sm font-bold uppercase tracking-widest flex items-center gap-2">
-              <span class="w-8 h-px bg-secondary" />
-              {formatDateHeader(dateObj)}
-            </h3>
-          </div>
+    <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide" data-day-rail>
+      {
+        visibleDates.map((dateKey, index) => {
+          const dateObj = new Date(dateKey);
+          const dayEvents = groupedEvents[dateKey];
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {dateEvents.map((event) => {
-              const CategoryIcon = getCategoryIcon(event.category);
+          return (
+            <button
+              type="button"
+              class={`min-w-24 shrink-0 rounded-xl border px-3 py-2 text-left transition-all ${index === 0 ? "border-accent bg-accent/10 text-accent" : "border-border bg-background/80 text-muted-foreground hover:border-accent/50 hover:text-foreground"}`}
+              data-day-button
+              data-day-key={dateKey}
+            >
+              <div class="text-[11px] font-semibold uppercase tracking-widest opacity-80">
+                {dateObj.toLocaleDateString("en-US", { weekday: "short" })}
+              </div>
+              <div class="text-sm font-bold">
+                {dateObj.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+              </div>
+              <div class="text-xs opacity-80">
+                {dayEvents[0]?.start ? formatTime(dayEvents[0].start) : "TBD"}
+              </div>
+            </button>
+          );
+        })
+      }
+    </div>
+  </div>
 
-              return (
-                <div class="bg-card text-card-foreground flex h-full w-full max-w-[28rem] flex-col overflow-hidden rounded-xl border border-border shadow-sm transition-all group hover:shadow-md">
-                  {event.imageUrl && (
-                    <div class="overflow-hidden border-b border-border bg-muted">
-                      <img
-                        src={event.imageUrl}
-                        alt={event.title}
-                        loading="lazy"
-                        class="block h-auto max-h-[240px] min-h-[180px] w-full object-cover"
-                      />
-                    </div>
-                  )}
-                  <div class="p-4 flex flex-col h-full space-y-3">
-                    <div class="flex justify-between items-start gap-4">
-                      <h4 class="font-bold group-hover:text-accent transition-colors leading-snug">
-                        {event.title}
-                      </h4>
-                      <div class="shrink-0 p-2 bg-muted rounded-lg text-muted-foreground group-hover:text-accent group-hover:bg-accent/20 transition-colors">
-                        <CategoryIcon className="w-4 h-4" />
-                      </div>
-                    </div>
+    <div class="space-y-4">
+      {
+      visibleDates.map((dateKey, index) => {
+        const dateEvents = groupedEvents[dateKey];
+        const dateObj = new Date(dateKey);
 
-                    <div class="space-y-1.5 text-sm text-muted-foreground">
-                      <div class="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-accent/70" />
-                        <span class="font-medium">
-                          {formatTime(event.start)}
-                        </span>
-                      </div>
-                      <div class="flex items-start gap-2">
-                        <MapPin className="w-4 h-4 text-accent/70 mt-0.5" />
-                        <div class="flex items-start gap-2 min-w-0">
-                          {event.location !== "TBD" ? (
-                            <>
-                              <a
-                                href={generateMapsLink(event.location)}
+        return (
+          <article
+            class={`event-day-panel bg-card text-card-foreground overflow-hidden rounded-2xl border border-border shadow-sm transition-all ${index === 0 ? "" : "hidden"} max-w-2xl mx-auto`}
+            data-day-panel
+            data-day-key={dateKey}
+          >
+            <div class="p-4 md:p-5 space-y-3">
+              <div class="flex flex-wrap items-start justify-between gap-4">
+                <div class="space-y-1">
+                  <p class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                    {formatDateHeader(dateObj)}
+                  </p>
+                  <p class="text-sm text-muted-foreground">
+                    {dateEvents.length === 1
+                      ? "1 event"
+                      : `${dateEvents.length} events`}
+                  </p>
+                </div>
+              </div>
+
+              <div class={`grid gap-4 ${dateEvents.length === 2 ? "md:grid-cols-2" : ""}`}>
+                {dateEvents.map((event) => {
+                  const CategoryIcon = getCategoryIcon(event.category);
+
+                  return (
+                    <div class="overflow-hidden rounded-xl border border-border bg-background/60">
+                      {event.imageUrl && (
+                        <div class="overflow-hidden border-b border-border bg-muted">
+                          <img
+                            src={event.imageUrl}
+                            alt={event.title}
+                            loading="lazy"
+                            class="block aspect-[4/3] max-h-[280px] min-h-[180px] w-full object-cover"
+                          />
+                        </div>
+                      )}
+
+                      <div class="p-4 space-y-3">
+                        <div class="flex justify-between items-start gap-4">
+                          <h5 class="font-bold leading-snug">
+                            {event.title}
+                          </h5>
+                          <div class="shrink-0 p-2 bg-muted rounded-lg text-muted-foreground">
+                            <CategoryIcon className="w-4 h-4" />
+                          </div>
+                        </div>
+
+                        <div class="space-y-2 text-sm text-muted-foreground">
+                          <div class="flex items-center gap-2">
+                            <Clock className="w-4 h-4 text-accent/70" />
+                            <span
+                              class="font-medium"
+                              data-event-time
+                              data-start={event.start.toISOString()}
+                              data-end={event.end.toISOString()}
+                            >
+                              {formatTime(event.start)}
+                            </span>
+                          </div>
+                          <div class="flex items-start gap-2">
+                            <MapPin className="w-4 h-4 text-accent/70 mt-0.5" />
+                            <div class="flex items-start gap-2 min-w-0">
+                              {event.location !== "TBD" ? (
+                                <>
+                                  <a
+                                    href={generateMapsLink(event.location)}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    class="leading-tight underline-offset-4 hover:underline"
+                                  >
+                                    {event.location}
+                                  </a>
+                                  <button
+                                    type="button"
+                                    class="inline-flex shrink-0 items-center justify-center rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                                    data-copy-location={event.location}
+                                    aria-label={`Copy address for ${event.title}`}
+                                    title="Copy address"
+                                  >
+                                    <Copy className="w-3.5 h-3.5 copy-icon" />
+                                    <Check className="hidden w-3.5 h-3.5 copied-icon text-secondary" />
+                                  </button>
+                                </>
+                              ) : (
+                                <span class="leading-tight">{event.location}</span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        <p class="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+                          {event.description}
+                        </p>
+
+                        <div class="pt-1 flex flex-wrap items-center justify-between gap-3">
+                          <Badge variant="secondary" className="bg-secondary/10">
+                            {event.category}
+                          </Badge>
+
+                          <div class="flex flex-wrap items-center gap-2">
+                            {event.url && (
+                              <Link
+                                href={event.url}
                                 target="_blank"
                                 rel="noreferrer"
-                                class="leading-tight underline-offset-4 hover:underline"
+                                variant="default"
+                                size="sm"
+                                className="!rounded-xl text-xs"
                               >
-                                {event.location}
-                              </a>
-                              <button
-                                type="button"
-                                class="inline-flex shrink-0 items-center justify-center rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                                data-copy-location={event.location}
-                                aria-label={`Copy address for ${event.title}`}
-                                title="Copy address"
-                              >
-                                <Copy className="w-3.5 h-3.5 copy-icon" />
-                                <Check className="hidden w-3.5 h-3.5 copied-icon text-secondary" />
-                              </button>
-                            </>
-                          ) : (
-                            <span class="leading-tight">{event.location}</span>
-                          )}
+                                View event
+                              </Link>
+                            )}
+                            <Link
+                              href={generateCalendarLink(event)}
+                              variant="outline"
+                              size="sm"
+                              className="!rounded-xl text-xs gap-1.5"
+                              data-event-id={event.id}
+                              data-event-title={event.title}
+                              data-event-start={event.start.toISOString()}
+                              data-event-end={event.end.toISOString()}
+                              data-event-location={event.location}
+                              data-event-description={event.description}
+                            >
+                              <CalendarPlus className="w-3.5 h-3.5" />
+                              Add to Calendar
+                            </Link>
+                          </div>
                         </div>
                       </div>
                     </div>
+                  );
+                })}
+              </div>
+            </div>
+          </article>
+        );
+      })
+    }
 
-                    <p class="text-sm text-muted-foreground line-clamp-2 flex-1 leading-relaxed">
-                      {event.description}
-                    </p>
-
-                    <div class="pt-1 flex flex-wrap items-center justify-between gap-3">
-                      <Badge variant="secondary" className="bg-secondary/10">
-                        {event.category}
-                      </Badge>
-
-                      <div class="flex flex-wrap items-center gap-2">
-                        {event.url && (
-                          <Link
-                            href={event.url}
-                            target="_blank"
-                            rel="noreferrer"
-                            variant="default"
-                            size="sm"
-                            className="!rounded-xl text-xs"
-                          >
-                            View event
-                          </Link>
-                        )}
-                        <Link
-                          href={generateCalendarLink(event)}
-                          variant="outline"
-                          size="sm"
-                          className="!rounded-xl text-xs gap-1.5"
-                          data-event-id={event.id}
-                          data-event-title={event.title}
-                          data-event-start={event.start.toISOString()}
-                          data-event-end={event.end.toISOString()}
-                          data-event-location={event.location}
-                          data-event-description={event.description}
-                        >
-                          <CalendarPlus className="w-3.5 h-3.5" />
-                          Add to Calendar
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      );
-    })
-  }
-
-  {
-    sortedDates.length === 0 && (
-      <div class="text-center py-20 border-2 border-dashed border-border rounded-2xl bg-muted/50">
-        <Calendar className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-        <p class="font-bold">No upcoming events found.</p>
-        <p class="text-sm text-muted-foreground">
-          Check back later for new workshops!
-        </p>
-      </div>
-    )
-  }
+  {visibleDates.length === 0 && (
+    <div class="text-center py-20 border-2 border-dashed border-border rounded-2xl bg-muted/50">
+      <Calendar className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+      <p class="font-bold">No upcoming events found.</p>
+      <p class="text-sm text-muted-foreground">
+        Check back later for new workshops!
+      </p>
+    </div>
+  )}
 </div>
 
 <script>
   const copyButtons = document.querySelectorAll("[data-copy-location]");
+  const timeFormat = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+  const dayButtons = document.querySelectorAll("[data-day-button]");
+  const dayPanels = document.querySelectorAll("[data-day-panel]");
+
+  const setActiveDay = (dayKey: string) => {
+    dayButtons.forEach((button) => {
+      const isActive = button.getAttribute("data-day-key") === dayKey;
+      button.classList.toggle("border-accent", isActive);
+      button.classList.toggle("bg-accent/10", isActive);
+      button.classList.toggle("text-accent", isActive);
+      button.classList.toggle("border-border", !isActive);
+      button.classList.toggle("bg-background/80", !isActive);
+      button.classList.toggle("text-muted-foreground", !isActive);
+    });
+
+    dayPanels.forEach((panel) => {
+      panel.classList.toggle("hidden", panel.getAttribute("data-day-key") !== dayKey);
+    });
+  };
 
   copyButtons.forEach((button) => {
     button.addEventListener("click", async () => {
@@ -263,6 +346,51 @@ const generateMapsLink = (location: string) => {
         button.setAttribute("data-copy-timeout", String(timeoutId));
       } catch (error) {
         console.error("Failed to copy event location", error);
+      }
+    });
+  });
+
+  const getApproxDuration = (start: Date, end: Date) => {
+    const minutes = Math.max(0, Math.round((end.getTime() - start.getTime()) / 60000));
+
+    if (minutes < 60) {
+      return `${minutes} min${minutes === 1 ? "" : "s"}`;
+    }
+
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+
+    if (!remainingMinutes) {
+      return `${hours} hr${hours === 1 ? "" : "s"}`;
+    }
+
+    return `${hours} hr${hours === 1 ? "" : "s"} ${remainingMinutes} min${remainingMinutes === 1 ? "" : "s"}`;
+  };
+
+  document.querySelectorAll("[data-event-time]").forEach((element) => {
+    const start = element.getAttribute("data-start");
+    const end = element.getAttribute("data-end");
+
+    if (!start || !end) return;
+
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    element.innerHTML = `${timeFormat.format(startDate)} <span class="px-1 opacity-70">•</span> <span class="text-xs opacity-80">${getApproxDuration(startDate, endDate)}</span>`;
+  });
+
+  if (dayButtons.length > 0) {
+    const initialDayKey = dayButtons[0].getAttribute("data-day-key");
+    if (initialDayKey) {
+      setActiveDay(initialDayKey);
+    }
+  }
+
+  dayButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const dayKey = button.getAttribute("data-day-key");
+      if (dayKey) {
+        setActiveDay(dayKey);
       }
     });
   });
