@@ -3,10 +3,13 @@ const EVENTBRITE_ORGANIZATION_ID = import.meta.env.EVENTBRITE_ORGANIZATION_ID;
 const EVENTBRITE_API_BASE = "https://www.eventbriteapi.com/v3";
 const EVENTBRITE_CACHE_TTL_MS = 15 * 60 * 1000;
 
-const eventbriteCache = new Map<string, {
-  expiresAt: number;
-  events: EventbriteEvent[];
-}>();
+const eventbriteCache = new Map<
+  string,
+  {
+    expiresAt: number;
+    events: EventbriteEvent[];
+  }
+>();
 
 export interface EventbriteEvent {
   id: string;
@@ -141,7 +144,10 @@ export async function getUpcomingEvents(
       const data: EventbriteApiResponse = await response.json();
       allEvents.push(...data.events);
 
-      if (!data.pagination?.has_more_items || allEvents.length >= (maxResults || 50)) {
+      if (
+        !data.pagination?.has_more_items ||
+        allEvents.length >= (maxResults || 50)
+      ) {
         break;
       }
 
@@ -208,8 +214,8 @@ async function getDefaultOrganizationId(): Promise<string | null> {
 }
 
 function mapEventbriteEvent(event: EventbriteApiEvent): EventbriteEvent {
-  const start = new Date(event.start.utc);
-  const end = new Date(event.end.utc);
+  const start = new Date(event.start.local);
+  const end = new Date(event.end.local);
 
   return {
     id: event.id,
