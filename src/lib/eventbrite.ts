@@ -1,15 +1,6 @@
 const EVENTBRITE_API_TOKEN = import.meta.env.EVENTBRITE_API_TOKEN;
 const EVENTBRITE_ORGANIZATION_ID = import.meta.env.EVENTBRITE_ORGANIZATION_ID;
 const EVENTBRITE_API_BASE = "https://www.eventbriteapi.com/v3";
-const EVENTBRITE_CACHE_TTL_MS = 15 * 60 * 1000;
-
-const eventbriteCache = new Map<
-  string,
-  {
-    expiresAt: number;
-    events: EventbriteEvent[];
-  }
->();
 
 export interface EventbriteEvent {
   id: string;
@@ -70,21 +61,10 @@ export async function getUpcomingEvents(
   options: GetEventsOptions = {},
 ): Promise<EventbriteEvent[]> {
   const { maxDays, maxResults = 50 } = options;
-  const cacheKey = JSON.stringify({ maxDays: maxDays ?? null, maxResults });
 
   if (!EVENTBRITE_API_TOKEN) {
     console.warn("Eventbrite token not configured");
     return [];
-  }
-
-  const cached = eventbriteCache.get(cacheKey);
-  if (cached && cached.expiresAt > Date.now()) {
-    console.log("Eventbrite cache hit", {
-      cacheKey,
-      eventCount: cached.events.length,
-      expiresAt: new Date(cached.expiresAt).toISOString(),
-    });
-    return cached.events;
   }
 
   try {
@@ -105,12 +85,6 @@ export async function getUpcomingEvents(
     }
 
     const now = new Date();
-
-    let timeMax: string | undefined;
-    if (maxDays) {
-      const maxDate = new Date(now.getTime() + maxDays * 24 * 60 * 60 * 1000);
-      timeMax = maxDate.toISOString();
-    }
 
     const params = new URLSearchParams({
       expand: "venue",
@@ -157,26 +131,20 @@ export async function getUpcomingEvents(
       }
     }
 
+    const maxDate = maxDays
+      ? new Date(now.getTime() + maxDays * 24 * 60 * 60 * 1000)
+      : null;
+
     const events = allEvents
       .filter((event) => {
-        if (!maxDays) return true;
-        const eventStart = new Date(event.start.utc);
-        const maxDate = new Date(Date.now() + maxDays * 24 * 60 * 60 * 1000);
+        const eventStart = getEventStartDate(event);
+        if (!eventStart) return false;
+        if (eventStart < now) return false;
+        if (!maxDate) return true;
         return eventStart <= maxDate;
       })
       .slice(0, maxResults || 50)
       .map(mapEventbriteEvent);
-
-    eventbriteCache.set(cacheKey, {
-      expiresAt: Date.now() + EVENTBRITE_CACHE_TTL_MS,
-      events,
-    });
-
-    console.log("Eventbrite cache set", {
-      cacheKey,
-      eventCount: events.length,
-      ttlMs: EVENTBRITE_CACHE_TTL_MS,
-    });
 
     return events;
   } catch (error) {
@@ -214,8 +182,8 @@ async function getDefaultOrganizationId(): Promise<string | null> {
 }
 
 function mapEventbriteEvent(event: EventbriteApiEvent): EventbriteEvent {
-  const start = new Date(event.start.local);
-  const end = new Date(event.end.local);
+  const start = getEventStartDate(event) ?? new Date(event.start.local);
+  const end = getEventEndDate(event) ?? new Date(event.end.local);
 
   return {
     id: event.id,
@@ -228,6 +196,18 @@ function mapEventbriteEvent(event: EventbriteApiEvent): EventbriteEvent {
     url: event.url,
     imageUrl: event.logo?.original?.url || event.logo?.url,
   };
+}
+
+function getEventStartDate(event: EventbriteApiEvent): Date | null {
+  const value = event.start.utc || event.start.local;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function getEventEndDate(event: EventbriteApiEvent): Date | null {
+  const value = event.end.utc || event.end.local;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
 }
 
 function extractCategory(
