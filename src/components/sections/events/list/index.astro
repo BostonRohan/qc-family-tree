@@ -86,14 +86,38 @@ const visibleDates = sortedDates.slice(0, 6);
         <p class="text-sm text-muted-foreground">Pick a day to preview the event.</p>
       </div>
       <p class="text-xs text-muted-foreground">
-        <span data-day-count>Loading...</span>
+        <span data-day-count>{visibleDates.length} day{visibleDates.length === 1 ? "" : "s"}</span>
       </p>
     </div>
 
     <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide" data-day-rail>
-      <div class="min-w-24 h-24 rounded-xl bg-muted animate-pulse"></div>
-      <div class="min-w-24 h-24 rounded-xl bg-muted animate-pulse"></div>
-      <div class="min-w-24 h-24 rounded-xl bg-muted animate-pulse"></div>
+      {visibleDates.map((dateKey, index) => {
+        const dateObj = new Date(dateKey);
+        const firstEvent = groupedEvents[dateKey]?.[0];
+
+        return (
+          <button
+            type="button"
+            class={`min-w-24 shrink-0 rounded-xl border px-3 py-2 text-left transition-all ${index === 0 ? "border-accent bg-accent/10 text-accent" : "border-border bg-background/80 text-muted-foreground hover:border-accent/50 hover:text-foreground"}`}
+            data-day-button
+            data-day-key={dateKey}
+          >
+            <div class="text-[11px] font-semibold uppercase tracking-widest opacity-80">
+              {dateObj.toLocaleDateString("en-US", { weekday: "short" })}
+            </div>
+            <div class="text-sm font-bold">
+              {dateObj.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+            </div>
+            <div
+              class="text-xs opacity-80"
+              data-day-time
+              data-start={firstEvent?.startUtc}
+            >
+              <span class="inline-block h-4 w-14 rounded bg-muted animate-pulse"></span>
+            </div>
+          </button>
+        );
+      })}
     </div>
   </div>
 
@@ -124,8 +148,12 @@ const visibleDates = sortedDates.slice(0, 6);
                 <div class="p-4 md:p-5 space-y-3">
                   <div class="flex flex-wrap items-start justify-between gap-4">
                     <div class="space-y-1">
-                      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground" data-date-header data-date={dateObj.toISOString()}>
-                        Loading...
+                      <p
+                        class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground"
+                        data-date-header
+                        data-date={dateObj.toISOString()}
+                      >
+                        <span class="inline-block h-3 w-24 rounded bg-muted animate-pulse"></span>
                       </p>
                       <p class="text-sm text-muted-foreground">
                         {dateEvents.length === 1
@@ -167,12 +195,12 @@ const visibleDates = sortedDates.slice(0, 6);
                                 <div class="flex items-center gap-2">
                                   <Clock className="w-4 h-4 text-accent/70" />
                                   <span
-                                    class="font-medium"
+                                    class="font-medium inline-block min-w-24 rounded bg-muted/70 px-2 py-0.5 text-transparent animate-pulse"
                                     data-event-time
                                     data-start={event.startUtc}
                                     data-end={event.endUtc}
                                   >
-                                    Loading...
+                                    Loading
                                   </span>
                                 </div>
                                 <div class="flex items-start gap-2">
@@ -261,16 +289,12 @@ const visibleDates = sortedDates.slice(0, 6);
   </div>
 </div>
 
-<script type="application/json" id="eventbrite-events-data" set:html={JSON.stringify(events)}></script>
-
 <script>
-  const eventsDataEl = document.getElementById("eventbrite-events-data");
   const dayRail = document.querySelector("[data-day-rail]");
   const dayPanels = document.querySelectorAll("[data-day-panel]");
   const dayCount = document.querySelector("[data-day-count]");
 
-  if (eventsDataEl && dayRail && dayPanels.length && dayCount) {
-    const events = JSON.parse(eventsDataEl.textContent || "[]");
+  if (dayRail && dayPanels.length && dayCount) {
     // Astro owns the markup; the browser only hydrates the time-dependent text.
     const timeFormat = new Intl.DateTimeFormat("en-US", {
       hour: "numeric",
@@ -283,54 +307,13 @@ const visibleDates = sortedDates.slice(0, 6);
       day: "numeric",
       year: "numeric",
     });
-
-    const groupedEvents = events.reduce((groups, event) => {
-      const dateKey = new Date(event.startUtc).toDateString();
-      if (!groups[dateKey]) {
-        groups[dateKey] = [];
-      }
-      groups[dateKey].push(event);
-      return groups;
-    }, {});
-
-    const sortedDates = Object.keys(groupedEvents).sort(
-      (a, b) => new Date(a).getTime() - new Date(b).getTime(),
-    );
-    const visibleDates = sortedDates.slice(0, 6);
-
-    dayCount.textContent = `${visibleDates.length} day${visibleDates.length === 1 ? "" : "s"}`;
-    // Build the interactive rail in the browser so timezone-sensitive labels stay local.
-    dayRail.innerHTML = visibleDates
-      .map((dateKey, index) => {
-        const dateObj = new Date(dateKey);
-        const firstEvent = groupedEvents[dateKey]?.[0];
-
-        return `
-          <button
-            type="button"
-            class="min-w-24 shrink-0 rounded-xl border px-3 py-2 text-left transition-all ${index === 0 ? "border-accent bg-accent/10 text-accent" : "border-border bg-background/80 text-muted-foreground hover:border-accent/50 hover:text-foreground"}"
-            data-day-button
-            data-day-key="${dateKey}"
-          >
-            <div class="text-[11px] font-semibold uppercase tracking-widest opacity-80">
-              ${dateObj.toLocaleDateString("en-US", { weekday: "short" })}
-            </div>
-            <div class="text-sm font-bold">
-              ${dateObj.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-            </div>
-            <div class="text-xs opacity-80" data-day-time data-start="${firstEvent?.startUtc || ""}">
-              ${firstEvent?.startUtc ? timeFormat.format(new Date(firstEvent.startUtc)) : ""}
-            </div>
-          </button>
-        `;
-      })
-      .join("");
-
     const dayButtons = dayRail.querySelectorAll("[data-day-button]");
 
     document.querySelectorAll("[data-date-header]").forEach((element) => {
       const date = element.getAttribute("data-date");
       if (!date) return;
+      element.textContent = "";
+      element.classList.remove("text-transparent", "bg-muted/70", "animate-pulse");
       element.textContent = dayHeaderFormat.format(new Date(date));
     });
 
@@ -345,16 +328,19 @@ const visibleDates = sortedDates.slice(0, 6);
         minutes < 60
           ? `${minutes} min${minutes === 1 ? "" : "s"}`
           : `${Math.floor(minutes / 60)} hr${Math.floor(minutes / 60) === 1 ? "" : "s"}${minutes % 60 ? ` ${minutes % 60} min${minutes % 60 === 1 ? "" : "s"}` : ""}`;
-      element.innerHTML = `${timeFormat.format(startDate)} <span class="px-1 opacity-70">•</span> <span class="text-xs opacity-80">${duration}</span>`;
+      element.classList.remove("text-transparent", "bg-muted/70", "animate-pulse");
+      element.textContent = `${timeFormat.format(startDate)} • ${duration}`;
     });
 
     document.querySelectorAll("[data-day-time]").forEach((element) => {
       const start = element.getAttribute("data-start");
       if (!start) return;
+      element.textContent = "";
+      element.classList.remove("text-transparent", "bg-muted/70", "animate-pulse");
       element.textContent = timeFormat.format(new Date(start));
     });
 
-    const setActiveDay = (dayKey) => {
+    const setActiveDay = (dayKey: string) => {
       dayButtons.forEach((button) => {
         const isActive = button.getAttribute("data-day-key") === dayKey;
         button.classList.toggle("border-accent", isActive);
