@@ -59,7 +59,7 @@ const generateMapsLink = (location: string) => {
 
 const groupedEvents = events.reduce(
   (groups, event) => {
-    const dateKey = new Date(event.startUtc).toDateString();
+    const dateKey = event.startUtc.slice(0, 10);
     if (!groups[dateKey]) {
       groups[dateKey] = [];
     }
@@ -70,7 +70,7 @@ const groupedEvents = events.reduce(
 );
 
 const sortedDates = Object.keys(groupedEvents).sort(
-  (a, b) => new Date(a).getTime() - new Date(b).getTime(),
+  (a, b) => a.localeCompare(b),
 );
 
 const visibleDates = sortedDates.slice(0, 6);
@@ -92,7 +92,6 @@ const visibleDates = sortedDates.slice(0, 6);
 
     <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide" data-day-rail>
       {visibleDates.map((dateKey, index) => {
-        const dateObj = new Date(dateKey);
         const firstEvent = groupedEvents[dateKey]?.[0];
 
         return (
@@ -102,11 +101,11 @@ const visibleDates = sortedDates.slice(0, 6);
             data-day-button
             data-day-key={dateKey}
           >
-            <div class="text-[11px] font-semibold uppercase tracking-widest opacity-80">
-              {dateObj.toLocaleDateString("en-US", { weekday: "short" })}
+            <div class="text-[11px] font-semibold uppercase tracking-widest opacity-80" data-day-label data-start={firstEvent?.startUtc}>
+              <span class="inline-block h-3 w-9 rounded bg-muted animate-pulse"></span>
             </div>
-            <div class="text-sm font-bold">
-              {dateObj.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+            <div class="text-sm font-bold" data-day-subtitle data-start={firstEvent?.startUtc}>
+              <span class="inline-block h-4 w-14 rounded bg-muted animate-pulse"></span>
             </div>
             <div
               class="text-xs opacity-80"
@@ -137,7 +136,7 @@ const visibleDates = sortedDates.slice(0, 6);
         {
           visibleDates.map((dateKey, index) => {
             const dateEvents = groupedEvents[dateKey];
-            const dateObj = new Date(dateKey);
+            const firstEvent = dateEvents[0];
 
             return (
               <article
@@ -151,7 +150,7 @@ const visibleDates = sortedDates.slice(0, 6);
                       <p
                         class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground"
                         data-date-header
-                        data-date={dateObj.toISOString()}
+                        data-start={firstEvent?.startUtc}
                       >
                         <span class="inline-block h-3 w-24 rounded bg-muted animate-pulse"></span>
                       </p>
@@ -310,11 +309,32 @@ const visibleDates = sortedDates.slice(0, 6);
     const dayButtons = dayRail.querySelectorAll("[data-day-button]");
 
     document.querySelectorAll("[data-date-header]").forEach((element) => {
-      const date = element.getAttribute("data-date");
-      if (!date) return;
+      const start = element.getAttribute("data-start");
+      if (!start) return;
       element.textContent = "";
       element.classList.remove("text-transparent", "bg-muted/70", "animate-pulse");
-      element.textContent = dayHeaderFormat.format(new Date(date));
+      element.textContent = dayHeaderFormat.format(new Date(start));
+    });
+
+    document.querySelectorAll("[data-day-label]").forEach((element) => {
+      const start = element.getAttribute("data-start");
+      if (!start) return;
+      element.textContent = "";
+      element.classList.remove("text-transparent", "bg-muted/70", "animate-pulse");
+      element.textContent = new Date(start).toLocaleDateString("en-US", {
+        weekday: "short",
+      });
+    });
+
+    document.querySelectorAll("[data-day-subtitle]").forEach((element) => {
+      const start = element.getAttribute("data-start");
+      if (!start) return;
+      element.textContent = "";
+      element.classList.remove("text-transparent", "bg-muted/70", "animate-pulse");
+      element.textContent = new Date(start).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
     });
 
     document.querySelectorAll("[data-event-time]").forEach((element) => {
