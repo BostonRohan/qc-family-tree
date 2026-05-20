@@ -5,8 +5,8 @@ const EVENTBRITE_API_BASE = "https://www.eventbriteapi.com/v3";
 export interface EventbriteEvent {
   id: string;
   title: string;
-  start: Date;
-  end: Date;
+  startUtc: string;
+  endUtc: string;
   location: string;
   description: string;
   category: "Workshop" | "Meeting" | "Community" | "Social";
@@ -137,7 +137,7 @@ export async function getUpcomingEvents(
 
     const events = allEvents
       .filter((event) => {
-        const eventStart = getEventStartDate(event);
+        const eventStart = new Date(event.start.utc || event.start.local);
         if (!eventStart) return false;
         if (eventStart < now) return false;
         if (!maxDate) return true;
@@ -182,32 +182,17 @@ async function getDefaultOrganizationId(): Promise<string | null> {
 }
 
 function mapEventbriteEvent(event: EventbriteApiEvent): EventbriteEvent {
-  const start = getEventStartDate(event) ?? new Date(event.start.local);
-  const end = getEventEndDate(event) ?? new Date(event.end.local);
-
   return {
     id: event.id,
     title: event.name.text,
-    start,
-    end,
+    startUtc: event.start.utc,
+    endUtc: event.end.utc,
     location: event.venue?.address.localized_address_display || "TBD",
     description: event.description.text || "",
     category: extractCategory(event.name.text, event.description.text),
     url: event.url,
     imageUrl: event.logo?.original?.url || event.logo?.url,
   };
-}
-
-function getEventStartDate(event: EventbriteApiEvent): Date | null {
-  const value = event.start.utc || event.start.local;
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? null : date;
-}
-
-function getEventEndDate(event: EventbriteApiEvent): Date | null {
-  const value = event.end.utc || event.end.local;
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? null : date;
 }
 
 function extractCategory(
