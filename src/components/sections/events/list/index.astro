@@ -33,7 +33,6 @@ interface Props {
 }
 
 const { events } = Astro.props;
-
 const getCategoryIcon = (category: string) => {
   switch (category) {
     case "Workshop":
@@ -47,14 +46,6 @@ const getCategoryIcon = (category: string) => {
     default:
       return Calendar;
   }
-};
-
-const formatTime = (date: Date) => {
-  return date.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
 };
 
 const formatDateHeader = (date: Date) => {
@@ -131,7 +122,10 @@ const generateMapsLink = (location: string) => {
                 {dateObj.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
               </div>
               <div class="text-xs opacity-80">
-                {dayEvents[0]?.start ? formatTime(dayEvents[0].start) : "TBD"}
+                <span
+                  data-day-time
+                  class="inline-block h-4 w-16 animate-pulse rounded bg-muted"
+                ></span>
               </div>
             </button>
           );
@@ -197,12 +191,12 @@ const generateMapsLink = (location: string) => {
                           <div class="flex items-center gap-2">
                             <Clock className="w-4 h-4 text-accent/70" />
                             <span
-                              class="font-medium"
+                              class="font-medium inline-block min-w-24 rounded bg-muted/70 px-2 py-0.5 text-transparent animate-pulse"
                               data-event-time
                               data-start={event.start.toISOString()}
                               data-end={event.end.toISOString()}
                             >
-                              {formatTime(event.start)}
+                              Loading
                             </span>
                           </div>
                           <div class="flex items-start gap-2">
@@ -376,7 +370,27 @@ const generateMapsLink = (location: string) => {
     const startDate = new Date(start);
     const endDate = new Date(end);
 
+    element.className = "font-medium";
     element.innerHTML = `${timeFormat.format(startDate)} <span class="px-1 opacity-70">•</span> <span class="text-xs opacity-80">${getApproxDuration(startDate, endDate)}</span>`;
+  });
+
+  document.querySelectorAll("[data-day-time]").forEach((element) => {
+    const dayButton = element.closest("[data-day-button]");
+    const dayKey = dayButton?.getAttribute("data-day-key");
+
+    if (!dayKey) return;
+
+    const dayPanel = document.querySelector(`[data-day-panel][data-day-key="${dayKey}"]`);
+    const firstEventTime = dayPanel?.querySelector("[data-event-time]");
+    const start = firstEventTime?.getAttribute("data-start");
+
+    if (!start) {
+      element.className = "inline-block h-4 w-12 rounded bg-muted";
+      return;
+    }
+
+    element.className = "";
+    element.textContent = timeFormat.format(new Date(start));
   });
 
   if (dayButtons.length > 0) {
