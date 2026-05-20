@@ -108,7 +108,7 @@ export default function HamburgerMenu({
           <Button
             variant="ghost"
             size="icon"
-            className={`md:hidden ${open ? "hidden" : ""}`}
+            className={cn("md:hidden", open && "hidden")}
           >
             <Menu className="h-5 w-5" />
             <span className="sr-only">Toggle menu</span>
@@ -116,7 +116,10 @@ export default function HamburgerMenu({
         </SheetTrigger>
         <a
           href="/"
-          className={`md:hidden flex h-10 items-center ml-auto transition-opacity duration-200 ${open ? "hidden" : ""}`}
+          className={cn(
+            "md:hidden flex h-10 items-center ml-auto transition-opacity duration-200",
+            open && "hidden",
+          )}
           aria-label="QC Family Tree home"
           data-mobile-nav-logo
         >

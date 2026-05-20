@@ -14,8 +14,8 @@ const eventbriteCache = new Map<
 export interface EventbriteEvent {
   id: string;
   title: string;
-  start: Date;
-  end: Date;
+  startUtc: string;
+  endUtc: string;
   location: string;
   description: string;
   category: "Workshop" | "Meeting" | "Community" | "Social";
@@ -214,14 +214,11 @@ async function getDefaultOrganizationId(): Promise<string | null> {
 }
 
 function mapEventbriteEvent(event: EventbriteApiEvent): EventbriteEvent {
-  const start = new Date(event.start.local);
-  const end = new Date(event.end.local);
-
   return {
     id: event.id,
     title: event.name.text,
-    start,
-    end,
+    startUtc: event.start.utc,
+    endUtc: event.end.utc,
     location: event.venue?.address.localized_address_display || "TBD",
     description: event.description.text || "",
     category: extractCategory(event.name.text, event.description.text),
