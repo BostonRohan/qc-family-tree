@@ -1,0 +1,42 @@
+---
+---
+
+<section class="px-4">
+  <div class="mx-auto max-w-3xl rounded-3xl border border-border bg-card/80 p-8 text-center shadow-lg">
+    <h2 class="mb-2 text-3xl font-bold font-ubuntu sm:text-4xl">Stay in the Loop</h2>
+    <p class="mx-auto max-w-2xl text-muted-foreground">Get QCFT updates, event announcements, and opportunities.</p>
+    <form id="residency-subscribe-form" class="mx-auto mt-6 flex max-w-xl flex-col gap-2 sm:flex-row sm:items-center">
+      <label for="residency-email" class="sr-only">Email address</label>
+      <input id="residency-email" type="email" name="email" placeholder="Enter your email" required class="min-h-10 flex-1 rounded-xl border border-input bg-background px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring/20" />
+      <button type="submit" class="min-h-10 rounded-xl bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">Subscribe</button>
+    </form>
+    <p class="mt-3 text-xs text-muted-foreground" id="residency-form-message" aria-live="polite"></p>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById("residency-subscribe-form");
+  const messageEl = document.getElementById("residency-form-message");
+
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const formData = new FormData(form as HTMLFormElement);
+    const email = formData.get("email");
+
+    try {
+      const response = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, list: "qcft" }),
+      });
+
+      const data = await response.json();
+      messageEl!.textContent = data.message || (response.ok ? "Thanks for subscribing!" : "Something went wrong. Try again.");
+      messageEl!.className = response.ok ? "mt-3 text-xs text-green-600" : "mt-3 text-xs text-red-600";
+      if (response.ok) (form as HTMLFormElement).reset();
+    } catch {
+      messageEl!.textContent = "Something went wrong. Try again.";
+      messageEl!.className = "mt-3 text-xs text-red-600";
+    }
+  });
+</script>

@@ -1,0 +1,159 @@
+---
+export const prerender = true;
+
+import { defineQuery } from "groq";
+import { sanityClient } from "sanity:client";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import PhotoCarousel from "@/components/photo-carousel";
+import AlumniCarousel from "@/components/alumni-carousel";
+import EmailSignup from "@/components/sections/EmailSignup.astro";
+import { Link } from "@/components/ui/link";
+import headerImage from "@/assets/culture-bearer-residency/culture_bearer_residency_header.jpg";
+import residencyImage1 from "@/assets/culture-bearer-residency/cb_residency_1.jpg";
+import residencyImage3 from "@/assets/culture-bearer-residency/cb_residency_3.jpg";
+import residencyImage4 from "@/assets/culture-bearer-residency/cb_residency_4.jpg";
+import residencyImage5 from "@/assets/culture-bearer-residency/cb_residency_5.jpg";
+import residencyImage6 from "@/assets/culture-bearer-residency/cb_residency_6.jpg";
+import alumniPlaceholder from "@/assets/culture-bearer-residency/culture_bearer_residency_header.jpg";
+
+type Cohort = {
+  title?: string;
+  applicationOpening?: string;
+  applicationClosing?: string;
+  residencyDates?: string;
+  showcaseDates?: string;
+  applicationUrl?: string;
+  additionalInformationUrl?: string;
+  applicationButtonLabel?: string;
+  additionalInformationButtonLabel?: string;
+};
+
+type Alumni = {
+  name?: string;
+  cohort?: string;
+  altText?: string;
+  url?: string;
+  portrait?: { asset?: { _id?: string } };
+};
+
+const CULTURE_BEARER_QUERY = defineQuery(`{
+  "cohort": *[_type == "cultureBearerCohort" && enabled == true && defined(title) && defined(applicationOpening) && defined(applicationClosing) && defined(residencyDates) && defined(showcaseDates)] | order(_updatedAt desc)[0] {
+    title, applicationOpening, applicationClosing, residencyDates, showcaseDates,
+    applicationUrl, additionalInformationUrl, applicationButtonLabel, additionalInformationButtonLabel
+  },
+  "alumni": *[_type == "alumni" && visible != false && defined(name) && defined(cohort)] | order(displayOrder asc, name asc) {
+    name, cohort, altText, url, portrait { asset->{ _id } }
+  }
+}`);
+
+const data = await sanityClient
+  .fetch<{ cohort?: Cohort | null; alumni?: Alumni[] }>(CULTURE_BEARER_QUERY)
+  .catch(() => ({ cohort: null, alumni: [] }));
+const cohort = data.cohort ?? null;
+const cohortSortValue = (cohort = "") => {
+  const years = [...cohort.matchAll(/\d{4}/g)].map((match) => Number(match[0]));
+  const year = Math.max(...years, 0);
+  const season = /fall/i.test(cohort) ? 2 : /spring/i.test(cohort) ? 1 : 0;
+  return year * 10 + season;
+};
+
+const alumni = (data.alumni ?? []).sort(
+  (a, b) =>
+    cohortSortValue(b.cohort) - cohortSortValue(a.cohort) ||
+    (a.name || "").localeCompare(b.name || ""),
+);
+const sanityImageBaseUrl = `https://cdn.sanity.io/images/${import.meta.env.PUBLIC_SANITY_STUDIO_PROJECT_ID}/${import.meta.env.PUBLIC_SANITY_STUDIO_DATASET}/`;
+const alumniCards = alumni.map((artist) => ({
+  name: artist.name,
+  cohort: artist.cohort,
+  url: artist.url,
+  alt: artist.altText || `${artist.name || "Culture Bearer"} portrait`,
+  portraitUrl: artist.portrait?.asset?._id
+    ? `${sanityImageBaseUrl}${artist.portrait.asset._id}`
+    : alumniPlaceholder.src,
+}));
+const externalLinkProps = { target: "_blank", rel: "noreferrer noopener" };
+
+const welcomeCriteria = [
+  ["Artists with purpose", "Artists who want their creative practice to move people and shape a more just world."],
+  ["Community-minded", "People who see culture as a way to build connection, care, and collective power."],
+  ["Rooted in place", "Creators who are connected to Charlotte and the communities that make this place home."],
+  ["Ready to experiment", "Artists who are curious, collaborative, and open to trying something new."],
+];
+
+const benefits = [
+  ["Space to create", "Dedicated time and space to focus on your creative practice."],
+  ["A supportive cohort", "A circle of artists and cultural workers to learn and grow alongside."],
+  ["Resources and guidance", "Stipend, mentorship, and practical support to help your work take shape."],
+  ["A public showcase", "A chance to share your work and invite the community into your process."],
+];
+
+const goals = [
+  ["Build Community", "Create meaningful relationships and shared experiences across difference."],
+  ["Celebrate Culture", "Honor the stories, traditions, and creative practices that make our communities whole."],
+  ["Explore Justice", "Ask brave questions and imagine a more equitable future through art."],
+  ["Support Innovation", "Give artists room to test ideas, take risks, and make something new."],
+];
+---
+
+<Layout
+  title="Culture Bearer Residency"
+  description="Giving artists the space and opportunity to create with purpose."
+  slug="culture-bearer-residency"
+>
+  <Header
+    title="Culture Bearer Residency"
+    tagline="Giving artists the space and opportunity to create with purpose."
+    image={headerImage}
+    imageAlt="Artists gathered together in community"
+    overlayClassName="bg-gradient-to-t from-black/80 via-black/55 to-black/35"
+    primaryCta={cohort?.applicationUrl ? { label: cohort.applicationButtonLabel || "Apply", href: cohort.applicationUrl, ...externalLinkProps } : undefined}
+    secondaryCta={cohort?.additionalInformationUrl ? { label: cohort.additionalInformationButtonLabel || "Additional info", href: cohort.additionalInformationUrl, ...externalLinkProps } : undefined}
+  />
+
+  <main class="space-y-16 py-8 lg:space-y-24 lg:py-16">
+    <section class="mx-auto max-w-4xl space-y-5 px-4 text-center">
+      <p>The Culture Bearer Residency is a creative home for artists who believe their work can help us understand one another, celebrate where we come from, and build a more just future.</p>
+      <p>Residents receive the time, space, resources, and community support to develop a meaningful body of work. We welcome artists across disciplines, from emerging voices to established practitioners.</p>
+    </section>
+
+    {cohort && (
+      <section class="mx-4 rounded-3xl bg-accent px-6 py-10 text-accent-foreground sm:px-10 lg:mx-auto lg:max-w-5xl lg:px-16">
+        <div class="mx-auto max-w-3xl space-y-6 text-center">
+          <p class="text-sm font-semibold uppercase tracking-[0.2em] text-secondary">The next cohort</p>
+          <h2 class="text-3xl sm:text-4xl">{cohort.title}</h2>
+          <div class="mx-auto grid max-w-3xl gap-3 text-left sm:grid-cols-2">
+            <div class="rounded-2xl bg-accent-foreground/10 p-5"><p class="mb-2 text-xs font-semibold uppercase tracking-wider text-secondary">Applications open</p><p>{cohort.applicationOpening}</p></div>
+            <div class="rounded-2xl bg-accent-foreground/10 p-5"><p class="mb-2 text-xs font-semibold uppercase tracking-wider text-secondary">Applications close</p><p>{cohort.applicationClosing}</p></div>
+            <div class="rounded-2xl bg-accent-foreground/10 p-5"><p class="mb-2 text-xs font-semibold uppercase tracking-wider text-secondary">Residency</p><p>{cohort.residencyDates}</p></div>
+            <div class="rounded-2xl bg-accent-foreground/10 p-5"><p class="mb-2 text-xs font-semibold uppercase tracking-wider text-secondary">Showcase</p><p>{cohort.showcaseDates}</p></div>
+          </div>
+          <div class="flex flex-wrap justify-center gap-3">
+            {cohort.applicationUrl && <Link href={cohort.applicationUrl} target="_blank" rel="noreferrer noopener" className="rounded-xl">{cohort.applicationButtonLabel || "Apply"}</Link>}
+            {cohort.additionalInformationUrl && <Link href={cohort.additionalInformationUrl} target="_blank" rel="noreferrer noopener" variant="outline" className="rounded-xl">{cohort.additionalInformationButtonLabel || "Additional info"}</Link>}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <section class="mx-auto max-w-6xl space-y-8 px-4">
+      <div class="mx-auto max-w-3xl space-y-3 text-center"><h2 class="text-3xl sm:text-4xl">We welcome artists who…</h2><p>Bring a generous spirit and a desire to make something meaningful with others.</p></div>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{welcomeCriteria.map(([title, text]) => <article class="rounded-2xl border border-border bg-muted p-6"><h3 class="mb-2 text-xl">{title}</h3><p class="text-base">{text}</p></article>)}</div>
+    </section>
+
+    <section class="bg-accent px-4 py-12 text-accent-foreground lg:py-16">
+      <div class="mx-auto max-w-6xl space-y-8"><div class="mx-auto max-w-3xl space-y-3 text-center"><p class="text-sm font-semibold uppercase tracking-[0.2em] text-secondary">A season of support</p><h2 class="text-3xl sm:text-4xl">Culture Bearers Receive</h2><p>Support designed to make room for deep, purposeful creative work.</p></div><div class="mx-auto grid max-w-4xl gap-x-10 sm:grid-cols-2">{benefits.map(([title, text], index) => <article class="flex gap-4 border-t border-accent-foreground/30 py-5"><span class="font-ubuntu text-3xl text-secondary">0{index + 1}</span><div><h3 class="mb-1 text-xl">{title}</h3><p class="text-base opacity-90">{text}</p></div></article>)}</div></div>
+    </section>
+
+    <section class="mx-auto max-w-6xl space-y-8 px-4"><div class="mx-auto max-w-3xl space-y-3 text-center"><h2 class="text-3xl sm:text-4xl">Our residency goals</h2></div><div class="grid gap-4 sm:grid-cols-2">{goals.map(([title, text], index) => <article class="rounded-2xl border border-border p-6"><span class="text-sm font-semibold text-secondary">0{index + 1}</span><h3 class="mt-2 text-2xl">{title}</h3><p>{text}</p></article>)}</div></section>
+
+    <section class="mx-auto grid max-w-6xl items-center gap-8 px-4 lg:grid-cols-2"><div class="space-y-5"><h2 class="text-3xl sm:text-4xl">Culture Bearer Organization-in-Residence</h2><p><a href="https://www.instagram.com/mixedmetaphorsclt/" target="_blank" rel="noreferrer noopener" class="text-primary underline underline-offset-4 hover:opacity-80">Mixed Metaphors Productions</a> disrupts narratives of erasure through immersive theatre, art installation, and new oral histories in Charlotte, NC.</p><p>Together, artists and organizations create opportunities for listening, learning, and sharing work in ways that honor the people and places involved.</p></div><img src={residencyImage4.src} alt="Community members gathered around a table" class="aspect-[4/3] w-full rounded-3xl object-cover" loading="lazy" /></section>
+
+    <section class="bg-accent px-4 py-12 text-accent-foreground lg:py-16"><div class="mx-auto max-w-5xl space-y-8"><div class="space-y-3 text-center"><h2 class="text-3xl sm:text-4xl">Making space for culture</h2><p class="mx-auto max-w-2xl">A residency is a season of attention, experimentation, and shared possibility.</p></div><PhotoCarousel images={[{ src: residencyImage1.src, alt: "Culture Bearer Residency participants gathered together" }, { src: residencyImage3.src, alt: "Community members participating in a residency activity" }, { src: residencyImage4.src, alt: "Artists creating together" }, { src: residencyImage5.src, alt: "Culture Bearer Residency gathering" }, { src: residencyImage6.src, alt: "Participants connecting through art and culture" }]} arrowClassName="cursor-pointer border-white/80 bg-transparent text-white transition-colors hover:bg-white/20 disabled:cursor-not-allowed" client:load /></div></section>
+
+    {alumni.length > 0 && <section class="mx-auto max-w-6xl space-y-8 px-4"><div class="mx-auto max-w-3xl space-y-3 text-center"><h2 class="text-3xl sm:text-4xl">Culture Bearer Alumni</h2><p>Meet the artists who have carried this work forward.</p></div><AlumniCarousel alumni={alumniCards} client:load /></section>}
+
+    <EmailSignup />
+  </main>
+</Layout>
