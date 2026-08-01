@@ -3,7 +3,7 @@ import Layout from "@/layouts/Layout.astro";
 import SectionHeading from "@/components/ui/SectionHeading.astro";
 import Header from "@/components/Header.astro";
 import { Image } from "astro:assets";
-import freedomFridgeImage from "@/assets/freedom-fridge.jpeg";
+import freedomFridgeImage from "@/assets/freedom_fridge_header.jpg";
 
 const waysToHelp = [
   "Donate extra food and supplies to help keep the Freedom Fridge & Pantry stocked for the community.",
@@ -21,9 +21,9 @@ const waysToHelp = [
   <div class="pb-8 lg:pb-16">
     <Header
       title="Freedom Fridge & Pantry"
-      tagline="Neighbors stock and shop anytime"
-      subline="for groceries, meals, and shared care."
+      tagline="Free food, shared care."
       image={freedomFridgeImage}
+      overlayClassName="bg-black/50"
     />
   </div>
 
