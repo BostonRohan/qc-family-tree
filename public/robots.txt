@@ -3,4 +3,4 @@ Allow: /
 
 Disallow: /admin/
 
-Sitemap: https://qcfamilytree.org/sitemap-index.xml
+Sitemap: https://www.qcfamilytree.org/sitemap-index.xml
