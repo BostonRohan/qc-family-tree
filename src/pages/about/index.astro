@@ -7,6 +7,38 @@ import Programs from "@/components/sections/Programs.astro";
 import aboutBorder1 from "@/assets/about_border_1.jpeg";
 import aboutBorder2 from "@/assets/about_border_2.jpeg";
 import headerImage from "@/assets/about-option.jpg";
+import { defineQuery } from "groq";
+import { sanityClient } from "sanity:client";
+
+type Report = { year: number; url: string };
+type Accountability = {
+  annualReports?: Report[];
+  form990s?: Report[];
+};
+
+const ACCOUNTABILITY_QUERY = defineQuery(`
+  *[_type == "accountability" && _id == "accountability"][0] {
+    "annualReports": annualReports[] | order(year desc) { year, url },
+    "form990s": form990s[] | order(year desc) { year, url }
+  }
+`);
+
+const fallbackAccountability: Required<Accountability> = {
+  annualReports: [
+    { year: 2025, url: "https://drive.google.com/file/d/1IBK84-g3meMXCCtYt0trhv0DN1Ud2C0g/view?usp=sharing" },
+    { year: 2024, url: "https://drive.google.com/file/d/1obkW2SGpPdGztWhuNIfRWrGKMsCNSD7e/view?ts=69dfb735" },
+    { year: 2023, url: "https://drive.google.com/file/d/1dyT6Sn5XYs9uibEl5XQNaeutBs-xa7Ly/view?ts=69dfb756" },
+  ],
+  form990s: [
+    { year: 2024, url: "https://projects.propublica.org/nonprofits/organizations/204091165/202503149349305480/full" },
+    { year: 2023, url: "https://projects.propublica.org/nonprofits/organizations/204091165/202440729349301409/full" },
+    { year: 2022, url: "https://projects.propublica.org/nonprofits/organizations/204091165/202313039349301436/full" },
+  ],
+};
+
+const accountability =
+  (await sanityClient.fetch<Accountability | null>(ACCOUNTABILITY_QUERY)) ??
+  fallbackAccountability;
 
 const values = [
   "We believe that our freedom is connected to the freedom of people who are struggling the most.",
@@ -96,6 +128,17 @@ const cultivationPractices = [
 
     <Programs sectionId="programs-about" showLearnMore={false} dividerSrc={aboutBorder1.src} />
 
+    <section class="max-w-5xl mx-auto rounded-3xl bg-muted px-6 py-8 text-center sm:px-10">
+      <h2 class="font-ubuntu text-2xl font-bold sm:text-3xl">See the work in community</h2>
+      <p class="mx-auto mt-3 max-w-2xl text-muted-foreground">
+        From free food access to artist support and neighborhood events, our programs turn this vision into practice.
+      </p>
+      <div class="mt-5 flex flex-wrap justify-center gap-3">
+        <a href="/freedom-fridge" class="rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90">Visit the Freedom Fridge</a>
+        <a href="/#events" class="rounded-xl border border-border px-5 py-3 text-sm font-semibold hover:bg-background">See upcoming events</a>
+      </div>
+    </section>
+
     <section id="cultivation" class="space-y-6 sm:space-y-8 max-w-5xl mx-auto">
       <SectionHeading title="How we cultivate the common good" />
       <div class="grid gap-3 sm:grid-cols-2">
@@ -124,17 +167,17 @@ const cultivationPractices = [
         <div>
           <h3 class="font-semibold mb-2">Annual Reports</h3>
           <ul class="flex flex-wrap gap-3">
-            <li><a href="https://drive.google.com/file/d/1IBK84-g3meMXCCtYt0trhv0DN1Ud2C0g/view?usp=sharing" target="_blank" rel="noreferrer" class="text-primary hover:underline">2025</a></li>
-            <li><a href="https://drive.google.com/file/d/1obkW2SGpPdGztWhuNIfRWrGKMsCNSD7e/view?ts=69dfb735" target="_blank" rel="noreferrer" class="text-primary hover:underline">2024</a></li>
-            <li><a href="https://drive.google.com/file/d/1dyT6Sn5XYs9uibEl5XQNaeutBs-xa7Ly/view?ts=69dfb756" target="_blank" rel="noreferrer" class="text-primary hover:underline">2023</a></li>
+            {(accountability.annualReports ?? fallbackAccountability.annualReports).map((report) => (
+              <li><a href={report.url} target="_blank" rel="noreferrer" class="text-primary underline">{report.year}</a></li>
+            ))}
           </ul>
         </div>
         <div>
           <h3 class="font-semibold mb-2">Form 990s</h3>
           <ul class="flex flex-wrap gap-3">
-            <li><a href="https://projects.propublica.org/nonprofits/organizations/204091165/202503149349305480/full" target="_blank" rel="noreferrer" class="text-primary hover:underline">2024</a></li>
-            <li><a href="https://projects.propublica.org/nonprofits/organizations/204091165/202313039349301436/full" target="_blank" rel="noreferrer" class="text-primary hover:underline">2022</a></li>
-            <li><a href="https://projects.propublica.org/nonprofits/organizations/204091165/202440729349301409/full" target="_blank" rel="noreferrer" class="text-primary hover:underline">2023</a></li>
+            {(accountability.form990s ?? fallbackAccountability.form990s).map((report) => (
+              <li><a href={report.url} target="_blank" rel="noreferrer" class="text-primary underline">{report.year}</a></li>
+            ))}
           </ul>
         </div>
       </div>

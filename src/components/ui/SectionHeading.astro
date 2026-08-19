@@ -2,6 +2,7 @@
 interface Props {
   title: string;
   subtitle?: string;
+  headingLevel?: "h1" | "h2" | "h3";
   containerClass?: string;
   titleClass?: string;
   subtitleClass?: string;
@@ -10,15 +11,18 @@ interface Props {
 const {
   title,
   subtitle,
+  headingLevel = "h2",
   containerClass = "text-center",
   titleClass = "mb-1 sm:mb-3 text-3xl sm:text-4xl lg:text-5xl font-bold font-ubuntu",
   subtitleClass =
     "text-muted-foreground max-w-2xl mx-auto whitespace-pre-line leading-relaxed",
 } = Astro.props;
+
+const HeadingTag = headingLevel;
 ---
 
 <hgroup class={`${containerClass}`}>
-  <h1 class={`${titleClass}`}>{title}</h1>
+  <HeadingTag class={`${titleClass}`}>{title}</HeadingTag>
   {subtitle && (
     <p class={`${subtitleClass}`}>
       {subtitle}

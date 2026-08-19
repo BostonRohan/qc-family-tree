@@ -47,6 +47,7 @@
     "googleapis": "^171.4.0",
     "groq": "^4.20.3",
     "lucide-react": "^0.539.0",
+    "posthog-js": "^1.416.0",
     "prettier-plugin-astro": "0.14.0",
     "radix-ui": "^1.4.3",
     "react": "19.0.0",

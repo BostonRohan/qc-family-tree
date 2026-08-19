@@ -9,6 +9,7 @@ import Analytics from "@vercel/analytics/astro";
 import Banner from "@/components/banner.astro";
 import BotIdClient from "@/components/BotIdClient";
 import BotIdInit from "@/components/BotIdInit.astro";
+import PostHog from "@/components/PostHog.astro";
 
 import logoImage from "@/assets/logo-fullcolor-white-tag.png";
 import LogoToggle from "@/components/LogoToggle.tsx";
@@ -29,6 +30,15 @@ const {
   ogImageAlt = "People standing outside listening to speaker at a QC Family Tree event",
 } = Astro.props;
 
+const canonicalOrigin = "https://www.qcfamilytree.org";
+const normalizedPath = slug
+  ? `/${slug.replace(/^\/+|\/+$/g, "")}`
+  : "/";
+const canonicalUrl = new URL(normalizedPath, canonicalOrigin).href;
+const socialImageUrl = new URL(ogImage, canonicalOrigin).href;
+const organizationDescription =
+  "QC Family Tree is a community-rooted organization cultivating belonging, mutual care, and economic resilience in West Charlotte, Charlotte, North Carolina.";
+
 const navWrapperClassName =
   "fixed inset-x-0 sm:top-4 top-2 w-full z-[100] bg-white/75 backdrop-blur-2xl justify-center max-w-2xl rounded-2xl mx-auto text-center flex";
 const isHome = slug === "";
@@ -40,22 +50,51 @@ const isHome = slug === "";
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalUrl} />
 
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={`https://qcfamilytree.org/${slug}`} />
-    <meta property="og:site_name" content="Courtney Rohan" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content="QC Family Tree" />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={new URL(ogImage, Astro.url)} />
+    <meta property="og:image" content={socialImageUrl} />
     <meta property="og:image:alt" content={ogImageAlt} />
 
     <!-- Twitter or X -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@qcfamilytree" />
-    <meta property="twitter:image" content={new URL(ogImage, Astro.url)} />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageUrl} />
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "QC Family Tree",
+      url: canonicalOrigin,
+      logo: `${canonicalOrigin}/android-chrome-512x512.png`,
+      image: socialImageUrl,
+      description: organizationDescription,
+      telephone: "+1-980-505-7147",
+      email: "info@qcfamilytree.org",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "2916 Parkway Avenue",
+        addressLocality: "Charlotte",
+        addressRegion: "NC",
+        postalCode: "28208",
+        addressCountry: "US",
+      },
+      areaServed: {
+        "@type": "City",
+        name: "Charlotte",
+      },
+      sameAs: [
+        "https://www.instagram.com/qcfamilytree",
+        "https://www.facebook.com/qcfamilytree",
+      ],
+    })}></script>
 
     <!-- Favicon -->
     <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -79,6 +118,7 @@ const isHome = slug === "";
     <Font cssVariable="--font-ubuntu" />
 
     <title>{title}</title>
+    <PostHog />
     <BotIdClient client:only="react" />
     <BotIdInit />
   </head>
