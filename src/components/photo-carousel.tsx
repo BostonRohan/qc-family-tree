@@ -31,8 +31,8 @@ export default function PhotoCarousel({
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className={`absolute -left-10 top-1/2 -translate-y-1/2 ${arrowClassName}`} />
-        <CarouselNext className={`absolute -right-10 top-1/2 -translate-y-1/2 ${arrowClassName}`} />
+        <CarouselPrevious className={`absolute left-2 top-1/2 z-10 -translate-y-1/2 sm:-left-10 ${arrowClassName}`} />
+        <CarouselNext className={`absolute right-2 top-1/2 z-10 -translate-y-1/2 sm:-right-10 ${arrowClassName}`} />
       </div>
     </Carousel>
   );

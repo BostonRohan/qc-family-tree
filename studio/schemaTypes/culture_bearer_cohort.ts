@@ -7,8 +7,8 @@ export const cultureBearerCohortType = defineType({
   fields: [
     defineField({ name: "enabled", title: "Show next cohort", type: "boolean", initialValue: false }),
     defineField({ name: "title", title: "Application title", type: "string", validation: (rule) => rule.required() }),
-    defineField({ name: "applicationOpening", title: "Application opening copy", type: "string", validation: (rule) => rule.required() }),
-    defineField({ name: "applicationClosing", title: "Application closing copy", type: "string", validation: (rule) => rule.required() }),
+    defineField({ name: "applicationOpening", title: "Application opening copy", type: "string" }),
+    defineField({ name: "applicationClosing", title: "Application closing copy", type: "string" }),
     defineField({ name: "residencyDates", title: "Residency dates", type: "string", validation: (rule) => rule.required() }),
     defineField({ name: "showcaseDates", title: "Showcase dates", type: "string", validation: (rule) => rule.required() }),
     defineField({ name: "applicationUrl", title: "Application URL", type: "url" }),
