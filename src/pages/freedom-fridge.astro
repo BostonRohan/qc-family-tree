@@ -43,7 +43,7 @@ const waysToHelp = [
       <div class="grid gap-3 sm:grid-cols-2 justify-items-center max-w-[700px] mx-auto">
         {waysToHelp.map((item, index) => (
           index === waysToHelp.length - 1 ? (
-            <a href={donateLink} class="mx-auto w-full max-w-[320px] rounded-xl border border-border bg-muted p-4 text-left text-sm hover:bg-muted/50 transition">
+            <a href={donateLink} target="_blank" rel="noreferrer" class="mx-auto w-full max-w-[320px] rounded-xl border border-border bg-muted p-4 text-left text-sm hover:bg-muted/50 transition">
               <p>Make a <span class="underline">donation</span> to support free food access and community care.</p>
             </a>
           ) : (
