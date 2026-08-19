@@ -66,6 +66,48 @@ export type FeaturedSection = {
   secondaryCtaLabel?: string;
 };
 
+export type CultureBearerCohort = {
+  _id: string;
+  _type: "cultureBearerCohort";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  enabled?: boolean;
+  title?: string;
+  applicationOpening?: string;
+  applicationClosing?: string;
+  residencyDates?: string;
+  showcaseDates?: string;
+  applicationUrl?: string;
+  additionalInformationUrl?: string;
+  applicationButtonLabel?: string;
+  additionalInformationButtonLabel?: string;
+};
+
+export type Alumni = {
+  _id: string;
+  _type: "alumni";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  cohort?: string;
+  portrait?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  altText?: string;
+  url?: string;
+  displayOrder?: number;
+  visible?: boolean;
+};
+
 export type SanityImageCrop = {
   _type: "sanity.imageCrop";
   top?: number;
@@ -184,7 +226,7 @@ export type Slug = {
   source?: string;
 };
 
-export type AllSanitySchemaTypes = Banner | Hero | FeaturedSection | SanityImageCrop | SanityImageHotspot | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint | Slug;
+export type AllSanitySchemaTypes = Banner | Hero | FeaturedSection | CultureBearerCohort | Alumni | SanityImageCrop | SanityImageHotspot | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint | Slug;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: src/components/banner.astro
 // Variable: BANNER_QUERY

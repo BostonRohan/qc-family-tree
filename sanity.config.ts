@@ -1,7 +1,7 @@
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { schemaTypes } from "studio/schemaTypes/index";
-import { getEnvVar, getRequiredEnvVar } from "@/utils/sanity";
+import { getRequiredEnvVar } from "@/utils/sanity";
 
 export default defineConfig({
   projectId: getRequiredEnvVar("PUBLIC_SANITY_STUDIO_PROJECT_ID"),
@@ -21,6 +21,10 @@ export default defineConfig({
                 .schemaType("featuredSection")
                 .documentId("featuredSection"),
             ),
+            S.listItem().title("Culture Bearer Next Cohort").id("cultureBearerCohort").child(
+              S.document().schemaType("cultureBearerCohort").documentId("cultureBearerCohort"),
+            ),
+            S.documentTypeListItem("alumni").title("Culture Bearer Alumni"),
           ]),
     }),
     structureTool({
@@ -36,6 +40,16 @@ export default defineConfig({
               S.document().schemaType("banner").documentId("banner"),
             ),
         ]),
+    }),
+    structureTool({
+      structure: (S) =>
+        S.list()
+          .title("Accountability")
+          .items([
+            S.listItem().title("Accountability").id("accountability").child(
+              S.document().schemaType("accountability").documentId("accountability"),
+            ),
+          ]),
     }),
     structureTool({
       structure: (S) =>

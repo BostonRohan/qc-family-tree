@@ -10,8 +10,10 @@ import {
 
 export default function PhotoCarousel({
   images,
+  arrowClassName = "",
 }: {
   images: { src: string; alt: string }[];
+  arrowClassName?: string;
 }) {
   return (
     <Carousel className="w-full max-w-2xl mx-auto">
@@ -29,8 +31,8 @@ export default function PhotoCarousel({
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="absolute -left-10 top-1/2 -translate-y-1/2" />
-        <CarouselNext className="absolute -right-10 top-1/2 -translate-y-1/2" />
+        <CarouselPrevious className={`absolute left-2 top-1/2 z-10 -translate-y-1/2 sm:-left-10 ${arrowClassName}`} />
+        <CarouselNext className={`absolute right-2 top-1/2 z-10 -translate-y-1/2 sm:-right-10 ${arrowClassName}`} />
       </div>
     </Carousel>
   );

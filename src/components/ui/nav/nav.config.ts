@@ -46,6 +46,11 @@ export const nav: NavItem[] = [
         description: "Join the Rhizome Coalition and co-create cultural power.",
       },
       {
+        title: "Culture Bearer Residency",
+        href: "/culture-bearer-residency",
+        description: "Give artists space and opportunity to create with purpose.",
+      },
+      {
         title: "Freedom Fridge",
         href: "/freedom-fridge",
         description: "See how mutual aid keeps food flowing 24/7.",
