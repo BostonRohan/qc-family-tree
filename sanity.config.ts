@@ -41,6 +41,16 @@ export default defineConfig({
             ),
           ]),
     }),
+    structureTool({
+      structure: (S) =>
+        S.list()
+          .title("Accountability")
+          .items([
+            S.listItem().title("Accountability").id("accountability").child(
+              S.document().schemaType("accountability").documentId("accountability"),
+            ),
+          ]),
+    }),
   ],
   schema: {
     types: schemaTypes,
