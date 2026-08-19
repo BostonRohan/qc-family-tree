@@ -35,6 +35,16 @@ export default defineConfig({
               // that we're editing the single instance of the document
               S.document().schemaType("banner").documentId("banner"),
             ),
+        ]),
+    }),
+    structureTool({
+      structure: (S) =>
+        S.list()
+          .title("Accountability")
+          .items([
+            S.listItem().title("Accountability").id("accountability").child(
+              S.document().schemaType("accountability").documentId("accountability"),
+            ),
           ]),
     }),
   ],
