@@ -7,38 +7,6 @@ import Programs from "@/components/sections/Programs.astro";
 import aboutBorder1 from "@/assets/about_border_1.jpeg";
 import aboutBorder2 from "@/assets/about_border_2.jpeg";
 import headerImage from "@/assets/about-option.jpg";
-import { defineQuery } from "groq";
-import { sanityClient } from "sanity:client";
-
-type Report = { year: number; url: string };
-type Accountability = {
-  annualReports?: Report[];
-  form990s?: Report[];
-};
-
-const ACCOUNTABILITY_QUERY = defineQuery(`
-  *[_type == "accountability" && _id == "accountability"][0] {
-    "annualReports": annualReports[] | order(year desc) { year, url },
-    "form990s": form990s[] | order(year desc) { year, url }
-  }
-`);
-
-const fallbackAccountability: Required<Accountability> = {
-  annualReports: [
-    { year: 2025, url: "https://drive.google.com/file/d/1IBK84-g3meMXCCtYt0trhv0DN1Ud2C0g/view?usp=sharing" },
-    { year: 2024, url: "https://drive.google.com/file/d/1obkW2SGpPdGztWhuNIfRWrGKMsCNSD7e/view?ts=69dfb735" },
-    { year: 2023, url: "https://drive.google.com/file/d/1dyT6Sn5XYs9uibEl5XQNaeutBs-xa7Ly/view?ts=69dfb756" },
-  ],
-  form990s: [
-    { year: 2024, url: "https://projects.propublica.org/nonprofits/organizations/204091165/202503149349305480/full" },
-    { year: 2023, url: "https://projects.propublica.org/nonprofits/organizations/204091165/202440729349301409/full" },
-    { year: 2022, url: "https://projects.propublica.org/nonprofits/organizations/204091165/202313039349301436/full" },
-  ],
-};
-
-const accountability =
-  (await sanityClient.fetch<Accountability | null>(ACCOUNTABILITY_QUERY)) ??
-  fallbackAccountability;
 
 const values = [
   "We believe that our freedom is connected to the freedom of people who are struggling the most.",
@@ -163,23 +131,14 @@ const cultivationPractices = [
       <p>
         QC Family Tree is guided by a team of staff, board members, and community partners who are dedicated to the long-term wellbeing of West Charlotte. We are committed to being open, responsible, and accountable to our community.
       </p>
-      <div class="space-y-6 pt-4">
-        <div>
-          <h3 class="font-semibold mb-2">Annual Reports</h3>
-          <ul class="flex flex-wrap gap-3">
-            {(accountability.annualReports ?? fallbackAccountability.annualReports).map((report) => (
-              <li><a href={report.url} target="_blank" rel="noreferrer" class="text-primary underline">{report.year}</a></li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <h3 class="font-semibold mb-2">Form 990s</h3>
-          <ul class="flex flex-wrap gap-3">
-            {(accountability.form990s ?? fallbackAccountability.form990s).map((report) => (
-              <li><a href={report.url} target="_blank" rel="noreferrer" class="text-primary underline">{report.year}</a></li>
-            ))}
-          </ul>
-        </div>
+      <div class="rounded-2xl border border-border bg-muted p-5">
+        <h3 class="font-ubuntu text-xl">Read our reports</h3>
+        <p class="mt-2 text-muted-foreground">
+          Visit the Donate page for annual reports, Form 990s, and information about how we steward community support.
+        </p>
+        <a href="/donate#accountability" class="mt-4 inline-block rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90">
+          View accountability records
+        </a>
       </div>
     </section>
   </div>

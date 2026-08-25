@@ -32,7 +32,6 @@ export default defineConfig({
   site: "https://www.qcfamilytree.org",
   redirects: {
     "/get-involved/contribute": "/freedom-fridge",
-    "/donate": "https://www.paypal.com/donate?hosted_button_id=5CZWHCA4YRQLW",
     "/events": "https://www.eventbrite.com/o/qc-family-tree-15926567999",
     "/rhizome/signup":
       "https://docs.google.com/forms/d/e/1FAIpQLSfYTyfmmSAruH8YgHCJ_dt-wKt9T13bfYXJyEls6bhCy3wwdg/viewform?usp=dialog",
