@@ -8,7 +8,8 @@ import Header from "@/components/Header.astro";
 import PhotoCarousel from "@/components/photo-carousel";
 import EmailSignup from "@/components/sections/EmailSignup.astro";
 import { Link } from "@/components/ui/link";
-import headerImage from "@/assets/mixed_metaphors_header.jpeg";
+import headerImage from "@/assets/culture-bearer-residency/culture_bearer_residency_header.jpg";
+import mixedMetaphorsImage from "@/assets/mixed_metaphors_header.jpeg";
 import residencyImage1 from "@/assets/culture-bearer-residency/cb_residency_1.jpg";
 import residencyImage3 from "@/assets/culture-bearer-residency/cb_residency_3.jpg";
 import residencyImage4 from "@/assets/culture-bearer-residency/cb_residency_4.jpg";
@@ -71,7 +72,7 @@ const goals = [
     title="Culture Bearer Residency"
     tagline="Giving artists the space and opportunity to create with purpose."
     image={headerImage}
-    imageAlt="Mixed Metaphors Productions artists gathered together in community"
+    imageAlt="Artists gathered together in community"
     overlayClassName="bg-gradient-to-t from-black/80 via-black/55 to-black/35"
     primaryCta={cohort?.applicationUrl ? { label: cohort.applicationButtonLabel || "Apply", href: cohort.applicationUrl, ...externalLinkProps } : undefined}
     secondaryCta={cohort?.additionalInformationUrl ? { label: cohort.additionalInformationButtonLabel || "Additional info", href: cohort.additionalInformationUrl, ...externalLinkProps } : undefined}
@@ -112,7 +113,7 @@ const goals = [
 
     <section class="mx-auto max-w-6xl space-y-8 px-4"><div class="mx-auto max-w-3xl space-y-3 text-center"><h2 class="text-3xl sm:text-4xl">This residency is designed to</h2></div><div class="grid gap-4 sm:grid-cols-2">{goals.map(([title, text], index) => <article class="rounded-2xl border border-border p-6"><span class="text-sm font-semibold text-secondary">0{index + 1}</span><h3 class="mt-2 text-2xl">{title}</h3><p>{text}</p></article>)}</div></section>
 
-    <section class="mx-auto grid max-w-6xl items-center gap-8 px-4 lg:grid-cols-2"><div class="space-y-5"><h2 class="text-3xl sm:text-4xl">Culture Bearer Organization-in-Residence</h2><p>Each summer, QC Family Tree opens our doors to support a cultural organization in need of space. <a href="https://www.instagram.com/mixedmetaphorsclt/" target="_blank" rel="noreferrer noopener" class="text-primary underline underline-offset-4 hover:opacity-80">Mixed Metaphors Productions</a>, an immersive theater production company, was in residency for Summer 2026.</p><p>Mixed Metaphors Productions disrupts narratives of erasure through immersive theatre, art installation, and new oral histories in Charlotte, NC.</p><p>They work to challenge Charlotte’s past, celebrate Charlotte’s present, and imagine a future where every Charlottean is valued.</p></div><img src={residencyImage4.src} alt="Community members gathered around a table" class="aspect-[4/3] w-full rounded-3xl object-cover" loading="lazy" /></section>
+    <section class="mx-auto grid max-w-6xl items-center gap-8 px-4 lg:grid-cols-2"><div class="space-y-5"><h2 class="text-3xl sm:text-4xl">Culture Bearer Organization-in-Residence</h2><p>Each summer, QC Family Tree opens our doors to support a cultural organization in need of space. <a href="https://www.instagram.com/mixedmetaphorsclt/" target="_blank" rel="noreferrer noopener" class="text-primary underline underline-offset-4 hover:opacity-80">Mixed Metaphors Productions</a>, an immersive theater production company, was in residency for Summer 2026.</p><p>Mixed Metaphors Productions disrupts narratives of erasure through immersive theatre, art installation, and new oral histories in Charlotte, NC.</p><p>They work to challenge Charlotte’s past, celebrate Charlotte’s present, and imagine a future where every Charlottean is valued.</p></div><img src={mixedMetaphorsImage.src} alt="Mixed Metaphors Productions artists gathered together in community" class="aspect-[4/3] w-full rounded-3xl object-cover" loading="lazy" /></section>
 
     <section class="bg-accent px-4 py-12 text-accent-foreground lg:py-16"><div class="mx-auto max-w-5xl space-y-8"><div class="space-y-3 text-center"><h2 class="text-3xl sm:text-4xl">Making space for culture</h2><p class="mx-auto max-w-2xl">A residency is a season of attention, experimentation, and shared possibility.</p></div><PhotoCarousel images={[{ src: residencyImage1.src, alt: "Culture Bearer Residency participants gathered together" }, { src: residencyImage3.src, alt: "Community members participating in a residency activity" }, { src: residencyImage5.src, alt: "Culture Bearer Residency gathering" }, { src: residencyImage6.src, alt: "Participants connecting through art and culture" }]} arrowClassName="cursor-pointer border-white/80 bg-black/40 text-white transition-colors hover:bg-black/60 sm:bg-transparent sm:hover:bg-white/20 disabled:cursor-not-allowed" client:load /></div></section>
 
