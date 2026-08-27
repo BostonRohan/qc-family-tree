@@ -8,7 +8,7 @@ import Header from "@/components/Header.astro";
 import PhotoCarousel from "@/components/photo-carousel";
 import EmailSignup from "@/components/sections/EmailSignup.astro";
 import { Link } from "@/components/ui/link";
-import headerImage from "@/assets/culture-bearer-residency/culture_bearer_residency_header.jpg";
+import headerImage from "@/assets/mixed_metaphors_header.jpeg";
 import residencyImage1 from "@/assets/culture-bearer-residency/cb_residency_1.jpg";
 import residencyImage3 from "@/assets/culture-bearer-residency/cb_residency_3.jpg";
 import residencyImage4 from "@/assets/culture-bearer-residency/cb_residency_4.jpg";
@@ -71,7 +71,7 @@ const goals = [
     title="Culture Bearer Residency"
     tagline="Giving artists the space and opportunity to create with purpose."
     image={headerImage}
-    imageAlt="Artists gathered together in community"
+    imageAlt="Mixed Metaphors Productions artists gathered together in community"
     overlayClassName="bg-gradient-to-t from-black/80 via-black/55 to-black/35"
     primaryCta={cohort?.applicationUrl ? { label: cohort.applicationButtonLabel || "Apply", href: cohort.applicationUrl, ...externalLinkProps } : undefined}
     secondaryCta={cohort?.additionalInformationUrl ? { label: cohort.additionalInformationButtonLabel || "Additional info", href: cohort.additionalInformationUrl, ...externalLinkProps } : undefined}
