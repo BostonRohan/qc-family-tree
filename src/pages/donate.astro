@@ -1,54 +1,398 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import Accountability from "@/components/sections/Accountability.astro";
+import { Copy, CopyCheck } from "lucide-react";
 
-const paypalDonateUrl = "https://www.paypal.com/donate";
-const paypalHostedButtonId = "5CZWHCA4YRQLW";
+const paypalClientId = import.meta.env.PAYPAL_CLIENT_ID;
+const paypalApiUrl = import.meta.env.PAYPAL_API_URL || "https://api-m.sandbox.paypal.com";
+const paypalSdkHost = paypalApiUrl.includes("sandbox") ? "www.sandbox.paypal.com" : "www.paypal.com";
+const paypalFallbackUrl = "https://www.paypal.com/donate?hosted_button_id=5CZWHCA4YRQLW";
 const amounts = [25, 50, 100, 250];
+const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
 ---
 
 <Layout title="Give to QC Family Tree" description="Support community care, cultural organizing, affordable housing, and free food access in Charlotte." slug="donate">
   <main data-variate-section="donate-page" class="bg-muted pb-20 pt-28 sm:pt-36">
     <section class="mx-auto max-w-6xl px-4">
       <div class="max-w-3xl">
-        <p class="font-ubuntu text-lg text-accent">Give where you live</p>
-        <h1 class="mt-5 text-5xl leading-[0.98] tracking-tight sm:text-7xl">Support the work. See how we steward it.</h1>
-        <p class="mt-6 text-lg leading-relaxed text-muted-foreground sm:text-xl">Your gift helps QC Family Tree cultivate belonging, mutual care, and economic resilience through free food access, cultural programs, and neighborhood-rooted organizing.</p>
+        <p class="font-ubuntu text-lg text-accent">Lorem ipsum dolor sit amet</p>
+        <h1 class="mt-5 text-5xl leading-[0.98] tracking-tight sm:text-7xl">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h1>
+        <p class="mt-6 text-lg leading-relaxed text-muted-foreground sm:text-xl">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae sem at justo facilisis tincidunt, curabitur euismod sapien sed gravida feugiat.</p>
       </div>
     </section>
 
-    <section class="mx-auto mt-12 grid max-w-6xl gap-10 px-4 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-16">
+    <section data-paypal-client-id={paypalClientId} data-paypal-sdk-host={paypalSdkHost} data-giving-mode={isMonthly ? "monthly" : "one-time"} class="mx-auto mt-12 grid max-w-6xl gap-10 px-4 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-16">
       <div class="rounded-3xl bg-white p-6 shadow-sm sm:p-8">
         <h2 class="text-3xl">Make a gift</h2>
-        <p class="mt-2 text-base text-muted-foreground">Choose an amount, then finish securely with PayPal.</p>
-        <div class="mt-6 grid grid-cols-2 rounded-xl bg-muted p-1" role="group" aria-label="Gift frequency">
-          <button type="button" aria-pressed="true" class="rounded-lg bg-white px-3 py-2 text-sm font-semibold shadow-sm">One-time</button>
-          <button type="button" aria-disabled="true" disabled class="cursor-not-allowed rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground">Monthly <span class="ml-1 text-xs font-normal">Coming soon</span></button>
+        <div class="mt-5 grid grid-cols-2 rounded-xl bg-muted p-1" role="tablist" aria-label="Gift frequency">
+          <a href="/donate" role="tab" aria-selected={!isMonthly ? "true" : "false"} class:list={["rounded-lg px-3 py-2 text-center text-sm font-semibold", { "bg-white shadow-sm": !isMonthly, "text-muted-foreground": isMonthly }]}>One-time</a>
+          <a href="/donate?giving=monthly" role="tab" aria-selected={isMonthly ? "true" : "false"} class:list={["rounded-lg px-3 py-2 text-center text-sm font-semibold", { "bg-white shadow-sm": isMonthly, "text-muted-foreground": !isMonthly }]}>Monthly</a>
         </div>
-        <form action={paypalDonateUrl} method="post" target="_top" class="mt-6 space-y-5">
-          <input type="hidden" name="hosted_button_id" value={paypalHostedButtonId} />
+        <p class="mt-3 text-base text-muted-foreground">{isMonthly ? "Choose a monthly amount, then finish securely with PayPal." : "Choose an amount, then finish securely with PayPal."}</p>
+        {!isMonthly && <div id="donation-checkout" class="mt-6 space-y-5">
           <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {amounts.map((amount) => (
               <label class="cursor-pointer">
-                <input class="peer sr-only" type="radio" name="amount" value={amount} checked={amount === 50} />
+                <input class="peer sr-only" type="radio" name="amount" value={amount} checked={amount === 25} />
                 <span class="flex justify-center rounded-xl border border-border px-3 py-3 font-ubuntu text-lg peer-checked:border-secondary peer-checked:bg-secondary peer-checked:text-secondary-foreground">${amount}</span>
               </label>
             ))}
           </div>
           <label class="block text-sm font-semibold">Or enter another amount<span class="mt-2 flex rounded-xl bg-muted px-4 text-lg"><span class="py-3">$</span><input name="amount_other" type="number" min="1" placeholder="50" class="w-full bg-transparent px-2 py-3 outline-none" /></span></label>
-          <div class="flex items-start gap-3 rounded-2xl border border-border bg-muted/60 p-4">
-            <input id="remember-gift" type="checkbox" disabled class="mt-1 h-4 w-4 accent-secondary" />
-            <label for="remember-gift" class="text-sm"><span class="font-semibold">Remember this gift for next time</span><span class="mt-1 block font-normal text-muted-foreground">Coming soon. We will remember your amount, never your payment details.</span></label>
+          <div id="remember-gift-container" class="hidden items-start gap-3 rounded-2xl border border-border bg-muted/60 p-4">
+            <input id="remember-gift" type="checkbox" class="mt-1 h-4 w-4 accent-secondary" />
+            <label for="remember-gift" class="text-sm"><span class="font-semibold">Remember this gift for next time</span><span class="mt-1 block font-normal text-muted-foreground">We’ll remember your amount, never your payment details.</span></label>
           </div>
-          <button type="submit" class="w-full rounded-xl bg-accent px-6 py-4 font-ubuntu text-lg font-bold text-accent-foreground">Continue with PayPal</button>
-        </form>
+          <div class="mt-6 grid grid-cols-2 rounded-xl bg-muted p-1" role="tablist" aria-label="Payment method">
+            <button id="paypal-method-button" type="button" role="tab" aria-selected="true" class="rounded-lg bg-white px-3 py-2 text-sm font-semibold shadow-sm">Pay with PayPal</button>
+            <button id="card-method-button" type="button" role="tab" aria-selected="false" class="rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground">Pay with card</button>
+          </div>
+          <div id="paypal-payment-panel" role="tabpanel" class="mx-auto w-full max-w-md">
+            <div id="paypal-button-container"></div>
+          </div>
+          <div id="card-form" role="tabpanel" class="mx-auto hidden max-w-md space-y-3">
+            <div id="card-name-field-container" class="rounded-lg border border-border px-3 py-2"></div>
+            <div id="card-number-field-container" class="rounded-lg border border-border px-3 py-2"></div>
+            <div class="grid gap-3 sm:grid-cols-2">
+              <div id="card-expiry-field-container" class="rounded-lg border border-border px-3 py-2"></div>
+              <div id="card-cvv-field-container" class="rounded-lg border border-border px-3 py-2"></div>
+            </div>
+            <button id="card-field-submit-button" type="button" disabled class="w-full rounded-xl bg-secondary px-6 py-4 font-ubuntu text-lg font-bold text-secondary-foreground disabled:cursor-not-allowed disabled:opacity-50">Pay by card</button>
+          </div>
+          <p id="paypal-status" class="sr-only" role="status"></p>
+        </div>}
+        {isMonthly && <div id="monthly-checkout" class="mt-6 space-y-5">
+          <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {amounts.map((amount) => (
+              <label class="cursor-pointer">
+                <input class="peer sr-only" type="radio" name="monthly_amount" value={amount} checked={amount === 25} />
+                <span class="flex justify-center rounded-xl border border-border px-3 py-3 font-ubuntu text-lg peer-checked:border-secondary peer-checked:bg-secondary peer-checked:text-secondary-foreground">${amount}</span>
+              </label>
+            ))}
+          </div>
+          <label class="block text-sm font-semibold">Or enter another monthly amount<span class="mt-2 flex rounded-xl bg-muted px-4 text-lg"><span class="py-3">$</span><input name="monthly_amount_other" type="number" min="1" max="10000" step="0.01" placeholder="35" class="w-full bg-transparent px-2 py-3 outline-none" /></span></label>
+          <div id="monthly-paypal-button-container" class="mx-auto w-full max-w-md"></div>
+          <p id="monthly-paypal-status" class="sr-only" role="status"></p>
+          <div id="monthly-gift-management" class="rounded-2xl border border-border bg-muted/60 p-4 text-center">
+            <h3 class="font-ubuntu text-lg font-bold">Already giving monthly?</h3>
+            <p class="mt-1 text-sm text-muted-foreground">Manage or cancel your monthly gift anytime from PayPal’s Automatic Payments settings.</p>
+            <a href="https://www.paypal.com/myaccount/autopay/" target="_blank" rel="noreferrer" class="mt-3 inline-block font-semibold text-primary underline">Manage or cancel in PayPal</a>
+          </div>
+        </div>}
+        <div id="paypal-fallback" class="mt-5 hidden rounded-2xl border border-border bg-muted/60 p-4 text-center text-base">
+          <p>PayPal checkout is temporarily unavailable.</p>
+          <p class="mt-1 text-muted-foreground">You’ll need to enter your donation amount again on the fallback page.</p>
+          <a href={paypalFallbackUrl} target="_blank" rel="noreferrer" class="mt-2 inline-block font-semibold text-primary underline">Continue with PayPal’s fallback donation page</a>
+        </div>
       </div>
       <div class="space-y-5">
-        <article class="rounded-3xl bg-accent p-6 text-accent-foreground sm:p-8"><h2 class="text-3xl">Why give?</h2><p class="mt-3 leading-relaxed text-accent-foreground/80">We believe thriving communities are built through shared resources, cultural imagination, and sustained mutual care. Your contribution helps keep that practice rooted in Charlotte.</p></article>
-        <article class="rounded-3xl border border-border bg-white p-6 sm:p-8"><h2 class="text-2xl">Giving beyond PayPal</h2><ul class="mt-3 space-y-3 text-muted-foreground"><li><span class="font-semibold text-foreground">Checks:</span> contact us for mailing details.</li><li><span class="font-semibold text-foreground">Monthly giving:</span> coming soon online.</li><li><span class="font-semibold text-foreground">Employer matching:</span> ask your workplace how to get started.</li></ul><a href="mailto:info@qcfamilytree.org" class="mt-4 inline-block text-primary underline">info@qcfamilytree.org</a></article>
+        <div id="donation-supporting-info" class="space-y-5">
+        <article class="rounded-3xl bg-accent p-6 text-accent-foreground sm:p-8"><h2 class="text-3xl">Why give?</h2><p class="mt-3 leading-relaxed text-accent-foreground/80">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae sem at justo facilisis tincidunt. Curabitur euismod, sapien sed gravida feugiat, nisl lorem consequat justo, vitae posuere arcu ipsum non erat.</p></article>
+        <article class="rounded-3xl border border-border bg-white p-6 sm:p-8"><h2 class="text-2xl">Giving beyond PayPal</h2><p class="mt-3 leading-relaxed text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vehicula, nibh at suscipit luctus, neque lorem posuere magna, vitae tincidunt lectus justo sed arcu. Nam blandit, urna vel aliquam cursus, lorem ipsum consequat erat.</p><a href="mailto:info@qcfamilytree.org" class="mt-4 inline-block text-primary underline">info@qcfamilytree.org</a></article>
+        </div>
+        <section id="donation-confirmation" class="hidden rounded-3xl bg-secondary p-8 text-center text-secondary-foreground shadow-sm sm:p-10" aria-live="polite">
+        <p class="font-ubuntu text-lg font-bold uppercase tracking-[0.16em]">Thank you</p>
+        <h2 class="mt-3 text-4xl leading-tight sm:text-5xl">Your gift is making a difference.</h2>
+        <p id="donation-confirmation-message" class="mt-4 text-lg leading-relaxed text-secondary-foreground/80"></p>
+        <p id="subscription-id-row" class="mt-5 hidden text-base">Subscription ID: <strong id="subscription-id" class="break-all underline"></strong> <button id="copy-subscription-id" type="button" class="ml-2 inline-flex size-8 items-center justify-center rounded-lg border border-secondary-foreground/40 align-middle" aria-label="Copy subscription ID" title="Copy subscription ID"><Copy className="copy-icon size-4" /><CopyCheck className="copied-icon hidden size-4" /></button></p>
+        </section>
+        <section id="donation-payment-error" class="hidden rounded-3xl border-2 border-destructive/30 bg-white p-8 text-center shadow-sm sm:p-10" aria-live="assertive">
+          <p class="font-ubuntu text-lg font-bold uppercase tracking-[0.16em] text-destructive">Payment issue</p>
+          <h2 class="mt-3 text-4xl leading-tight sm:text-5xl">We couldn’t complete that gift.</h2>
+          <p id="donation-payment-error-message" class="mt-4 text-lg leading-relaxed text-muted-foreground"></p>
+          <p class="mt-4 text-base text-muted-foreground">Your payment was not completed. Please try again or refresh the page to start over.</p>
+        </section>
       </div>
     </section>
 
     <div class="mx-auto mt-16 max-w-6xl px-4"><Accountability /></div>
   </main>
 </Layout>
+
+<script>
+  // @ts-nocheck
+  import { setupDonationAmountMemory } from "@/lib/donation-amount-memory";
+  import {
+    buildPayPalSdkUrl,
+    copySubscriptionId as copySubscriptionIdState,
+    setCardProcessingState,
+    setPayPalClientToken,
+    showConfirmation as showConfirmationState,
+    showFallback as showFallbackState,
+    showPaymentError as showPaymentErrorState,
+  } from "@/lib/donation-checkout-ui";
+
+  const donationSection = document.querySelector("[data-paypal-client-id]");
+  const paypalClientId = donationSection?.getAttribute("data-paypal-client-id") || "";
+  const paypalSdkHost = donationSection?.getAttribute("data-paypal-sdk-host") || "www.sandbox.paypal.com";
+  const givingMode = donationSection?.getAttribute("data-giving-mode") || "one-time";
+  const supportingInfo = document.getElementById("donation-supporting-info");
+  const confirmation = document.getElementById("donation-confirmation");
+  const confirmationMessage = document.getElementById("donation-confirmation-message");
+  const subscriptionIdRow = document.getElementById("subscription-id-row");
+  const subscriptionId = document.getElementById("subscription-id");
+  const copySubscriptionId = document.getElementById("copy-subscription-id");
+  const copyIcon = copySubscriptionId?.querySelector(".copy-icon");
+  const copiedIcon = copySubscriptionId?.querySelector(".copied-icon");
+  const paymentError = document.getElementById("donation-payment-error");
+  const paymentErrorMessage = document.getElementById("donation-payment-error-message");
+  const donationCheckout = document.getElementById("donation-checkout");
+  const monthlyCheckout = document.getElementById("monthly-checkout");
+  const paypalFallback = document.getElementById("paypal-fallback");
+  const status = document.getElementById("paypal-status");
+  const previewPaymentError = new URLSearchParams(window.location.search).get("paypalError") === "1";
+  const previewPaymentSuccess = new URLSearchParams(window.location.search).get("paypalSuccess") === "1";
+
+  const checkoutElements = {
+    supportingInfo,
+    confirmation,
+    confirmationMessage,
+    subscriptionIdRow,
+    subscriptionId,
+    paymentError,
+    paymentErrorMessage,
+    donationCheckout,
+    monthlyCheckout,
+    paypalFallback,
+  };
+  const showConfirmation = (message, subscriptionID) => showConfirmationState(checkoutElements, message, subscriptionID);
+
+  copySubscriptionId?.addEventListener("click", async () => {
+    await copySubscriptionIdState(
+      {
+        button: copySubscriptionId,
+        source: subscriptionId,
+        copyIcon,
+        copiedIcon,
+      },
+      navigator.clipboard,
+    );
+  });
+
+  const showPaymentError = (message) => {
+    showPaymentErrorState(checkoutElements, message);
+  };
+
+  const showFallback = () => {
+    showFallbackState(checkoutElements);
+    if (status) status.textContent = "PayPal checkout is temporarily unavailable. You can use the fallback donation page below.";
+  };
+
+  if (givingMode === "monthly") {
+    const monthlyContainer = document.getElementById("monthly-paypal-button-container");
+    const monthlyStatus = document.getElementById("monthly-paypal-status");
+    const monthlyCustomAmount = document.querySelector('input[name="monthly_amount_other"]');
+    const monthlyPresetAmounts = document.querySelectorAll('input[name="monthly_amount"]');
+
+    const getMonthlyAmount = () => {
+      const selected = document.querySelector('input[name="monthly_amount"]:checked');
+      return monthlyCustomAmount?.value || selected?.value || "";
+    };
+
+    const createMonthlyPlan = async () => {
+      const amount = Number(getMonthlyAmount());
+      if (!Number.isFinite(amount) || amount < 1 || amount > 10000) {
+        throw new Error("Enter a monthly amount between $1 and $10,000.");
+      }
+      const response = await fetch("/api/paypal/create-subscription-plan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Unable to start monthly giving.");
+      return data.planId;
+    };
+
+    monthlyPresetAmounts.forEach((input) => input.addEventListener("change", () => {
+      if (monthlyCustomAmount) monthlyCustomAmount.value = "";
+    }));
+    monthlyCustomAmount?.addEventListener("input", () => {
+      if (monthlyCustomAmount.value) monthlyPresetAmounts.forEach((input) => { input.checked = false; });
+    });
+
+    const renderMonthlyPayPal = () => {
+      if (!monthlyContainer || !window.paypal) {
+        showFallback();
+        return;
+      }
+      window.paypal.Buttons({
+        createSubscription: async (_data, actions) => {
+          if (monthlyStatus) monthlyStatus.textContent = "Preparing your monthly gift…";
+          const planId = await createMonthlyPlan();
+          return actions.subscription.create({ plan_id: planId });
+        },
+        onApprove: (data) => {
+          const message = `Your monthly gift is active. Your subscription ID is ${data.subscriptionID}. You can manage or cancel it anytime through PayPal.`;
+          if (monthlyStatus) monthlyStatus.textContent = message;
+          showConfirmation(message, data.subscriptionID);
+        },
+        onError: (error) => {
+          console.error(error);
+          const message = error.message || "Monthly giving could not be completed. Please try again.";
+          if (monthlyStatus) monthlyStatus.textContent = message;
+          showPaymentError(message);
+        },
+      }).render("#monthly-paypal-button-container");
+    };
+
+    if (previewPaymentSuccess) {
+      showConfirmation("Your monthly gift is active. You can manage or cancel it anytime through PayPal.", "I-TEST-SUBSCRIPTION-123");
+    } else if (previewPaymentError) {
+      showPaymentError("This is a preview of the error state. No payment was attempted.");
+    } else {
+      const sdk = document.createElement("script");
+      sdk.src = `${buildPayPalSdkUrl({ host: paypalSdkHost, clientId: paypalClientId, intent: "subscription", components: "buttons" })}&vault=true`;
+      sdk.onload = renderMonthlyPayPal;
+      sdk.onerror = () => {
+        showFallback();
+      };
+      document.head.appendChild(sdk);
+    }
+  } else {
+  const getDonationAmount = () => {
+    const selected = document.querySelector('input[name="amount"]:checked');
+    const custom = document.querySelector<HTMLInputElement>('input[name="amount_other"]');
+    return custom?.value ? custom.value : selected?.value;
+  };
+
+  const container = document.getElementById("paypal-button-container");
+  const cardForm = document.getElementById("card-form");
+  const cardSubmit = document.getElementById("card-field-submit-button");
+  const paypalPanel = document.getElementById("paypal-payment-panel");
+  const paypalMethodButton = document.getElementById("paypal-method-button");
+  const cardMethodButton = document.getElementById("card-method-button");
+  let cardField;
+  let cardFieldsRendered = false;
+
+  setupDonationAmountMemory(document, window.localStorage);
+
+  const setPaymentMethod = (method) => {
+    const showCard = method === "card";
+    paypalPanel.classList.toggle("hidden", showCard);
+    cardForm.classList.toggle("hidden", !showCard);
+    paypalMethodButton.setAttribute("aria-selected", String(!showCard));
+    cardMethodButton.setAttribute("aria-selected", String(showCard));
+    paypalMethodButton.classList.toggle("bg-white", !showCard);
+    paypalMethodButton.classList.toggle("shadow-sm", !showCard);
+    cardMethodButton.classList.toggle("bg-white", showCard);
+    cardMethodButton.classList.toggle("shadow-sm", showCard);
+    paypalMethodButton.classList.toggle("text-muted-foreground", showCard);
+    cardMethodButton.classList.toggle("text-muted-foreground", !showCard);
+
+    if (showCard && cardField && !cardFieldsRendered) {
+      cardForm.classList.remove("hidden");
+      cardField.NameField().render("#card-name-field-container");
+      cardField.NumberField().render("#card-number-field-container");
+      cardField.ExpiryField().render("#card-expiry-field-container");
+      cardField.CVVField().render("#card-cvv-field-container");
+      cardFieldsRendered = true;
+      cardSubmit.disabled = false;
+    }
+  };
+
+  paypalMethodButton.addEventListener("click", () => setPaymentMethod("paypal"));
+  cardMethodButton.addEventListener("click", () => setPaymentMethod("card"));
+
+  const createOrder = async () => {
+    const response = await fetch("/api/paypal/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: getDonationAmount() }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Unable to start PayPal checkout.");
+    return data.id;
+  };
+
+  const captureOrder = async (orderID) => {
+    try {
+      const response = await fetch("/api/paypal/capture-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderID }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Unable to complete the donation.");
+      status.textContent = "Thank you! Your sandbox donation was completed successfully.";
+      showConfirmation("Your one-time gift was completed successfully. Thank you for supporting QC Family Tree.");
+    } catch (error) {
+      console.error(error);
+      const message = error.message || "Unable to complete the donation. Please try again.";
+      status.textContent = message;
+      showPaymentError(message);
+    }
+  };
+
+  const renderPayPalCheckout = () => {
+    if (!container) return;
+    if (!window.paypal) {
+      showFallback();
+      return;
+    }
+    window.paypal.Buttons({
+      createOrder,
+      onApprove: (data) => captureOrder(data.orderID),
+      onError: (error) => {
+        console.error(error);
+        showPaymentError(error.message || "PayPal checkout could not be completed. Please try again.");
+        status.textContent = error.message || "PayPal checkout could not be completed. Please try again.";
+      },
+    }).render("#paypal-button-container");
+
+    cardField = window.paypal.CardFields({
+      createOrder,
+      onApprove: (data) => captureOrder(data.orderID),
+      onError: (error) => {
+        console.error(error);
+        showPaymentError(error.message || "Card payment could not be completed. Please try again.");
+        status.textContent = error.message || "Card payment could not be completed. Please try again.";
+        setCardProcessingState(cardSubmit, false);
+      },
+      style: { input: { "font-size": "16px", color: "#1f2937" }, ".invalid": { color: "#b91c1c" } },
+    });
+
+    if (!cardField.isEligible()) {
+      cardMethodButton.disabled = true;
+      cardMethodButton.textContent = "Card unavailable";
+      return;
+    }
+    if (cardMethodButton.getAttribute("aria-selected") === "true") setPaymentMethod("card");
+    cardSubmit.addEventListener("click", async () => {
+      setCardProcessingState(cardSubmit, true);
+      status.textContent = "Processing your card payment…";
+      try {
+        await cardField.submit();
+      } catch (error) {
+        console.error(error);
+        status.textContent = error.message || "Card payment could not be completed.";
+        setCardProcessingState(cardSubmit, false);
+      }
+    });
+  };
+
+  const initializePayPal = async () => {
+    if (!container) return;
+    try {
+      const response = await fetch("/api/paypal/client-token");
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Unable to initialize PayPal sandbox.");
+      const sdk = document.createElement("script");
+      sdk.src = buildPayPalSdkUrl({ host: paypalSdkHost, clientId: paypalClientId, intent: "capture", components: "buttons,card-fields" });
+      setPayPalClientToken(sdk, data.clientToken);
+      sdk.onload = renderPayPalCheckout;
+      sdk.onerror = showFallback;
+      document.head.appendChild(sdk);
+    } catch (error) {
+      console.error(error);
+      showFallback();
+    }
+  };
+
+  const previewFallback = new URLSearchParams(window.location.search).get("paypalFallback") === "1";
+  if (previewPaymentSuccess) showConfirmation("Your one-time gift was completed successfully. Thank you for supporting QC Family Tree.");
+  else if (previewPaymentError) showPaymentError("This is a preview of the error state. No payment was attempted.");
+  else if (previewFallback) showFallback();
+  else initializePayPal();
+  }
+</script>

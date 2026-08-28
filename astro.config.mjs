@@ -13,6 +13,15 @@ const {
 // Different environments use different variables
 const projectId = PUBLIC_SANITY_STUDIO_PROJECT_ID || PUBLIC_SANITY_PROJECT_ID;
 const dataset = PUBLIC_SANITY_STUDIO_DATASET || PUBLIC_SANITY_DATASET;
+const sentryBuildOptions = process.env.SENTRY_AUTH_TOKEN
+  ? {
+      sourceMapsUploadOptions: {
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+        org: process.env.SENTRY_ORG,
+        project: process.env.SENTRY_PROJECT,
+      },
+    }
+  : {};
 
 import sanity from "@sanity/astro";
 import react from "@astrojs/react";
@@ -23,6 +32,7 @@ import vercel from "@astrojs/vercel";
 import tailwind from "@tailwindcss/vite";
 
 import icon from "astro-icon";
+import sentry from "@sentry/astro";
 
 // https://astro.build/config
 export default defineConfig({
@@ -64,5 +74,6 @@ export default defineConfig({
     react(),
     icon(),
     sitemap(),
+    sentry({ telemetry: false, ...sentryBuildOptions }),
   ],
 });
