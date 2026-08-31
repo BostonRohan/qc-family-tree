@@ -44,7 +44,7 @@ const {
 <section
   id="hero"
   data-hero-section
-  class={`w-full relative min-h-[650px] flex items-center justify-center overflow-hidden pt-16 sm:pt-20 lg:pt-28 ${className}`}
+  class={`relative flex min-h-[560px] w-full items-center overflow-hidden py-28 sm:py-32 lg:py-40 ${className}`}
 >
   <Image
     src={image}
@@ -56,38 +56,26 @@ const {
     class={`absolute inset-0 w-full h-full object-cover ${imageClassName}`}
   />
   <div class={`absolute inset-0 ${overlayClassName}`}></div>
-  <div class="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex flex-col items-center lg:items-start lg:flex-row lg:gap-12 gap-8">
-      <div class="flex flex-col items-center lg:items-start gap-6 lg:gap-8">
+  <div class="site-container relative z-10">
+    <div class="max-w-4xl">
+      <div class="flex flex-col items-center gap-6 text-center lg:items-start lg:text-left">
         <Image
-          width={180}
-          height={180}
+          width={128}
+          height={128}
           format="png"
           src={logoImage}
           alt="QC Family Tree"
           loading="eager"
           fetchpriority="high"
-          class={`w-32 h-32 sm:w-40 sm:h-40 drop-shadow-lg ${logoClassName}`}
+          class={`h-24 w-24 drop-shadow-lg sm:h-28 sm:w-28 ${logoClassName}`}
         />
-        <div>
-          <h1 class="flex flex-col font-semibold text-center lg:text-left gap-1 font-ubuntu">
-            <span class="text-4xl sm:text-5xl lg:text-6xl text-white drop-shadow-lg">
-              {title}
-            </span>
-            {tagline && (
-              <span class="text-2xl sm:text-3xl lg:text-4xl text-secondary drop-shadow-lg">
-                {tagline}
-              </span>
-            )}
-            {subline && (
-              <span class="text-xl sm:text-2xl lg:text-3xl text-secondary drop-shadow-lg">
-                {subline}
-              </span>
-            )}
-          </h1>
-        </div>
+        <h1 class="text-balance text-5xl leading-[0.95] tracking-tight text-white drop-shadow-lg sm:text-6xl lg:text-7xl">
+          {title}
+        </h1>
+        {tagline && <p class="font-ubuntu text-xl font-bold text-secondary drop-shadow-lg sm:text-2xl">{tagline}</p>}
+        {subline && <p class="max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">{subline}</p>}
         {(primaryCta || secondaryCta) && (
-          <div class="flex flex-wrap gap-3">
+          <div class="flex flex-wrap justify-center gap-3 lg:justify-start">
             {primaryCta && (
               <Link
                 size="lg"

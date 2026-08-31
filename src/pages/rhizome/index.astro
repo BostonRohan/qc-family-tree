@@ -20,29 +20,27 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
   slug="/rhizome"
   title="Rhizome Coalition"
 >
-  <div>
-    <Header
-      imageClassName="!object-top"
-      title="Rhizome Coalition"
-      tagline="Artists united for community and creativity."
-      image={slide_1}
-      primaryCta={{
-        label: "Sign up",
-        href: "/rhizome/signup",
-      }}
-    />
-  </div>
+  <Header
+    imageClassName="!object-top"
+    title="Rhizome Coalition"
+    tagline="Artists united for community and creativity."
+    image={slide_1}
+    primaryCta={{
+      label: "Sign up",
+      href: "/rhizome/signup",
+    }}
+  />
   <section
     id="about"
-    class="bg-accent lg:p-16 md:p-8 p-4 text-neutral-100 space-y-4"
+    class="site-section bg-accent text-accent-foreground"
   >
     <div
-      class="dark bg-accent-foreground-hover border border-secondary-dark p-8 rounded-xl space-y-4 w-full"
+        class="mx-auto w-full max-w-6xl border-y border-accent-foreground/30 py-8 sm:py-12"
     >
       <div
-        class="max-w-[932px] mx-auto flex justify-center gap-6 flex-wrap-reverse"
+        class="grid items-center gap-8 lg:grid-cols-2"
       >
-        <div class="px-6 w-full max-w-full">
+        <div class="w-full">
           <PhotoCarousel
             images={[
               {
@@ -65,7 +63,7 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
             client:load
           />
         </div>
-        <div class="space-y-3 w-full max-w-2xl">
+        <div class="space-y-5">
           <h2 class="sm:text-3xl text-xl font-bold font-ubuntu">
             What is the
             <CustomTooltip
@@ -86,25 +84,25 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
             build a strong support system for our work and our collective
             progress.
           </p>
-<div class="flex gap-4 sm:flex-row flex-col">
-<Link
-              className="flex-1 rounded-xl"
-              href="/rhizome/signup">Sign up</Link>
+          <div class="flex flex-col gap-3 sm:flex-row">
+            <Link className="rounded-xl" href="/rhizome/signup">Sign up</Link>
             <Link
-              className="flex-1 rounded-xl"
-            variant="outline"
+              className="rounded-xl border-accent-foreground/70 text-accent-foreground hover:bg-accent-foreground hover:text-accent"
+              variant="outline"
               href="#faqs">View FAQs</Link>
           </div>
         </div>
       </div>
     </div>
   </section>
-  <section id="benefits" class="max-w-[932px] mx-auto py-16 px-4">
-    <h2 class="sm:text-3xl text-xl font-semibold mb-6 font-ubuntu">
+  <section id="benefits" class="site-section">
+    <div class="site-container max-w-4xl">
+    <p class="section-kicker">Membership</p>
+    <h2 class="mb-8 mt-2 text-3xl font-semibold sm:text-4xl">
       Membership Benefits
     </h2>
-    <ul class="space-y-4">
-      <li class="flex items-start gap-3">
+    <ul class="grid gap-x-10 sm:grid-cols-2">
+      <li class="flex items-start gap-3 border-t border-border py-5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -124,7 +122,7 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
         <span>Be a member of a supportive group of artists.</span>
       </li>
 
-      <li class="flex items-start gap-3">
+      <li class="flex items-start gap-3 border-t border-border py-5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -144,7 +142,7 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
         <span>1 half day retreat</span>
       </li>
 
-      <li class="flex items-start gap-3">
+      <li class="flex items-start gap-3 border-t border-border py-5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -164,7 +162,7 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
         <span>Special invitations to events.</span>
       </li>
 
-      <li class="flex items-start gap-3">
+      <li class="flex items-start gap-3 border-t border-border py-5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -184,7 +182,7 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
         <span>Exclusive discounts on events.</span>
       </li>
 
-      <li class="flex items-start gap-3">
+      <li class="flex items-start gap-3 border-t border-border py-5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -207,7 +205,7 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
         <span>Skill share opportunities with fellow artists.</span>
       </li>
 
-      <li class="flex items-start gap-3">
+      <li class="flex items-start gap-3 border-t border-border py-5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -228,7 +226,7 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
         <span>Artist-specific news and offers.</span>
       </li>
 
-      <li class="flex items-start gap-3">
+      <li class="flex items-start gap-3 border-t border-border py-5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -247,7 +245,7 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
         <span>Grant writing and portfolio development.</span>
       </li>
 
-      <li class="flex items-start gap-3">
+      <li class="flex items-start gap-3 border-t border-border py-5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -276,7 +274,7 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
         </span>
       </li>
 
-      <li class="flex items-start gap-3">
+      <li class="flex items-start gap-3 border-t border-border py-5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -300,7 +298,7 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
         >
       </li>
 
-      <li class="flex items-start gap-3">
+      <li class="flex items-start gap-3 border-t border-border py-5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -345,9 +343,10 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
         </span>
       </li>
     </ul>
+    </div>
   </section>
-  <section id="faqs" class="bg-secondary py-16 px-4 text-white w-full">
-    <div class="max-w-[932px] mx-auto">
+  <section id="faqs" class="site-section bg-accent text-accent-foreground">
+    <div class="site-container max-w-4xl">
       <h2 class="sm:text-3xl text-xl font-semibold font-ubuntu">FAQs</h2>
       <RhizomeFAQ client:load />
     </div>

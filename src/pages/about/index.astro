@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import SectionHeading from "@/components/ui/SectionHeading.astro";
+import { Link } from "@/components/ui/link";
 import { Image } from "astro:assets";
 import Programs from "@/components/sections/Programs.astro";
 import aboutBorder1 from "@/assets/about_border_1.jpeg";
@@ -106,8 +107,9 @@ const cultivationPractices = [
       overlayClassName="bg-gradient-to-b from-black/70 via-black/55 to-black/65"
     />
   </div>
-  <div class="space-y-8 lg:space-y-16 px-4 py-8 lg:py-16">
-    <section id="mission" class="space-y-6 sm:space-y-8 max-w-5xl mx-auto">
+  <div class="site-section space-y-16 lg:space-y-24">
+    <section id="mission" class="site-container space-y-8">
+      <div class="reading-container space-y-5 text-center">
       <p>
         QC Family Tree is a community-rooted non-profit organization cultivating spaces of belonging, mutual care, and economic resilience by supporting local creatives, entrepreneurs, and neighbors. Our work building a more just and connected Charlotte is guided by resilience, adaptability, and a commitment to racial and gender equity.
       </p>
@@ -116,41 +118,43 @@ const cultivationPractices = [
         <br />
         <span class="text-accent font-semibold">Vision:</span> Thriving communities of abundance, justice, imagination, and mutual care for all.
       </p>
-      <SectionHeading title="Values" />
-      <div class="grid gap-4 sm:grid-cols-2">
-        {values.map((value) => (
-          <p class="rounded-2xl border border-border bg-muted px-4 py-3 text-sm">
-            {value}
-</p>
-        ))}
       </div>
+      <SectionHeading title="Values" />
+      <ol class="mx-auto grid max-w-5xl gap-x-10 sm:grid-cols-2">
+        {values.map((value, index) => (
+          <li class="flex gap-4 border-t border-border py-5 text-sm">
+            <span class="font-ubuntu text-lg font-bold text-secondary">0{index + 1}</span>
+            <p>{value}</p>
+          </li>
+        ))}
+      </ol>
     </section>
 
     <Programs sectionId="programs-about" showLearnMore={false} dividerSrc={aboutBorder1.src} />
 
-    <section class="max-w-5xl mx-auto rounded-3xl bg-muted px-6 py-8 text-center sm:px-10">
-      <h2 class="font-ubuntu text-2xl font-bold sm:text-3xl">See the work in community</h2>
-      <p class="mx-auto mt-3 max-w-2xl text-muted-foreground">
+    <section class="site-container rounded-2xl bg-accent px-6 py-12 text-center text-accent-foreground sm:px-10">
+      <h2 class="text-balance text-3xl sm:text-4xl">See the work in community</h2>
+      <p class="mx-auto mt-3 max-w-2xl text-accent-foreground/80">
         From free food access to artist support and neighborhood events, our programs turn this vision into practice.
       </p>
       <div class="mt-5 flex flex-wrap justify-center gap-3">
-        <a href="/freedom-fridge" class="rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90">Visit the Freedom Fridge</a>
-        <a href="/#events" class="rounded-xl border border-border px-5 py-3 text-sm font-semibold hover:bg-background">See upcoming events</a>
+        <Link href="/freedom-fridge" variant="secondary" className="rounded-xl px-5 py-3 text-sm">Visit the Freedom Fridge</Link>
+        <Link href="/#events" variant="outline" className="rounded-xl border-white/50 px-5 py-3 text-sm text-white hover:bg-white hover:text-accent">See upcoming events</Link>
       </div>
     </section>
 
-    <section id="cultivation" class="space-y-6 sm:space-y-8 max-w-5xl mx-auto">
+    <section id="cultivation" class="site-container space-y-8">
       <SectionHeading title="How we cultivate the common good" />
       <div class="grid gap-3 sm:grid-cols-2">
         {cultivationPractices.map((practice) => (
-          <div class="rounded-xl border border-border bg-muted px-4 py-3 font-semibold">
+          <div class="border-l-2 border-secondary bg-muted px-4 py-3 font-semibold">
             {practice.title}
           </div>
         ))}
       </div>
     </section>
 
-    <div class="aspect-[21/9] mx-auto max-w-5xl rounded-2xl overflow-hidden">
+    <div class="site-container aspect-[21/9] overflow-hidden rounded-2xl">
       <Image
         src={aboutBorder2}
         alt=""
@@ -158,7 +162,7 @@ const cultivationPractices = [
       />
     </div>
 
-    <section id="sustainability" class="space-y-6 sm:space-y-8 max-w-5xl mx-auto pb-16">
+    <section id="sustainability" class="site-container space-y-8">
       <SectionHeading title="Sustainability & accountability" />
       <p>
         QC Family Tree is guided by a team of staff, board members, and community partners who are dedicated to the long-term wellbeing of West Charlotte. We are committed to being open, responsible, and accountable to our community.

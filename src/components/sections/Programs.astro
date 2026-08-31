@@ -70,15 +70,17 @@ const {
         ]}
         client:visible
       />
-    </div>
     {showDivider && (
-    <div class="overflow-hidden">
-      <img
-        src={dividerSrc || "https://placehold.co/1200x400"}
-        alt=""
-        class="aspect-[21/9] w-full object-cover rounded-2xl"
-      />
-    </div>
+      <div class="overflow-hidden py-4 sm:py-6">
+        <img
+          src={dividerSrc || "https://placehold.co/1200x400"}
+          width="1200"
+          height="400"
+          alt=""
+          loading="lazy"
+          class="aspect-[21/9] w-full rounded-2xl object-cover"
+        />
+      </div>
     )}
   {showPillars && (
     <div class="mx-auto grid max-w-5xl grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
@@ -117,4 +119,5 @@ const {
       })}
     </div>
   )}
+  </div>
 </section>

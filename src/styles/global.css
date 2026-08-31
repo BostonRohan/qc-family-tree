@@ -133,6 +133,10 @@
   :focus-visible {
     @apply rounded-sm outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
+
+  :where([id]) {
+    scroll-margin-top: 6rem;
+  }
 }
 
 @layer components {
