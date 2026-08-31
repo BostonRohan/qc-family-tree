@@ -10,8 +10,6 @@ export type NavItem = {
   }[];
 };
 
-import { donateLink } from "@constants";
-
 export const nav: NavItem[] = [
   {
     title: "About",
@@ -65,8 +63,7 @@ export const nav: NavItem[] = [
   },
   {
     title: "Donate",
-    href: donateLink,
-    target: "_blank",
+    href: "/donate",
   },
   {
     title: "Contact",

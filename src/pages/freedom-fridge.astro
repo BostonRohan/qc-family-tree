@@ -4,7 +4,6 @@ import SectionHeading from "@/components/ui/SectionHeading.astro";
 import Header from "@/components/Header.astro";
 import { Image } from "astro:assets";
 import freedomFridgeImage from "@/assets/freedom_fridge_header.jpg";
-import { donateLink } from "@constants";
 
 const waysToHelp = [
   "Donate extra food and supplies to help keep the Freedom Fridge & Pantry stocked for the community.",
@@ -43,7 +42,7 @@ const waysToHelp = [
       <div class="grid gap-3 sm:grid-cols-2 justify-items-center max-w-[700px] mx-auto">
         {waysToHelp.map((item, index) => (
           index === waysToHelp.length - 1 ? (
-            <a href={donateLink} target="_blank" rel="noreferrer" class="mx-auto w-full max-w-[320px] rounded-xl border border-border bg-muted p-4 text-left text-sm hover:bg-muted/50 transition">
+            <a href="/donate" class="mx-auto w-full max-w-[320px] rounded-xl border border-border bg-muted p-4 text-left text-sm hover:bg-muted/50 transition">
               <p>Make a <span class="underline">donation</span> to support free food access and community care.</p>
             </a>
           ) : (
