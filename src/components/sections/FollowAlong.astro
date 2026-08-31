@@ -23,7 +23,7 @@ const messageId = `${list}-form-message`;
         target="_blank"
         rel="noreferrer"
       >
-        <Instagram className="h-4 w-4" />
+        <Instagram className="h-4 w-4" aria-hidden="true" />
         Instagram
       </a>
       <a
@@ -32,7 +32,7 @@ const messageId = `${list}-form-message`;
         target="_blank"
         rel="noreferrer"
       >
-        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z" />
         </svg>
         Facebook
@@ -40,19 +40,25 @@ const messageId = `${list}-form-message`;
     </div>
     <form
       id={formId}
+      data-follow-along-form
+      data-list={list}
       class="flex flex-col gap-2"
     >
       <div class="flex flex-col gap-2 sm:flex-row">
+        <label for={`${list}-email`} class="sr-only">Email address</label>
         <input
+          id={`${list}-email`}
           type="email"
           name="email"
-          placeholder="Enter your email"
+          autocomplete="email"
+          spellcheck="false"
+          placeholder="Email address…"
           required
           class="flex-1 rounded-xl border border-input bg-background px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring/20"
         />
         <button
           type="submit"
-          class="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+          class="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
         >
           Subscribe
         </button>
@@ -60,37 +66,56 @@ const messageId = `${list}-form-message`;
       <p class="text-xs text-muted-foreground text-center sm:text-left">Get {list === "hfgb" ? "HFGB" : "QCFT"} updates, event announcements, and opportunities.</p>
     </form>
   </div>
-  <p class="text-xs text-muted-foreground text-center" id={messageId}></p>
+  <p class="text-xs text-muted-foreground text-center" id={messageId} data-follow-along-message aria-live="polite"></p>
 </section>
 
-<script define:vars={{ formId, messageId, list }}>
-  const form = document.getElementById(formId);
-  const messageEl = document.getElementById(messageId);
+<script>
+  document.querySelectorAll<HTMLFormElement>("[data-follow-along-form]").forEach((form) => {
+    const messageEl = form.closest("section")?.querySelector<HTMLElement>("[data-follow-along-message]");
+    const submitButton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const list = form.dataset.list;
 
-  form?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const formData = new FormData(form);
-    const email = formData.get("email");
-
-    try {
-      const res = await fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, list }),
-      });
-
-      if (res.ok) {
-        messageEl.textContent = "Thanks for subscribing!";
-        messageEl.className = "text-xs text-center text-green-600 font-medium";
-        form.reset();
-      } else {
-        const data = await res.json();
-        messageEl.textContent = data.message || "Something went wrong. Try again.";
-        messageEl.className = "text-xs text-center text-red-600 font-medium";
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Subscribing…";
+        submitButton.setAttribute("aria-busy", "true");
       }
-    } catch {
-      messageEl.textContent = "Something went wrong. Try again.";
-      messageEl.className = "text-xs text-center text-red-600 font-medium";
-    }
+
+      const formData = new FormData(form);
+      const email = formData.get("email");
+
+      try {
+        const response = await fetch("/api/subscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, list }),
+        });
+
+        if (response.ok) {
+          if (messageEl) {
+            messageEl.textContent = "Thanks for subscribing!";
+            messageEl.className = "text-xs text-center text-green-600 font-medium";
+          }
+          form.reset();
+        } else if (messageEl) {
+          const data = await response.json();
+          messageEl.textContent = data.message || "Something went wrong. Try again.";
+          messageEl.className = "text-xs text-center text-red-600 font-medium";
+        }
+      } catch {
+        if (messageEl) {
+          messageEl.textContent = "Something went wrong. Try again.";
+          messageEl.className = "text-xs text-center text-red-600 font-medium";
+        }
+      } finally {
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = "Subscribe";
+          submitButton.removeAttribute("aria-busy");
+        }
+      }
+    });
   });
 </script>

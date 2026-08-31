@@ -126,6 +126,8 @@ export default function HamburgerMenu({
           <img
             src={logoImage.src}
             alt="QC Family Tree"
+            width={logoImage.width}
+            height={logoImage.height}
             className="h-full w-auto object-contain"
           />
         </a>
@@ -139,6 +141,8 @@ export default function HamburgerMenu({
               <img
                 src={logoImage.src}
                 alt="QC Family Tree"
+                width={logoImage.width}
+                height={logoImage.height}
                 className="h-full w-auto object-contain"
               />
             </a>

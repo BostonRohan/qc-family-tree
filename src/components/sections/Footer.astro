@@ -6,8 +6,8 @@ import SocialIcons from "@/components/SocialIcons";
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="border-t border-border/70 bg-background/90 backdrop-blur-xl">
-  <div class="mx-auto max-w-6xl px-4 py-10 sm:py-14">
+<footer class="border-t-4 border-secondary bg-accent text-accent-foreground">
+  <div class="site-container px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
     <div class="grid gap-10 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)]">
       <div class="space-y-4">
         <a href="/" aria-label="QC Family Tree home" class="inline-flex">
@@ -19,45 +19,45 @@ const currentYear = new Date().getFullYear();
             class="h-12 w-auto object-contain"
           />
         </a>
-        <p class="max-w-xl text-sm text-muted-foreground">
+        <p class="max-w-xl text-sm text-accent-foreground/80">
           QC Family Tree is a community-rooted organization supporting local creatives, entrepreneurs, and neighbors in building a more just and connected Charlotte. QCFT initiatives include cultural programming and business resources through the Rhizome Coalition, Culture Bearer Residency, and Here for Good Business Cooperative.
         </p>
-        <div class="flex flex-wrap gap-3 text-[11px] uppercase tracking-[0.4em] text-muted-foreground">
+        <div class="flex flex-wrap gap-3 text-[11px] uppercase tracking-[0.28em] text-secondary">
           <span>Culture</span>
           <span>Housing</span>
           <span>Mutual Aid</span>
         </div>
       </div>
-      <div class="space-y-2 text-sm text-muted-foreground">
-        <p class="font-semibold text-foreground">Connect</p>
-        <a href={`tel:${phoneNumber}`} class="block text-primary hover:underline">
+      <div class="space-y-2 text-sm text-accent-foreground/80">
+        <p class="font-semibold text-accent-foreground">Connect</p>
+        <a href={`tel:${phoneNumber}`} class="block text-secondary hover:underline">
           {phoneNumber}
         </a>
-        <a href={`mailto:${emailAddress}`} class="block text-primary hover:underline">
+        <a href={`mailto:${emailAddress}`} class="block text-secondary hover:underline">
           {emailAddress}
         </a>
         <div class="space-y-1">
-          <p class="font-medium text-foreground">Physical</p>
+          <p class="font-medium text-accent-foreground">Physical</p>
           <p>2916 Parkway Avenue<br />Charlotte, NC 28208</p>
         </div>
         <div class="space-y-1">
-          <p class="font-medium text-foreground">Mailing</p>
+          <p class="font-medium text-accent-foreground">Mailing</p>
           <p>2910 Parkway Avenue<br />Charlotte, NC 28208</p>
         </div>
       </div>
-      <div class="space-y-2 text-sm text-muted-foreground">
-        <p class="font-semibold text-foreground">Explore</p>
-        <a href="/" class="block hover:text-foreground">Home</a>
-        <a href="/freedom-fridge" class="block hover:text-foreground">Freedom Fridge</a>
-        <a href="/#events" class="block hover:text-foreground">Events</a>
-        <a href="/rhizome" class="block hover:text-foreground">Rhizome Coalition</a>
-        <a href="/culture-bearer-residency" class="block hover:text-foreground">Culture Bearer Residency</a>
-        <a href="/here-for-good" class="block hover:text-foreground">Here for Good</a>
-        <a href="/about" class="block hover:text-foreground">About QCFT</a>
+      <div class="space-y-2 text-sm text-accent-foreground/80">
+        <p class="font-semibold text-accent-foreground">Explore</p>
+        <a href="/" class="block hover:text-secondary">Home</a>
+        <a href="/freedom-fridge" class="block hover:text-secondary">Freedom Fridge</a>
+        <a href="/#events" class="block hover:text-secondary">Events</a>
+        <a href="/rhizome" class="block hover:text-secondary">Rhizome Coalition</a>
+        <a href="/culture-bearer-residency" class="block hover:text-secondary">Culture Bearer Residency</a>
+        <a href="/here-for-good" class="block hover:text-secondary">Here for Good</a>
+        <a href="/about" class="block hover:text-secondary">About QCFT</a>
       </div>
     </div>
-    <div class="mt-10 flex flex-col gap-4 justify-between border-t border-border/70 pt-6 text-sm text-muted-foreground sm:flex-row">
-      <SocialIcons wrapperClassName="flex gap-3 text-foreground" iconClassName="w-5 h-5 text-foreground" />
+    <div class="mt-10 flex flex-col gap-4 justify-between border-t border-accent-foreground/25 pt-6 text-sm text-accent-foreground/70 sm:flex-row">
+      <SocialIcons wrapperClassName="flex gap-3 text-accent-foreground" iconClassName="w-5 h-5 text-accent-foreground" />
       <p class="text-center sm:text-left">Copyright © {currentYear} QC Family Tree</p>
     </div>
   </div>
