@@ -1,0 +1,45 @@
+---
+import Layout from "@/layouts/Layout.astro";
+
+// Vercel sets this to "preview" only for Preview deployments.
+const isPreview = process.env.VERCEL_ENV === "preview";
+const shouldThrowOnServer = Astro.url.searchParams.get("server") === "1";
+
+if (isPreview && shouldThrowOnServer) {
+  throw new Error("Sentry server-side test error");
+}
+
+if (!isPreview) {
+  Astro.response.status = 404;
+}
+---
+
+<Layout title="Sentry test" description="Development-only Sentry verification page." slug="sentry-test">
+  <main class="mx-auto max-w-3xl px-4 pb-20 pt-36">
+    {isPreview ? (
+      <section class="rounded-3xl border border-border bg-white p-8 shadow-sm">
+        <p class="font-ubuntu text-lg text-accent">Development only</p>
+        <h1 class="mt-3 text-4xl">Test Sentry</h1>
+        <p class="mt-4 text-muted-foreground">
+          Use either trigger, then confirm the event appears in the matching Sentry project and environment.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <button id="sentry-client-error" type="button" class="rounded-xl bg-secondary px-5 py-3 font-semibold text-secondary-foreground">
+            Trigger browser error
+          </button>
+          <a href="/sentry-test?server=1" class="rounded-xl border border-border px-5 py-3 font-semibold">
+            Trigger server error
+          </a>
+        </div>
+      </section>
+    ) : (
+      <h1 class="text-4xl">Page not found</h1>
+    )}
+  </main>
+</Layout>
+
+{isPreview && <script>
+  document.querySelector<HTMLButtonElement>("#sentry-client-error")?.addEventListener("click", () => {
+    throw new Error("Sentry browser-side test error");
+  });
+</script>}

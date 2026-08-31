@@ -1,0 +1,61 @@
+---
+import { defineQuery } from "groq";
+import { sanityClient } from "sanity:client";
+
+type Report = { year: number; url: string };
+type Accountability = { annualReports?: Report[]; form990s?: Report[] };
+
+const ACCOUNTABILITY_QUERY = defineQuery(`
+  *[_type == "accountability" && _id == "accountability"][0] {
+    "annualReports": annualReports[] | order(year desc) { year, url },
+    "form990s": form990s[] | order(year desc) { year, url }
+  }
+`);
+
+const fallbackAccountability: Required<Accountability> = {
+  annualReports: [
+    { year: 2025, url: "https://drive.google.com/file/d/1IBK84-g3meMXCCtYt0trhv0DN1Ud2C0g/view?usp=sharing" },
+    { year: 2024, url: "https://drive.google.com/file/d/1obkW2SGpPdGztWhuNIfRWrGKMsCNSD7e/view?ts=69dfb735" },
+    { year: 2023, url: "https://drive.google.com/file/d/1dyT6Sn5XYs9uibEl5XQNaeutBs-xa7Ly/view?ts=69dfb756" },
+  ],
+  form990s: [
+    { year: 2024, url: "https://projects.propublica.org/nonprofits/organizations/204091165/202503149349305480/full" },
+    { year: 2023, url: "https://projects.propublica.org/nonprofits/organizations/204091165/202440729349301409/full" },
+    { year: 2022, url: "https://projects.propublica.org/nonprofits/organizations/204091165/202313039349301436/full" },
+  ],
+};
+
+const accountability =
+  (await sanityClient.fetch<Accountability | null>(ACCOUNTABILITY_QUERY)) ??
+  fallbackAccountability;
+
+interface Props { compact?: boolean }
+const { compact = false } = Astro.props;
+---
+
+<section id="accountability" class:list={["space-y-6 max-w-5xl mx-auto", { "pb-16": !compact }]}>
+  <div>
+    <h2 class="font-ubuntu text-3xl font-bold sm:text-4xl">Accountability</h2>
+    <p class="mt-3 max-w-2xl text-muted-foreground">
+      QC Family Tree is committed to being open, responsible, and accountable to the community that makes this work possible.
+    </p>
+  </div>
+  <div class="grid gap-6 sm:grid-cols-2">
+    <div>
+      <h3 class="mb-2 font-semibold">Annual Reports</h3>
+      <ul class="flex flex-wrap gap-3">
+        {(accountability.annualReports ?? fallbackAccountability.annualReports).map((report) => (
+          <li><a href={report.url} target="_blank" rel="noreferrer" class="text-primary underline">{report.year}</a></li>
+        ))}
+      </ul>
+    </div>
+    <div>
+      <h3 class="mb-2 font-semibold">Form 990s</h3>
+      <ul class="flex flex-wrap gap-3">
+        {(accountability.form990s ?? fallbackAccountability.form990s).map((report) => (
+          <li><a href={report.url} target="_blank" rel="noreferrer" class="text-primary underline">{report.year}</a></li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
