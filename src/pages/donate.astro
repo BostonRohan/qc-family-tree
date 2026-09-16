@@ -15,9 +15,9 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
   <main data-variate-section="donate-page" class="bg-muted pb-20 pt-28 sm:pt-36">
     <section class="mx-auto max-w-6xl px-4">
       <div class="max-w-3xl">
-        <p class="font-ubuntu text-lg text-accent">Lorem ipsum dolor sit amet</p>
-        <h1 class="mt-5 text-5xl leading-[0.98] tracking-tight sm:text-7xl">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h1>
-        <p class="mt-6 text-lg leading-relaxed text-muted-foreground sm:text-xl">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae sem at justo facilisis tincidunt, curabitur euismod sapien sed gravida feugiat.</p>
+        <p class="font-ubuntu text-lg text-accent">Invest in Community.</p>
+        <h1 class="mt-5 text-5xl leading-[0.98] tracking-tight sm:text-7xl">Help the Good Grow</h1>
+        <p class="mt-6 text-lg leading-relaxed text-muted-foreground sm:text-xl">Your support helps QC Family Tree cultivate the people, relationships, creativity, and resources that make a stronger community possible.</p>
       </div>
     </section>
 
@@ -87,8 +87,18 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
       </div>
       <div class="space-y-5">
         <div id="donation-supporting-info" class="space-y-5">
-        <article class="rounded-3xl bg-accent p-6 text-accent-foreground sm:p-8"><h2 class="text-3xl">Why give?</h2><p class="mt-3 leading-relaxed text-accent-foreground/80">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae sem at justo facilisis tincidunt. Curabitur euismod, sapien sed gravida feugiat, nisl lorem consequat justo, vitae posuere arcu ipsum non erat.</p></article>
-        <article class="rounded-3xl border border-border bg-white p-6 sm:p-8"><h2 class="text-2xl">Giving beyond PayPal</h2><p class="mt-3 leading-relaxed text-muted-foreground">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vehicula, nibh at suscipit luctus, neque lorem posuere magna, vitae tincidunt lectus justo sed arcu. Nam blandit, urna vel aliquam cursus, lorem ipsum consequat erat.</p><a href="mailto:info@qcfamilytree.org" class="mt-4 inline-block text-primary underline">info@qcfamilytree.org</a></article>
+        <article class="rounded-3xl bg-accent p-6 text-accent-foreground sm:p-8">
+          <h2 class="text-3xl">Why Give?</h2>
+          <p class="mt-3 leading-relaxed text-accent-foreground/80">
+            For more than 20 years, QC Family Tree has built trust and lasting relationships in the community. We bring together artists, entrepreneurs, neighbors, and partners to connect and build from what’s already here. Your gift supports this ecosystem—from artist residencies and networks, to housing justice, small business support, and the 24/7 Freedom Fridge &amp; Pantry. When you give, your investment goes further. <a href="/about#programs-about" class="font-semibold underline underline-offset-4">Learn more about our programs.</a>
+          </p>
+        </article>
+        <article class="rounded-3xl border border-border bg-white p-6 sm:p-8">
+          <h2 class="text-2xl">Giving Beyond PayPal</h2>
+          <p class="mt-3 leading-relaxed text-muted-foreground">
+            Looking to make a larger gift or support QC Family Tree through your company? We welcome corporate sponsorships, program partnerships, and larger individual contributions. <a href="mailto:info@qcfamilytree.org" class="font-semibold text-primary underline underline-offset-4">Contact us</a> to explore ways to invest in the work.
+          </p>
+        </article>
         </div>
         <section id="donation-confirmation" class="hidden rounded-3xl bg-secondary p-8 text-center text-secondary-foreground shadow-sm sm:p-10" aria-live="polite">
         <p class="font-ubuntu text-lg font-bold uppercase tracking-[0.16em]">Thank you</p>
