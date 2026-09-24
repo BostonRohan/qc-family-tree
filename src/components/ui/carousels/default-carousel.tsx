@@ -24,8 +24,8 @@ export function DefaultCarousel({ slides }: { slides: Slide[] }) {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
+      <CarouselPrevious className="left-3 top-[30vw] bg-background/90 md:top-1/2 md:-left-12" />
+      <CarouselNext className="right-3 top-[30vw] bg-background/90 md:top-1/2 md:-right-12" />
     </Carousel>
   );
 }

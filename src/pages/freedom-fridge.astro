@@ -19,17 +19,15 @@ const waysToHelp = [
   description="Learn how Freedom Fridge & Pantry keeps Charlotte neighbors fed and how to support it."
   slug="freedom-fridge"
 >
-  <div class="pb-8 lg:pb-16">
-    <Header
-      title="Freedom Fridge & Pantry"
-      tagline="Free food, shared care."
-      image={freedomFridgeImage}
-      overlayClassName="bg-gradient-to-t from-black/80 via-black/55 to-black/35"
-    />
-  </div>
+  <Header
+    title="Freedom Fridge & Pantry"
+    tagline="Free food, shared care."
+    image={freedomFridgeImage}
+    overlayClassName="bg-gradient-to-t from-black/80 via-black/55 to-black/35"
+  />
 
-  <div class="pb-8 lg:pb-16 space-y-8 lg:space-y-16 px-4 text-center">
-    <div class="mx-auto max-w-4xl space-y-8">
+  <div class="site-section space-y-20 text-center lg:space-y-28">
+    <div class="reading-container space-y-6">
       <p class="max-w-4xl mx-auto">
         The Freedom Fridge and Pantry is a community resource open 24 hours a day at 2916 Parkway Avenue, just off Tuckaseegee Road. Located outdoors for easy access, it provides free food, meals, fresh refrigerated items, pantry staples, and hygiene supplies for anyone in need.
       </p>
@@ -38,16 +36,16 @@ const waysToHelp = [
       </p>
     </div>
 
-    <section class="space-y-8 rounded-3xl bg-white/80 text-center">
+    <section class="site-container space-y-8 border-y border-border py-12 text-center">
       <SectionHeading title="Ways To Help" />
-      <div class="grid gap-3 sm:grid-cols-2 justify-items-center max-w-[700px] mx-auto">
+      <div class="mx-auto grid max-w-4xl gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2">
         {waysToHelp.map((item, index) => (
           index === waysToHelp.length - 1 ? (
-            <a href={donateLink} target="_blank" rel="noreferrer" class="mx-auto w-full max-w-[320px] rounded-xl border border-border bg-muted p-4 text-left text-sm hover:bg-muted/50 transition">
+            <a href={donateLink} target="_blank" rel="noreferrer" class="bg-secondary p-6 text-left text-sm font-semibold text-secondary-foreground transition-colors hover:bg-secondary/80">
               <p>Make a <span class="underline">donation</span> to support free food access and community care.</p>
             </a>
           ) : (
-            <article class="mx-auto w-full max-w-[320px] rounded-xl border border-border bg-muted p-4 text-left text-sm">
+            <article class="bg-background p-6 text-left text-sm">
               <p>{item}</p>
             </article>
           )

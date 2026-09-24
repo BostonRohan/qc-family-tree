@@ -51,21 +51,13 @@ const featuredSection = homepageData?.featuredSection ?? null;
   slug=""
   title="QC Family Tree"
 >
-  <div>
-    <div>
-      <Welcome hero={hero} />
-    </div>
-    <div class="space-y-8 lg:space-y-16">
-      <div class="!mb-0">
-        <ImpactSection />
-      </div>
-      <Featured section={featuredSection} />
-      <Programs showPillars={false} showDivider={false} />
-      <section id="events">
-        <Events includeFilters={false} maxResults={10} maxDays={30} />
-      </section>
-      <DonateSection />
-      <ContactBrief />
-    </div>
-  </div>
+  <Welcome hero={hero} />
+  <ImpactSection />
+  <Featured section={featuredSection} />
+  <Programs showPillars={false} showDivider={false} />
+  <section id="events" class="site-section">
+    <Events includeFilters={false} maxResults={10} maxDays={30} />
+  </section>
+  <DonateSection />
+  <ContactBrief />
 </Layout>

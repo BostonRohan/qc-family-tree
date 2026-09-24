@@ -25,12 +25,12 @@ const {
 } = Astro.props as Props;
 ---
 
-<section id={sectionId} class="px-4 w-full">
-  <div class="mx-auto w-full max-w-5xl space-y-6">
+<section id={sectionId} class="site-section">
+  <div class="site-container space-y-8">
     <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p class="text-sm uppercase tracking-[0.3em] text-muted-foreground">How we cultivate community</p>
-          <h2 class="sm:text-4xl text-3xl font-bold">Our programs in action</h2>
+          <p class="section-kicker">How we cultivate community</p>
+          <h2 class="text-balance text-3xl font-bold sm:text-4xl">Our programs in action</h2>
         </div>
         {showLearnMore && (
           <a
@@ -70,15 +70,17 @@ const {
         ]}
         client:visible
       />
-    </div>
     {showDivider && (
-    <div class="mx-auto max-w-5xl overflow-hidden py-8">
-      <img
-        src={dividerSrc || "https://placehold.co/1200x400"}
-        alt=""
-        class="aspect-[21/9] w-full object-cover rounded-2xl"
-      />
-    </div>
+      <div class="overflow-hidden py-4 sm:py-6">
+        <img
+          src={dividerSrc || "https://placehold.co/1200x400"}
+          width="1200"
+          height="400"
+          alt=""
+          loading="lazy"
+          class="aspect-[21/9] w-full rounded-2xl object-cover"
+        />
+      </div>
     )}
   {showPillars && (
     <div class="mx-auto grid max-w-5xl grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
@@ -106,7 +108,7 @@ const {
       ].map((pillar) => {
         const PillarIcon = pillar.icon;
         return (
-          <article class="rounded-2xl border border-border bg-card p-4 text-sm shadow-sm">
+          <article class="surface-card p-5 text-sm">
             <div class="flex items-center gap-2">
               <PillarIcon class="h-5 w-5 text-primary" />
               <h3 class="font-semibold">{pillar.title}</h3>
@@ -117,4 +119,5 @@ const {
       })}
     </div>
   )}
+  </div>
 </section>

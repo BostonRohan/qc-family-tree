@@ -29,8 +29,8 @@ const isExternalUrl = (url?: string) => /^https?:\/\//i.test(url ?? "");
 ---
 
 {section && (
-  <section id="featured" class="bg-secondary/10 px-4 py-8 sm:py-10 lg:py-16">
-    <div class="mx-auto w-full max-w-5xl space-y-7 sm:space-y-9">
+  <section id="featured" class="site-section bg-secondary/10">
+    <div class="site-container space-y-7 sm:space-y-9">
       {imageId && (
         <div class="mx-auto w-full max-w-4xl">
           <ImageWrapper
