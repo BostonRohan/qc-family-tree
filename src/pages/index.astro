@@ -20,12 +20,16 @@ const HOME_PAGE_QUERY = defineQuery(`
   },
   "featuredSection": *[_type == "featuredSection"][0] {
     _id,
+    eyebrow,
     title,
+    dateLine,
     description,
+    highlights,
     primaryCtaLink,
     primaryCtaLabel,
     secondaryCtaLabel,
     secondaryCtaLink,
+    imageAlt,
     image {
       asset->{_id}
     }
@@ -52,9 +56,11 @@ const featuredSection = homepageData?.featuredSection ?? null;
       <Welcome hero={hero} />
     </div>
     <div class="space-y-8 lg:space-y-16">
-      <ImpactSection />
-      <Programs showPillars={false} showDivider={false} />
+      <div class="!mb-0">
+        <ImpactSection />
+      </div>
       <Featured section={featuredSection} />
+      <Programs showPillars={false} showDivider={false} />
       <section id="events">
         <Events includeFilters={false} maxResults={10} maxDays={30} />
       </section>

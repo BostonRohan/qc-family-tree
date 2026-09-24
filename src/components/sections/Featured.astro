@@ -1,67 +1,114 @@
 ---
-import { Megaphone } from "@lucide/astro";
 import { Link } from "@/components/ui/link";
 import ImageWrapper from "../ImageWrapper.astro";
-import type { FeaturedSection } from "sanity.types";
+
+interface FeaturedContent {
+  title?: string;
+  eyebrow?: string;
+  dateLine?: string;
+  description?: string;
+  highlights?: string[];
+  image?: { asset?: { _id?: string; _ref?: string } };
+  imageAlt?: string;
+  primaryCtaLink?: string;
+  primaryCtaLabel?: string;
+  secondaryCtaLink?: string;
+  secondaryCtaLabel?: string;
+}
 
 interface Props {
-  section?: FeaturedSection | null;
+  section?: FeaturedContent | null;
 }
 
-const { section } = Astro.props as Props;
-const imageAsset = section?.image?.asset as { _id?: string; _ref?: string } | undefined;
+const { section } = Astro.props;
+const imageAsset = section?.image?.asset;
 const imageId = imageAsset?._id ?? imageAsset?._ref;
+const primaryCta = section?.primaryCtaLink && section?.primaryCtaLabel;
+const secondaryCta = section?.secondaryCtaLink && section?.secondaryCtaLabel;
+const isExternalUrl = (url?: string) => /^https?:\/\//i.test(url ?? "");
 ---
 
-{
-  section && (
-    <section
-      id="featured"
-      class="py-8 lg:py-16 px-4 w-full bg-accent/65 text-accent-foreground"
-    >
-      <div class="max-w-6xl space-y-6 mx-auto w-full">
-        <div class="mx-auto w-full max-w-3xl space-y-3">
-          <div class="flex gap-4 items-center">
-            <h2 class="font-ubuntu sm:text-4xl text-xl">{section.title}</h2>
-            <Megaphone class="text-yellow-500 sm:w-[40px] sm:h-[40px] h-[28px] w-[28px]" />
-          </div>
-          <p class="opacity-80">{section.description}</p>
-          {(section?.primaryCtaLink && section.primaryCtaLabel) ||
-            (section?.secondaryCtaLabel && section.secondaryCtaLink) ? (
-            <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-              {section?.primaryCtaLink && section.primaryCtaLabel && (
-                <Link
-                  size="sm"
-                  className="rounded-xl w-full sm:max-w-[220px]"
-                  variant="default"
-                  href={section.primaryCtaLink}
-                >
-                  {section.primaryCtaLabel}
-                </Link>
-              )}
-              {section?.secondaryCtaLabel && section.secondaryCtaLink && (
-                <Link
-                  size="sm"
-                  className="rounded-xl w-full sm:max-w-[220px]"
-                  href={section.secondaryCtaLink}
-                  variant="outline"
-                >
-                  {section.secondaryCtaLabel}
-                </Link>
-              )}
-            </div>
-          ) : null}
+{section && (
+  <section id="featured" class="bg-secondary/10 px-4 py-8 sm:py-10 lg:py-16">
+    <div class="mx-auto w-full max-w-5xl space-y-7 sm:space-y-9">
+      {imageId && (
+        <div class="mx-auto w-full max-w-4xl">
+          <ImageWrapper
+            id={imageId}
+            alt={section.imageAlt ?? "Community members gathered for a creative activity"}
+            className="aspect-[2/1] w-full rounded-2xl object-cover"
+          />
         </div>
-        {imageId && (
-          <div class="w-full sm:max-w-3xl mx-auto">
-            <ImageWrapper
-              id={imageId}
-              alt={section.title}
-              className="w-full h-auto object-cover rounded-lg"
-            />
+      )}
+
+      <div class="mx-auto w-full max-w-4xl space-y-5 text-center">
+        {section.title && (
+          <h2 class="font-ubuntu text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl">
+            {section.title}
+          </h2>
+        )}
+
+        {(section.dateLine || section.eyebrow) && (
+          <div class="flex flex-col items-center justify-center gap-1 sm:flex-row sm:gap-4">
+            {section.dateLine && (
+              <p class="text-lg font-semibold leading-snug sm:text-xl">{section.dateLine}</p>
+            )}
+            {section.eyebrow && (
+              <p class="text-sm font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                {section.eyebrow}
+              </p>
+            )}
           </div>
         )}
-</div>
-    </section>
-  )
-}
+
+        {section.description && (
+          <p class="mx-auto max-w-3xl text-base leading-relaxed text-foreground sm:text-lg">
+            {section.description}
+          </p>
+        )}
+
+        {section.highlights?.length ? (
+          <ul class="mx-auto grid max-w-3xl grid-cols-1 gap-x-8 gap-y-3 text-left text-base leading-relaxed sm:grid-cols-2">
+            {section.highlights.map((highlight) => (
+              <li class="flex items-start gap-3">
+                <span
+                  aria-hidden="true"
+                  class="mt-[0.6em] h-1.5 w-1.5 shrink-0 rounded-full bg-secondary"
+                ></span>
+                <span>{highlight}</span>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+
+        {(primaryCta || secondaryCta) && (
+          <div class="flex flex-col justify-center gap-3 pt-1 sm:flex-row">
+            {primaryCta && (
+              <Link
+                className="w-full rounded-xl px-6 py-4 text-base text-center sm:w-auto sm:min-w-[220px]"
+                variant="secondary"
+                href={section.primaryCtaLink!}
+                target={isExternalUrl(section.primaryCtaLink) ? "_blank" : undefined}
+                rel={isExternalUrl(section.primaryCtaLink) ? "noopener noreferrer" : undefined}
+              >
+                {section.primaryCtaLabel}
+              </Link>
+            )}
+            {secondaryCta && (
+              <Link
+                size="lg"
+                className="w-full rounded-md sm:w-auto"
+                variant="outline"
+                href={section.secondaryCtaLink!}
+                target={isExternalUrl(section.secondaryCtaLink) ? "_blank" : undefined}
+                rel={isExternalUrl(section.secondaryCtaLink) ? "noopener noreferrer" : undefined}
+              >
+                {section.secondaryCtaLabel}
+              </Link>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+)}
