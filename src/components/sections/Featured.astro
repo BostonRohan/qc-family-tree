@@ -97,7 +97,7 @@ const isExternalUrl = (url?: string) => /^https?:\/\//i.test(url ?? "");
             {secondaryCta && (
               <Link
                 size="lg"
-                className="w-full rounded-md sm:w-auto"
+                className="w-full rounded-xl border-2 border-secondary/60 bg-background px-6 py-4 text-base text-center shadow-sm hover:bg-secondary/10 hover:text-foreground sm:w-auto sm:min-w-[220px]"
                 variant="outline"
                 href={section.secondaryCtaLink!}
                 target={isExternalUrl(section.secondaryCtaLink) ? "_blank" : undefined}
