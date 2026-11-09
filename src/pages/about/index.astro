@@ -18,7 +18,7 @@ type Accountability = {
 };
 
 const ACCOUNTABILITY_QUERY = defineQuery(`
-  *[_type == "accountability" && _id == "accountability"][0] {
+  *[_type == "accountability"] | order((_id == "accountability") desc, _updatedAt desc, _id asc)[0] {
     "annualReports": annualReports[] | order(year desc) { year, url },
     "form990s": form990s[] | order(year desc) { year, url }
   }
