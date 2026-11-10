@@ -6,6 +6,9 @@ import { Copy, CopyCheck } from "lucide-react";
 const paypalClientId = import.meta.env.PAYPAL_CLIENT_ID;
 const paypalApiUrl = import.meta.env.PAYPAL_API_URL || "https://api-m.sandbox.paypal.com";
 const paypalSdkHost = paypalApiUrl.includes("sandbox") ? "www.sandbox.paypal.com" : "www.paypal.com";
+const paypalManageUrl = paypalSdkHost === "www.sandbox.paypal.com"
+  ? "https://www.sandbox.paypal.com/myaccount/autopay/connect/"
+  : "https://www.paypal.com/myaccount/autopay/";
 const paypalFallbackUrl = "https://www.paypal.com/donate?hosted_button_id=5CZWHCA4YRQLW";
 const amounts = [25, 50, 100, 250];
 const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
@@ -76,7 +79,7 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
           <div id="monthly-gift-management" class="rounded-2xl border border-border bg-muted/60 p-4 text-center">
             <h3 class="font-ubuntu text-lg font-bold">Already giving monthly?</h3>
             <p class="mt-1 text-sm text-muted-foreground">Manage or cancel your monthly gift anytime from PayPal’s Automatic Payments settings.</p>
-            <a href="https://www.paypal.com/myaccount/autopay/" target="_blank" rel="noreferrer" class="mt-3 inline-block font-semibold text-primary underline">Manage or cancel in PayPal</a>
+            <a href={paypalManageUrl} target="_blank" rel="noreferrer" class="mt-3 inline-block font-semibold text-primary underline">Manage or cancel in PayPal</a>
           </div>
         </div>}
         <div id="paypal-fallback" class="mt-5 hidden rounded-2xl border border-border bg-muted/60 p-4 text-center text-base">
