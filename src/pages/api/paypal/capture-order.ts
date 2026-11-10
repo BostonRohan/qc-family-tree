@@ -35,6 +35,7 @@ export async function POST({ request }: { request: Request }) {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
         Prefer: "return=representation",
+        "PayPal-Request-Id": `capture-${orderID}`,
       },
     });
     const data = await response.json();
@@ -44,5 +45,27 @@ export async function POST({ request }: { request: Request }) {
     Sentry.captureException(error, { tags: { payment_flow: "paypal", operation: "capture_order" } });
     console.error("PayPal capture order error", error);
     return new Response(JSON.stringify({ error: "PayPal sandbox is not configured yet." }), { status: 500 });
+  }
+}
+
+export async function GET({ request }: { request: Request }) {
+  const orderID = new URL(request.url).searchParams.get("orderID");
+  if (!orderID || !/^[A-Z0-9]{1,36}$/.test(orderID)) {
+    return new Response(JSON.stringify({ error: "Invalid PayPal order ID." }), { status: 400 });
+  }
+  try {
+    const accessToken = await getAccessToken();
+    const response = await fetch(`${paypalApiUrl}/v2/checkout/orders/${orderID}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    if (!response.ok) throw new Error("Unable to check order status");
+    const data = await response.json();
+    const capture = data.purchase_units?.[0]?.payments?.captures?.[0];
+    const status = ["COMPLETED", "PENDING", "DECLINED", "FAILED"].includes(capture?.status)
+      ? capture.status : "UNKNOWN";
+    return new Response(JSON.stringify({ status }), { headers: { "Cache-Control": "no-store" } });
+  } catch (error) {
+    Sentry.captureException(error, { tags: { payment_flow: "paypal", operation: "check_order" } });
+    return new Response(JSON.stringify({ status: "UNKNOWN" }), { status: 503 });
   }
 }

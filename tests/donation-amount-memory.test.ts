@@ -33,6 +33,42 @@ describe("donation amount memory integration", () => {
     expect(dom.window.document.getElementById("remember-gift-container")?.classList.contains("hidden")).toBe(true);
   });
 
+  it("keeps amount selection usable when storage access throws", () => {
+    dom = new JSDOM(markup, { url: "http://localhost/donate" });
+    const storage = {
+      getItem() { throw new DOMException("Blocked", "SecurityError"); },
+      setItem() { throw new DOMException("Blocked", "SecurityError"); },
+      removeItem() { throw new DOMException("Blocked", "SecurityError"); },
+    } as unknown as Storage;
+    setupDonationAmountMemory(dom.window.document, storage);
+    const custom = dom.window.document.querySelector<HTMLInputElement>('input[name="amount_other"]')!;
+    custom.value = "35";
+    custom.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
+    expect(dom.window.document.getElementById("remember-gift-container")?.classList.contains("hidden")).toBe(true);
+    const preset = dom.window.document.querySelector<HTMLInputElement>('input[value="50"]')!;
+    preset.click();
+    expect(custom.value).toBe("");
+  });
+
+  it("hides the remember option when writing to storage fails", () => {
+    dom = new JSDOM(markup, { url: "http://localhost/donate" });
+    const storage = {
+      getItem() { return null; },
+      setItem() { throw new DOMException("Blocked", "SecurityError"); },
+      removeItem() { throw new DOMException("Blocked", "SecurityError"); },
+    } as unknown as Storage;
+    setupDonationAmountMemory(dom.window.document, storage);
+    const custom = dom.window.document.querySelector<HTMLInputElement>('input[name="amount_other"]')!;
+    const remember = dom.window.document.querySelector<HTMLInputElement>("#remember-gift")!;
+    const container = dom.window.document.getElementById("remember-gift-container")!;
+    custom.value = "35";
+    custom.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
+    remember.checked = true;
+    remember.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+    expect(container.classList.contains("hidden")).toBe(true);
+    expect(remember.checked).toBe(false);
+  });
+
   it("restores a saved preset amount", () => {
     setup("50");
 

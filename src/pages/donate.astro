@@ -109,6 +109,7 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
         <section id="donation-payment-pending" class="hidden rounded-3xl border border-border bg-white p-8 text-center shadow-sm sm:p-10" aria-live="polite">
           <h2 class="text-4xl leading-tight sm:text-5xl">Your gift hasn’t been confirmed yet.</h2>
           <p id="donation-payment-pending-message" class="mt-4 text-lg leading-relaxed text-muted-foreground"></p>
+          <button id="check-payment-status" type="button" class="mt-4 rounded-xl bg-primary px-5 py-3 font-semibold text-primary-foreground">Check payment status</button>
         </section>
         <section id="donation-payment-error" class="hidden rounded-3xl border-2 border-destructive/30 bg-white p-8 text-center shadow-sm sm:p-10" aria-live="assertive">
           <p class="font-ubuntu text-lg font-bold uppercase tracking-[0.16em] text-destructive">Payment issue</p>
@@ -281,8 +282,11 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
   const cardMethodButton = document.getElementById("card-method-button");
   let cardField;
   let cardFieldsRendered = false;
+  let checkoutInitialized = false;
 
-  setupDonationAmountMemory(document, window.localStorage);
+  let amountStorage = null;
+  try { amountStorage = window.localStorage; } catch {}
+  setupDonationAmountMemory(document, amountStorage);
 
   const setPaymentMethod = (method) => {
     const showCard = method === "card";
@@ -322,7 +326,45 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
     return data.id;
   };
 
+  const statusButton = document.getElementById("check-payment-status");
+  const recoveryPrefix = "#payment-order=";
+  const savedOrder = () => window.location.hash.startsWith(recoveryPrefix)
+    ? window.location.hash.slice(recoveryPrefix.length) : "";
+  const clearSavedOrder = () => {
+    if (savedOrder()) window.history.replaceState(null, "", window.location.pathname + window.location.search);
+  };
+  const checkPaymentStatus = async () => {
+    const orderID = savedOrder();
+    if (!orderID) return;
+    statusButton.disabled = true;
+    try {
+      const response = await fetch(`/api/paypal/capture-order?orderID=${encodeURIComponent(orderID)}`);
+      if (!response.ok) throw new Error("Status unavailable");
+      const result = await response.json();
+      if (result.status === "COMPLETED") {
+        clearSavedOrder();
+        donationCheckout.classList.add("hidden");
+        showConfirmation("Your one-time gift was completed successfully. Thank you for supporting QC Family Tree.");
+      } else if (result.status === "DECLINED" || result.status === "FAILED") {
+        clearSavedOrder();
+        donationCheckout.classList.remove("hidden");
+        setCardProcessingState(cardSubmit, false);
+        showPaymentError("PayPal could not complete the payment.");
+        if (!checkoutInitialized) initializePayPal();
+      } else {
+        showPaymentPending(checkoutElements, "Your payment status is not yet confirmed. Please check again before making another gift.");
+      }
+    } catch {
+      showPaymentPending(checkoutElements, "We couldn’t check your payment. Please try again before making another gift.");
+    } finally {
+      statusButton.disabled = false;
+    }
+  };
+  statusButton.addEventListener("click", checkPaymentStatus);
+
   const captureOrder = async (orderID, retryButton?: HTMLButtonElement) => {
+    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}${recoveryPrefix}${encodeURIComponent(orderID)}`);
+    showPaymentPending(checkoutElements, "PayPal is processing your payment. Please wait before making another gift.");
     try {
       const response = await fetch("/api/paypal/capture-order", {
         method: "POST",
@@ -330,11 +372,18 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
         body: JSON.stringify({ orderID }),
       });
       const result = await response.json();
-      if (!response.ok) throw new Error(result?.error || "Unable to complete the donation.");
+      if (!response.ok) {
+        showPaymentPending(checkoutElements, "We couldn’t verify the payment status. Check with PayPal or your card provider before trying again.");
+        return;
+      }
 
       const captureStatus = result?.purchase_units?.[0]?.payments?.captures?.[0]?.status;
       if (captureStatus === "DECLINED" || captureStatus === "FAILED") {
-        throw new Error("PayPal could not complete the payment.");
+        clearSavedOrder();
+        donationCheckout.classList.remove("hidden");
+        if (retryButton) setCardProcessingState(retryButton, false);
+        showPaymentError("PayPal could not complete the payment.");
+        return;
       }
       if (captureStatus !== "COMPLETED") {
         const message = captureStatus === "PENDING"
@@ -345,14 +394,14 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
       }
 
       const message = "Your one-time gift was completed successfully. Thank you for supporting QC Family Tree.";
+      clearSavedOrder();
       status.textContent = message;
       showConfirmation(message);
     } catch (error) {
       console.error(error);
-      const message = error.message || "Unable to complete the donation. Please try again.";
+      const message = "We couldn’t verify the payment status. Check with PayPal or your card provider before trying again.";
       status.textContent = message;
-      if (retryButton) setCardProcessingState(retryButton, false);
-      showPaymentError(message);
+      showPaymentPending(checkoutElements, message);
     }
   };
 
@@ -362,11 +411,13 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
       showFallback();
       return;
     }
+    checkoutInitialized = true;
     window.paypal.Buttons({
       createOrder,
       onApprove: (data) => captureOrder(data.orderID),
       onError: (error) => {
         console.error(error);
+        if (savedOrder()) return;
         showPaymentError(error.message || "PayPal checkout could not be completed. Please try again.");
         status.textContent = error.message || "PayPal checkout could not be completed. Please try again.";
       },
@@ -377,6 +428,7 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
       onApprove: (data) => captureOrder(data.orderID, cardSubmit),
       onError: (error) => {
         console.error(error);
+        if (savedOrder()) return;
         showPaymentError(error.message || "Card payment could not be completed. Please try again.");
         status.textContent = error.message || "Card payment could not be completed. Please try again.";
         setCardProcessingState(cardSubmit, false);
@@ -425,6 +477,8 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
   if (previewPaymentSuccess) showConfirmation("Your one-time gift was completed successfully. Thank you for supporting QC Family Tree.");
   else if (previewPaymentError) showPaymentError("This is a preview of the error state. No payment was attempted.");
   else if (previewFallback) showFallback();
-  else initializePayPal();
+  else if (savedOrder()) {
+    showPaymentPending(checkoutElements, "Your payment status is not yet confirmed. Check its status before making another gift.");
+  } else initializePayPal();
   }
 </script>

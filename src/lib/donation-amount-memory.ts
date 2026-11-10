@@ -8,7 +8,7 @@ export const donationAmountStorageKey = "qcft-donation-amount";
 
 export function setupDonationAmountMemory(
   document: Document,
-  storage: Storage,
+  storage: Storage | null,
 ): void {
   const customAmount = document.querySelector<HTMLInputElement>(
     'input[name="amount_other"]',
@@ -24,12 +24,18 @@ export function setupDonationAmountMemory(
   if (!customAmount || !rememberGiftContainer || !rememberGift) return;
 
   const showCustomAmountOption = (show: boolean) => {
+    show = show && storage !== null;
     rememberGiftContainer.classList.toggle("hidden", !show);
     rememberGiftContainer.classList.toggle("flex", show);
     if (!show) rememberGift.checked = false;
   };
 
-  const savedAmount = storage.getItem(donationAmountStorageKey);
+  let savedAmount: string | null = null;
+  try {
+    savedAmount = storage?.getItem(donationAmountStorageKey) ?? null;
+  } catch {
+    storage = null;
+  }
   if (savedAmount && isValidDonationAmount(savedAmount)) {
     const savedPreset = [...presetAmounts].find(
       (input) => input.value === savedAmount,
@@ -51,7 +57,7 @@ export function setupDonationAmountMemory(
     input.addEventListener("change", () => {
       customAmount.value = "";
       showCustomAmountOption(false);
-      storage.setItem(donationAmountStorageKey, input.value);
+      try { storage?.setItem(donationAmountStorageKey, input.value); } catch { storage = null; }
     }),
   );
 
@@ -65,9 +71,9 @@ export function setupDonationAmountMemory(
       isValidDonationAmount(customAmount.value) &&
       !isPresetDonationAmount(customAmount.value)
     ) {
-      storage.setItem(donationAmountStorageKey, customAmount.value);
+      try { storage?.setItem(donationAmountStorageKey, customAmount.value); } catch { storage = null; showCustomAmountOption(false); }
     } else if (!rememberGift.checked) {
-      storage.removeItem(donationAmountStorageKey);
+      try { storage?.removeItem(donationAmountStorageKey); } catch { storage = null; }
     }
   });
 }
