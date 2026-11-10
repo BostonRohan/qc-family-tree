@@ -120,6 +120,50 @@ describe("donation amount memory integration", () => {
     expect(dom.window.localStorage.getItem(donationAmountStorageKey)).toBeNull();
   });
 
+  it("updates a remembered custom amount when the donor edits it", () => {
+    setup("35");
+    const custom = dom.window.document.querySelector<HTMLInputElement>('input[name="amount_other"]')!;
+    const reminder = dom.window.document.querySelector<HTMLInputElement>("#remember-gift")!;
+    custom.value = "75";
+    custom.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
+    expect(reminder.checked).toBe(true);
+    expect(dom.window.localStorage.getItem(donationAmountStorageKey)).toBe("75");
+    const saved = dom.window.localStorage.getItem(donationAmountStorageKey)!;
+    dom.window.close();
+    setup(saved);
+    expect(dom.window.document.querySelector<HTMLInputElement>('input[name="amount_other"]')?.value).toBe("75");
+  });
+
+  it("updates the amount after opting in during the same visit", () => {
+    setup();
+    const custom = dom.window.document.querySelector<HTMLInputElement>('input[name="amount_other"]')!;
+    const reminder = dom.window.document.querySelector<HTMLInputElement>("#remember-gift")!;
+    custom.value = "35";
+    custom.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
+    reminder.checked = true;
+    reminder.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+    custom.value = "75";
+    custom.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
+    expect(dom.window.localStorage.getItem(donationAmountStorageKey)).toBe("75");
+  });
+
+  it("does not retain a stale remembered amount when the new input is invalid or cleared", () => {
+    setup("35");
+    const custom = dom.window.document.querySelector<HTMLInputElement>('input[name="amount_other"]')!;
+    const reminder = dom.window.document.querySelector<HTMLInputElement>("#remember-gift")!;
+    custom.value = "0";
+    custom.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
+    expect(dom.window.localStorage.getItem(donationAmountStorageKey)).toBeNull();
+    expect(reminder.checked).toBe(true);
+    custom.value = "75";
+    custom.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
+    expect(dom.window.localStorage.getItem(donationAmountStorageKey)).toBe("75");
+    custom.value = "";
+    custom.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
+    expect(dom.window.localStorage.getItem(donationAmountStorageKey)).toBeNull();
+    expect(reminder.checked).toBe(false);
+  });
+
   it("clears custom entry and hides the reminder after selecting a preset", () => {
     setup("35");
     const preset = dom.window.document.querySelector<HTMLInputElement>('input[value="50"]')!;

@@ -64,6 +64,17 @@ export function setupDonationAmountMemory(
 
   customAmount.addEventListener("input", () => {
     if (customAmount.value) presetAmounts.forEach((input) => { input.checked = false; });
+    if (rememberGift.checked) {
+      try {
+        if (isValidDonationAmount(customAmount.value)) {
+          storage?.setItem(donationAmountStorageKey, customAmount.value);
+        } else {
+          storage?.removeItem(donationAmountStorageKey);
+        }
+      } catch {
+        storage = null;
+      }
+    }
     showCustomAmountOption(Boolean(customAmount.value));
   });
 
