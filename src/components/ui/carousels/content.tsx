@@ -6,6 +6,9 @@ function CarouselContent({ slide }: { slide: Slide }) {
       <img
         src={slide.image}
         alt=""
+        width={4}
+        height={3}
+        loading="lazy"
         className="rounded-2xl aspect-[4/3] w-full min-h-[180px] object-cover sm:min-h-[220px]"
       />
       <div>

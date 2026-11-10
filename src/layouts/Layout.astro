@@ -106,15 +106,6 @@ const isHome = slug === "";
 
     <meta name="theme-color" content="#b3be35" />
 
-    <link rel="preload" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="preload"
-      href="https://fonts.gstatic.com/s/ubuntu/v20/uU9eCBsR6Z2vfE9aq3bL0fxyUs4tcw9W-DMn8ACD7j17g.ttf"
-      as="font"
-      type="font/ttf"
-      crossorigin
-    />
-
     <Font cssVariable="--font-ubuntu" />
 
     <title>{title}</title>
@@ -123,7 +114,10 @@ const isHome = slug === "";
     <BotIdInit />
   </head>
   <body class="h-full w-full">
-    <main class="w-full h-full">
+    <a href="#main-content" class="sr-only fixed left-4 top-4 z-[2000] rounded-lg bg-background px-4 py-2 font-semibold text-foreground shadow-sm focus:not-sr-only">
+      Skip to content
+    </a>
+    <main id="main-content" class="w-full h-full">
       <Banner />
       <div class="md:block hidden">
         <div class={navWrapperClassName}>
