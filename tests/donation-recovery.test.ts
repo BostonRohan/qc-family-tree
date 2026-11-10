@@ -21,7 +21,7 @@ const bindings = {
   showPaymentErrorState: ui.showPaymentError,
 };
 
-async function checkout(options: { hash?: string; capture?: Response | Error; lookup?: Response | Error; blockedStorage?: boolean } = {}) {
+async function checkout(options: { hash?: string; capture?: Response | Error | Promise<Response>; lookup?: Response | Error | Promise<Response>; blockedStorage?: boolean } = {}) {
   const markup = '<div data-paypal-client-id="test" data-giving-mode="one-time"></div>' +
     [...page.matchAll(/<(button|div|section|p) id="([^"]+)"([^>]*)>/g)]
       .map(([, tag, id, attrs]) => `<${tag} id="${id}" ${attrs.includes('class="hidden ') ? 'class="hidden"' : ''}></${tag}>`).join("") +
@@ -62,6 +62,19 @@ async function checkout(options: { hash?: string; capture?: Response | Error; lo
 const flush = () => new Promise(resolve => setImmediate(resolve));
 
 describe("donation capture recovery", () => {
+  it("shows the appropriate outcome for completed, pending, and declined captures", async () => {
+    for (const status of ["COMPLETED", "PENDING", "DECLINED"]) {
+      const view = await checkout({ capture: Response.json({ purchase_units: [{ payments: { captures: [{ status }] } }] }) });
+      await view.wallet().onApprove({ orderID: "ORDER123" });
+      expect(view.visible("donation-confirmation")).toBe(status === "COMPLETED");
+      expect(view.visible("donation-payment-pending")).toBe(status === "PENDING");
+      expect(view.visible("donation-payment-error")).toBe(status === "DECLINED");
+      expect(view.visible("donation-checkout")).toBe(status === "DECLINED");
+      expect(view.window.location.hash).toBe(status === "PENDING" ? "#payment-order=ORDER123" : "");
+      view.dom.window.close();
+    }
+  });
+
   it("initializes checkout when localStorage access is blocked", async () => {
     const view = await checkout({ blockedStorage: true });
     expect(view.renders()).toBe(1);
@@ -137,6 +150,55 @@ describe("donation capture recovery", () => {
     }));
     expect(view.visible("donation-confirmation")).toBe(true);
     expect(view.window.location.hash).toBe("");
+    view.dom.window.close();
+  });
+
+  it("restores usable checkout when a recovery capture is declined", async () => {
+    const view = await checkout({
+      hash: "#payment-order=ORDER123",
+      lookup: Response.json({ status: "APPROVED" }),
+      capture: Response.json({ purchase_units: [{ payments: { captures: [{ status: "DECLINED" }] } }] }),
+    });
+    view.get("check-payment-status").click();
+    await flush();
+    view.loadSdk();
+    expect(view.visible("donation-payment-error")).toBe(true);
+    expect(view.visible("donation-checkout")).toBe(true);
+    expect(view.renders()).toBe(1);
+    view.get("card-method-button").click();
+    expect(view.get("card-field-submit-button").disabled).toBe(false);
+    view.dom.window.close();
+  });
+
+  it("prevents a status check while a capture is in flight", async () => {
+    let finishCapture!: (response: Response) => void;
+    const capture = new Promise<Response>((resolve) => { finishCapture = resolve; });
+    const view = await checkout({ capture });
+    const approval = view.wallet().onApprove({ orderID: "ORDER123" });
+    expect(view.get("check-payment-status").disabled).toBe(true);
+    view.get("check-payment-status").click();
+    expect(view.fetchMock).not.toHaveBeenCalledWith(expect.stringContaining("?orderID="));
+    finishCapture(Response.json({ purchase_units: [{ payments: { captures: [{ status: "COMPLETED" }] } }] }));
+    await approval;
+    expect(view.visible("donation-confirmation")).toBe(true);
+    expect(view.get("check-payment-status").disabled).toBe(false);
+    view.dom.window.close();
+  });
+
+  it("ignores a delayed status response after capture has completed", async () => {
+    let finishCapture!: (response: Response) => void;
+    let finishLookup!: (response: Response) => void;
+    const capture = new Promise<Response>((resolve) => { finishCapture = resolve; });
+    const lookup = new Promise<Response>((resolve) => { finishLookup = resolve; });
+    const view = await checkout({ capture, lookup });
+    const approval = view.wallet().onApprove({ orderID: "ORDER123" });
+    view.get("check-payment-status").dispatchEvent(new view.window.Event("click"));
+    finishCapture(Response.json({ purchase_units: [{ payments: { captures: [{ status: "COMPLETED" }] } }] }));
+    await approval;
+    finishLookup(Response.json({ status: "PENDING" }));
+    await flush();
+    expect(view.visible("donation-confirmation")).toBe(true);
+    expect(view.visible("donation-payment-pending")).toBe(false);
     view.dom.window.close();
   });
 
