@@ -123,6 +123,33 @@ describe("donation capture recovery", () => {
     view.dom.window.close();
   });
 
+  it("recaptures the original approved order after refresh", async () => {
+    const view = await checkout({
+      hash: "#payment-order=ORDER123",
+      lookup: Response.json({ status: "APPROVED" }),
+      capture: Response.json({ purchase_units: [{ payments: { captures: [{ status: "COMPLETED" }] } }] }),
+    });
+    view.get("check-payment-status").click();
+    await flush();
+    expect(view.fetchMock).toHaveBeenCalledWith("/api/paypal/capture-order", expect.objectContaining({
+      method: "POST",
+      body: JSON.stringify({ orderID: "ORDER123" }),
+    }));
+    expect(view.visible("donation-confirmation")).toBe(true);
+    expect(view.window.location.hash).toBe("");
+    view.dom.window.close();
+  });
+
+  it("keeps the original order recoverable if the retry response is lost", async () => {
+    const view = await checkout({ hash: "#payment-order=ORDER123", lookup: Response.json({ status: "APPROVED" }), capture: new Error("offline") });
+    view.get("check-payment-status").click();
+    await flush();
+    expect(view.visible("donation-payment-pending")).toBe(true);
+    expect(view.visible("donation-checkout")).toBe(false);
+    expect(view.window.location.hash).toBe("#payment-order=ORDER123");
+    view.dom.window.close();
+  });
+
   it("enables a new attempt after a confirmed failure without rendering checkout twice", async () => {
     const view = await checkout({ capture: new Error("lost"), lookup: Response.json({ status: "DECLINED" }) });
     view.get("card-method-button").click();

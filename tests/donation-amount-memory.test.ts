@@ -76,6 +76,26 @@ describe("donation amount memory integration", () => {
     expect(dom.window.document.querySelector<HTMLInputElement>('input[name="amount_other"]')?.value).toBe("");
   });
 
+  it("switches from a custom amount back to the originally selected preset", () => {
+    setup();
+    const custom = dom.window.document.querySelector<HTMLInputElement>('input[name="amount_other"]')!;
+    const preset = dom.window.document.querySelector<HTMLInputElement>('input[value="25"]')!;
+    custom.value = "100";
+    custom.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
+    expect(preset.checked).toBe(false);
+    preset.click();
+    expect(preset.checked).toBe(true);
+    expect(custom.value).toBe("");
+  });
+
+  it("leaves presets unselected when restoring a saved custom amount", () => {
+    setup("35");
+    expect(dom.window.document.querySelector<HTMLInputElement>('input[name="amount"]:checked')).toBeNull();
+    const preset = dom.window.document.querySelector<HTMLInputElement>('input[value="25"]')!;
+    preset.click();
+    expect(dom.window.document.querySelector<HTMLInputElement>('input[name="amount_other"]')?.value).toBe("");
+  });
+
   it("shows the reminder only after entering a custom amount and remembers it when opted in", () => {
     setup();
     const custom = dom.window.document.querySelector<HTMLInputElement>('input[name="amount_other"]')!;

@@ -145,6 +145,19 @@ describe("PayPal API routes", () => {
     expect(response.headers.get("Cache-Control")).toBe("no-store");
   });
 
+  it("distinguishes an approved order with no capture from an unknown capture status", async () => {
+    const { GET } = await loadRoute("../src/pages/api/paypal/capture-order");
+    for (const [order, expected] of [
+      [{ status: "APPROVED", purchase_units: [{}] }, "APPROVED"],
+      [{ status: "APPROVED", purchase_units: [{ payments: { captures: [{ status: "REFUNDED" }] } }] }, "UNKNOWN"],
+      [{ status: "COMPLETED", purchase_units: [{}] }, "UNKNOWN"],
+    ] as const) {
+      paypalFetch.mockResolvedValueOnce(Response.json({ access_token: "access-token" })).mockResolvedValueOnce(Response.json(order));
+      const response = await GET({ request: new Request("http://localhost/api/paypal/capture-order?orderID=ORDER123") });
+      expect(await response.json()).toEqual({ status: expected });
+    }
+  });
+
   it("returns an unknown outcome when order lookup fails", async () => {
     const { GET } = await loadRoute("../src/pages/api/paypal/capture-order");
     paypalFetch.mockResolvedValueOnce(Response.json({ access_token: "access-token" })).mockRejectedValueOnce(new Error("offline"));

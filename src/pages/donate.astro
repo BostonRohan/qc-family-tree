@@ -345,6 +345,8 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
         clearSavedOrder();
         donationCheckout.classList.add("hidden");
         showConfirmation("Your one-time gift was completed successfully. Thank you for supporting QC Family Tree.");
+      } else if (result.status === "APPROVED") {
+        await captureOrder(orderID, cardSubmit);
       } else if (result.status === "DECLINED" || result.status === "FAILED") {
         clearSavedOrder();
         donationCheckout.classList.remove("hidden");

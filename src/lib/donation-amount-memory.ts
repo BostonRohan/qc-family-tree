@@ -43,6 +43,7 @@ export function setupDonationAmountMemory(
     if (savedPreset) savedPreset.checked = true;
     else {
       customAmount.value = savedAmount;
+      presetAmounts.forEach((input) => { input.checked = false; });
       rememberGift.checked = true;
       showCustomAmountOption(true);
     }
@@ -62,6 +63,7 @@ export function setupDonationAmountMemory(
   );
 
   customAmount.addEventListener("input", () => {
+    if (customAmount.value) presetAmounts.forEach((input) => { input.checked = false; });
     showCustomAmountOption(Boolean(customAmount.value));
   });
 

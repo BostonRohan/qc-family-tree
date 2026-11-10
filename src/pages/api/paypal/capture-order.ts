@@ -62,7 +62,8 @@ export async function GET({ request }: { request: Request }) {
     const data = await response.json();
     const capture = data.purchase_units?.[0]?.payments?.captures?.[0];
     const status = ["COMPLETED", "PENDING", "DECLINED", "FAILED"].includes(capture?.status)
-      ? capture.status : "UNKNOWN";
+      ? capture.status
+      : !capture && data.status === "APPROVED" ? "APPROVED" : "UNKNOWN";
     return new Response(JSON.stringify({ status }), { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     Sentry.captureException(error, { tags: { payment_flow: "paypal", operation: "check_order" } });
