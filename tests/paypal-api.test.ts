@@ -137,15 +137,22 @@ describe("PayPal API routes", () => {
 
   it("captures an approved order", async () => {
     const { POST } = await loadRoute("../src/pages/api/paypal/capture-order");
+    const order = {
+      status: "COMPLETED",
+      purchase_units: [{ payments: { captures: [{ status: "PENDING" }] } }],
+    };
     paypalFetch
       .mockResolvedValueOnce(new Response(JSON.stringify({ access_token: "access-token" }), { status: 200 }))
-      .mockResolvedValueOnce(new Response(JSON.stringify({ status: "COMPLETED" }), { status: 200 }));
+      .mockResolvedValueOnce(new Response(JSON.stringify(order), { status: 200 }));
 
     const response = await POST({ request: jsonRequest({ orderID: "ORDER-123" }) });
 
     expect(response.status).toBe(200);
-    expect(await responseJson(response)).toEqual({ status: "COMPLETED" });
-    expect(paypalFetch).toHaveBeenNthCalledWith(2, "https://api-m.sandbox.paypal.com/v2/checkout/orders/ORDER-123/capture", expect.objectContaining({ method: "POST" }));
+    expect(await responseJson(response)).toEqual(order);
+    expect(paypalFetch).toHaveBeenNthCalledWith(2, "https://api-m.sandbox.paypal.com/v2/checkout/orders/ORDER-123/capture", expect.objectContaining({
+      method: "POST",
+      headers: expect.objectContaining({ Prefer: "return=representation" }),
+    }));
   });
 
   it("returns PayPal's capture error for a declined order", async () => {

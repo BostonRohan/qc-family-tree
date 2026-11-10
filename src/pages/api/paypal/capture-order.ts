@@ -31,7 +31,11 @@ export async function POST({ request }: { request: Request }) {
     const accessToken = await getAccessToken();
     const response = await fetch(`${paypalApiUrl}/v2/checkout/orders/${encodeURIComponent(orderID)}/capture`, {
       method: "POST",
-      headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      },
     });
     const data = await response.json();
     if (!response.ok) return new Response(JSON.stringify({ error: "PayPal could not capture the order.", details: data }), { status: response.status });

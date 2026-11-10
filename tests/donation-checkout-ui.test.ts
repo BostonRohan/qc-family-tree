@@ -8,6 +8,7 @@ import {
   showConfirmation,
   showFallback,
   showPaymentError,
+  showPaymentPending,
 } from "../src/lib/donation-checkout-ui";
 
 function setup() {
@@ -15,6 +16,7 @@ function setup() {
     <div id="supporting-info"></div>
     <section id="confirmation" class="hidden"><p id="confirmation-message"></p><p id="subscription-row" class="hidden"><strong id="subscription-id"></strong></p></section>
     <section id="payment-error" class="hidden"><p id="payment-error-message"></p></section>
+    <section id="payment-pending" class="hidden"><p id="payment-pending-message"></p></section>
     <div id="checkout"></div>
     <div id="monthly-checkout"></div>
     <div id="fallback" class="hidden"></div>
@@ -31,6 +33,8 @@ function setup() {
     subscriptionId: element("subscription-id"),
     paymentError: element("payment-error"),
     paymentErrorMessage: element("payment-error-message"),
+    paymentPending: element("payment-pending"),
+    paymentPendingMessage: element("payment-pending-message"),
     donationCheckout: element("checkout"),
     monthlyCheckout: element("monthly-checkout"),
     paypalFallback: element("fallback"),
@@ -47,16 +51,32 @@ function setup() {
 }
 
 describe("donation checkout UI", () => {
-  it("shows the confirmation and subscription ID while hiding supporting content", () => {
+  it("replaces the payment error with the confirmation and subscription ID after a successful retry", () => {
     const { dom, elements } = setup();
 
+    showPaymentError(elements, "PayPal could not complete the payment.");
     showConfirmation(elements, "Your monthly gift is active.", "I-SUBSCRIPTION-123");
 
     expect(elements.supportingInfo?.classList.contains("hidden")).toBe(true);
+    expect(elements.paymentError?.classList.contains("hidden")).toBe(true);
     expect(elements.confirmation?.classList.contains("hidden")).toBe(false);
     expect(elements.confirmationMessage?.textContent).toBe("Your monthly gift is active.");
     expect(elements.subscriptionId?.textContent).toBe("I-SUBSCRIPTION-123");
     expect(elements.subscriptionIdRow?.classList.contains("hidden")).toBe(false);
+    dom.window.close();
+  });
+
+  it("shows a pending payment after an error and hides checkout to prevent a duplicate gift", () => {
+    const { dom, elements } = setup();
+
+    showPaymentError(elements, "PayPal could not complete the payment.");
+    showPaymentPending(elements, "PayPal is still processing your payment.");
+
+    expect(elements.paymentError?.classList.contains("hidden")).toBe(true);
+    expect(elements.confirmation?.classList.contains("hidden")).toBe(true);
+    expect(elements.paymentPending?.classList.contains("hidden")).toBe(false);
+    expect(elements.paymentPendingMessage?.textContent).toBe("PayPal is still processing your payment.");
+    expect(elements.donationCheckout?.classList.contains("hidden")).toBe(true);
     dom.window.close();
   });
 
