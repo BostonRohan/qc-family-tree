@@ -135,6 +135,25 @@ describe("PayPal API routes", () => {
     expect(paypalFetch).not.toHaveBeenCalled();
   });
 
+  it("reuses the capture attempt key for retries and changes it for a new funding approval", async () => {
+    const { POST } = await loadRoute("../src/pages/api/paypal/capture-order");
+    for (const attempt of [0, 1, 1]) {
+      paypalFetch.mockResolvedValueOnce(Response.json({ access_token: "access-token" })).mockResolvedValueOnce(Response.json({ status: "COMPLETED" }));
+      expect((await POST({ request: jsonRequest({ orderID: "ORDER123", attempt }) })).status).toBe(200);
+    }
+    const captureCalls = paypalFetch.mock.calls.filter(([url]) => String(url).endsWith("/capture"));
+    expect(captureCalls.map(([, options]) => options.headers["PayPal-Request-Id"])).toEqual([
+      "capture-ORDER123", "capture-ORDER123-1", "capture-ORDER123-1",
+    ]);
+  });
+
+  it("rejects an invalid capture attempt without contacting PayPal", async () => {
+    const { POST } = await loadRoute("../src/pages/api/paypal/capture-order");
+    const response = await POST({ request: jsonRequest({ orderID: "ORDER123", attempt: -1 }) });
+    expect(response.status).toBe(400);
+    expect(paypalFetch).not.toHaveBeenCalled();
+  });
+
   it("checks the original order without exposing PayPal customer details", async () => {
     const { GET } = await loadRoute("../src/pages/api/paypal/capture-order");
     paypalFetch

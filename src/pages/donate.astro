@@ -331,8 +331,15 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
 
   const statusButton = document.getElementById("check-payment-status");
   const recoveryPrefix = "#payment-order=";
-  const savedOrder = () => window.location.hash.startsWith(recoveryPrefix)
-    ? window.location.hash.slice(recoveryPrefix.length) : "";
+  const recoveryParams = () => new URLSearchParams(window.location.hash.slice(1));
+  const savedOrder = () => recoveryParams().get("payment-order") || "";
+  const savedAttempt = () => {
+    const attempt = Number(recoveryParams().get("attempt") || 0);
+    return Number.isSafeInteger(attempt) && attempt >= 0 && attempt <= 100 ? attempt : 0;
+  };
+  let restartedOrder = "";
+  let restartedAttempt = 0;
+  let capturesInFlight = 0;
   const clearSavedOrder = () => {
     if (savedOrder()) window.history.replaceState(null, "", window.location.pathname + window.location.search);
   };
@@ -350,7 +357,7 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
         donationCheckout.classList.add("hidden");
         showConfirmation("Your one-time gift was completed successfully. Thank you for supporting QC Family Tree.");
       } else if (result.status === "APPROVED") {
-        await captureOrder(orderID, cardSubmit);
+        await captureOrder(orderID, cardSubmit, undefined, savedAttempt());
       } else if (result.status === "DECLINED" || result.status === "FAILED") {
         clearSavedOrder();
         donationCheckout.classList.remove("hidden");
@@ -365,23 +372,45 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
         showPaymentPending(checkoutElements, "We couldn’t check your payment. Please try again before making another gift.");
       }
     } finally {
-      statusButton.disabled = false;
+      statusButton.disabled = capturesInFlight > 0;
     }
   };
   statusButton.addEventListener("click", checkPaymentStatus);
 
-  const captureOrder = async (orderID, retryButton?: HTMLButtonElement) => {
-    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}${recoveryPrefix}${encodeURIComponent(orderID)}`);
+  const captureOrder = async (orderID, retryButton?: HTMLButtonElement, actions?, attempt = 0) => {
+    const attemptSuffix = attempt ? `&attempt=${attempt}` : "";
+    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}${recoveryPrefix}${encodeURIComponent(orderID)}${attemptSuffix}`);
+    capturesInFlight += 1;
     statusButton.disabled = true;
     showPaymentPending(checkoutElements, "PayPal is processing your payment. Please wait before making another gift.");
     try {
       const response = await fetch("/api/paypal/capture-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderID }),
+        body: JSON.stringify({ orderID, attempt }),
       });
       const result = await response.json();
       if (!response.ok) {
+        const instrumentDeclined = response.status === 422 && result?.details?.name === "UNPROCESSABLE_ENTITY"
+          && result.details.details?.some((detail) => detail.issue === "INSTRUMENT_DECLINED");
+        if (instrumentDeclined) {
+          clearSavedOrder();
+          donationCheckout.classList.remove("hidden");
+          if (retryButton) setCardProcessingState(retryButton, false);
+          showPaymentError("Your payment method was declined. Please choose another payment method and try again.");
+          if (!checkoutInitialized) initializePayPal();
+          if (actions && attempt < 100) {
+            restartedOrder = orderID;
+            restartedAttempt = attempt + 1;
+            try {
+              return await actions.restart();
+            } catch (error) {
+              console.error(error);
+              showPaymentError("PayPal could not restart checkout. Please try again.");
+            }
+          }
+          return;
+        }
         showPaymentPending(checkoutElements, "We couldn’t verify the payment status. Check with PayPal or your card provider before trying again.");
         return;
       }
@@ -413,7 +442,8 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
       status.textContent = message;
       showPaymentPending(checkoutElements, message);
     } finally {
-      statusButton.disabled = false;
+      capturesInFlight -= 1;
+      statusButton.disabled = capturesInFlight > 0;
     }
   };
 
@@ -426,7 +456,7 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
     checkoutInitialized = true;
     window.paypal.Buttons({
       createOrder,
-      onApprove: (data) => captureOrder(data.orderID),
+      onApprove: (data, actions) => captureOrder(data.orderID, undefined, actions, data.orderID === restartedOrder ? restartedAttempt : 0),
       onError: (error) => {
         console.error(error);
         if (savedOrder()) return;

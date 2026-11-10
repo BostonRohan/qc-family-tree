@@ -25,8 +25,9 @@ async function getAccessToken() {
 
 export async function POST({ request }: { request: Request }) {
   try {
-    const { orderID } = await request.json();
+    const { orderID, attempt = 0 } = await request.json();
     if (typeof orderID !== "string" || !orderID) return new Response(JSON.stringify({ error: "Missing PayPal order ID." }), { status: 400 });
+    if (!Number.isSafeInteger(attempt) || attempt < 0 || attempt > 100) return new Response(JSON.stringify({ error: "Invalid capture attempt." }), { status: 400 });
 
     const accessToken = await getAccessToken();
     const response = await fetch(`${paypalApiUrl}/v2/checkout/orders/${encodeURIComponent(orderID)}/capture`, {
@@ -35,7 +36,7 @@ export async function POST({ request }: { request: Request }) {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
         Prefer: "return=representation",
-        "PayPal-Request-Id": `capture-${orderID}`,
+        "PayPal-Request-Id": `capture-${orderID}${attempt ? `-${attempt}` : ""}`,
       },
     });
     const data = await response.json();
