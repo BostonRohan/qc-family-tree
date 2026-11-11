@@ -1,6 +1,7 @@
 ---
-export const prerender = true;
+export const prerender = false;
 
+import { getRhizomeSignupUrl } from "@/utils/rhizome";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import { CustomTooltip } from "@/components/ui/tooltip";
@@ -13,6 +14,8 @@ import slide_1 from "@/assets/rhizome/slide_1.jpg";
 import slide_2 from "@/assets/rhizome/slide_2.jpg";
 import slide_3 from "@/assets/rhizome/slide_3.jpg";
 import slide_4 from "@/assets/rhizome/slide_4.jpg";
+
+const signupUrl = await getRhizomeSignupUrl();
 ---
 
 <Layout
@@ -27,7 +30,7 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
     image={slide_1}
     primaryCta={{
       label: "Sign up",
-      href: "/rhizome/signup",
+      href: signupUrl,
     }}
   />
   <section
@@ -85,7 +88,7 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
             progress.
           </p>
           <div class="flex flex-col gap-3 sm:flex-row">
-            <Link className="rounded-xl" href="/rhizome/signup">Sign up</Link>
+            <Link className="rounded-xl" href={signupUrl}>Sign up</Link>
             <Link
               className="rounded-xl border-accent-foreground/70 text-accent-foreground hover:bg-accent-foreground hover:text-accent"
               variant="outline"

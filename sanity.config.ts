@@ -10,7 +10,7 @@ export default defineConfig({
     structureTool({
       structure: (S) =>
         S.list()
-          .title("Featured Section")
+          .title("Content")
           .items([
             // Our singleton type has a list item with a custom child
             S.listItem().title("Featured Section").id("featuredSection").child(
@@ -24,38 +24,13 @@ export default defineConfig({
             S.listItem().title("Culture Bearer Next Cohort").id("cultureBearerCohort").child(
               S.document().schemaType("cultureBearerCohort").documentId("cultureBearerCohort"),
             ),
+            S.listItem().title("Rhizome Membership").id("rhizomeMembership").child(
+              S.document().schemaType("rhizomeMembership").documentId("rhizomeMembership"),
+            ),
             S.documentTypeListItem("alumni").title("Culture Bearer Alumni"),
-          ]),
-    }),
-    structureTool({
-      structure: (S) =>
-        S.list()
-          .title("Banner")
-          .items([
-            // Our singleton type has a list item with a custom child
             S.listItem().title("Banner").id("banner").child(
-              // Instead of rendering a list of documents, we render a single
-              // document, specifying the `documentId` manually to ensure
-              // that we're editing the single instance of the document
               S.document().schemaType("banner").documentId("banner"),
             ),
-        ]),
-    }),
-    structureTool({
-      structure: (S) =>
-        S.list()
-          .title("Accountability")
-          .items([
-            S.listItem().title("Accountability").id("accountability").child(
-              S.document().schemaType("accountability").documentId("accountability"),
-            ),
-          ]),
-    }),
-    structureTool({
-      structure: (S) =>
-        S.list()
-          .title("Accountability")
-          .items([
             S.listItem().title("Accountability").id("accountability").child(
               S.document().schemaType("accountability").documentId("accountability"),
             ),
