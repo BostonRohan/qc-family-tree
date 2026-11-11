@@ -1,6 +1,7 @@
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { schemaTypes } from "studio/schemaTypes/index";
+import { getBannerDocumentId } from "@/utils/banner";
 import { getRequiredEnvVar } from "@/utils/sanity";
 
 export default defineConfig({
@@ -8,7 +9,7 @@ export default defineConfig({
   dataset: getRequiredEnvVar("PUBLIC_SANITY_STUDIO_DATASET"),
   plugins: [
     structureTool({
-      structure: (S) =>
+      structure: (S, { getClient }) =>
         S.list()
           .title("Content")
           .items([
@@ -28,15 +29,23 @@ export default defineConfig({
               S.document().schemaType("rhizomeMembership").documentId("rhizomeMembership"),
             ),
             S.documentTypeListItem("alumni").title("Culture Bearer Alumni"),
-            S.listItem().title("Banner").id("banner").child(
-              S.document().schemaType("banner").documentId("banner"),
-            ),
-            S.listItem().title("Accountability").id("accountability").child(
-              S.document().schemaType("accountability").documentId("accountability"),
-            ),
+            S.listItem().title("Banner").id("banner").child(async () => {
+              const client = getClient({ apiVersion: "2025-08-08" });
+              const documentId = await getBannerDocumentId(client);
+              return S.document().schemaType("banner").documentId(documentId);
+            }),
+            S.documentTypeListItem("accountability").title("Accountability"),
           ]),
     }),
   ],
+  document: {
+    newDocumentOptions: (options) =>
+      options.filter((option) => option.templateId !== "banner"),
+    actions: (actions, { schemaType }) =>
+      schemaType === "banner"
+        ? actions.filter(({ action }) => !["duplicate", "delete", "unpublish"].includes(action ?? ""))
+        : actions,
+  },
   schema: {
     types: schemaTypes,
   },

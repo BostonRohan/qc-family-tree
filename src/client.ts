@@ -7,6 +7,10 @@ export function init() {
         path: "/api/subscribe",
         method: "POST",
       },
+      {
+        path: "/api/paypal/create-subscription-plan",
+        method: "POST",
+      },
     ],
   });
 }

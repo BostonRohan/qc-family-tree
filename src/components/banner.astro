@@ -1,24 +1,18 @@
 ---
-import { defineQuery } from "groq";
+import { BANNER_QUERY } from "@/utils/banner";
 import { sanityClient } from "sanity:client";
 import { type Banner } from "sanity.types";
 import { FileText } from "lucide-react";
 
-const BANNER_QUERY = defineQuery(`*[_type == "banner"] | order((_id == "banner") desc, _updatedAt desc, _id asc)[0]`);
-
-const bannerData = await sanityClient
-  .fetch<Banner | null>(BANNER_QUERY)
+const banner = await sanityClient
+  .fetch<Banner | null>(BANNER_QUERY, {}, { perspective: "published" })
   .catch((error: unknown) => {
     console.error("Error fetching banner:", error);
   });
-
-const banner = bannerData;
-
-const showBanner = banner && Boolean(banner?.showBanner);
 ---
 
 {
-  showBanner && (
+  banner?.showBanner && (
     <div class="bg-secondary/20 flex justify-center items-center w-full h-12 gap-4 px-4 mt-16">
       <div class="flex items-center gap-2">
         <FileText className="size-4 text-secondary/70 flex-shrink-0" aria-hidden="true" />
