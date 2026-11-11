@@ -4,6 +4,7 @@ import { heroType } from "./hero";
 import { accountabilityType } from "./accountability";
 import { cultureBearerCohortType } from "./culture_bearer_cohort";
 import { alumniType } from "./alumni";
+import { rhizomeMembershipType } from "./rhizome_membership";
 
 export const schemaTypes = [
   featuredSectionType,
@@ -12,4 +13,5 @@ export const schemaTypes = [
   accountabilityType,
   cultureBearerCohortType,
   alumniType,
+  rhizomeMembershipType,
 ];

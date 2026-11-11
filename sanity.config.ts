@@ -25,6 +25,9 @@ export default defineConfig({
             S.listItem().title("Culture Bearer Next Cohort").id("cultureBearerCohort").child(
               S.document().schemaType("cultureBearerCohort").documentId("cultureBearerCohort"),
             ),
+            S.listItem().title("Rhizome Membership").id("rhizomeMembership").child(
+              S.document().schemaType("rhizomeMembership").documentId("rhizomeMembership"),
+            ),
             S.documentTypeListItem("alumni").title("Culture Bearer Alumni"),
             S.listItem().title("Banner").id("banner").child(async () => {
               const client = getClient({ apiVersion: "2025-08-08" });

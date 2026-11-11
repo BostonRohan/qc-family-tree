@@ -117,7 +117,7 @@ const isHome = slug === "";
     <a href="#main-content" class="sr-only fixed left-4 top-4 z-[2000] rounded-lg bg-background px-4 py-2 font-semibold text-foreground shadow-sm focus:not-sr-only">
       Skip to content
     </a>
-    <main id="main-content" class="w-full h-full">
+    <main class="w-full h-full">
       <Banner />
       <div class="md:block hidden">
         <div class={navWrapperClassName}>
@@ -153,7 +153,9 @@ const isHome = slug === "";
           </>
         )
       }
-      <slot />
+      <div id="main-content" tabindex="-1">
+        <slot />
+      </div>
       <LogoToggle client:load heroSelector="[data-hero-section]" logoSelector="[data-nav-logo]" />
     </main>
     <Footer />
