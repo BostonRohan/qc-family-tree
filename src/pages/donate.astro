@@ -46,7 +46,7 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
             <input id="remember-gift" type="checkbox" class="mt-1 h-4 w-4 accent-secondary" />
             <label for="remember-gift" class="text-sm"><span class="font-semibold">Remember this gift for next time</span><span class="mt-1 block font-normal text-muted-foreground">We’ll remember your amount, never your payment details.</span></label>
           </div>
-          <div class="mt-6 grid grid-cols-2 rounded-xl bg-muted p-1" role="tablist" aria-label="Payment method">
+          <div id="payment-method-tabs" class="hidden mt-6 grid-cols-2 rounded-xl bg-muted p-1" role="tablist" aria-label="Payment method">
             <button id="paypal-method-button" type="button" role="tab" aria-selected="true" class="rounded-lg bg-white px-3 py-2 text-sm font-semibold shadow-sm">Pay with PayPal</button>
             <button id="card-method-button" type="button" role="tab" aria-selected="false" class="rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground">Pay with card</button>
           </div>
@@ -283,6 +283,7 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
   const paypalPanel = document.getElementById("paypal-payment-panel");
   const paypalMethodButton = document.getElementById("paypal-method-button");
   const cardMethodButton = document.getElementById("card-method-button");
+  const paymentMethodTabs = document.getElementById("payment-method-tabs");
   let cardField;
   let cardFieldsRendered = false;
   let checkoutInitialized = false;
@@ -479,10 +480,11 @@ const isMonthly = Astro.url.searchParams.get("giving") === "monthly";
     });
 
     if (!cardField.isEligible()) {
-      cardMethodButton.disabled = true;
-      cardMethodButton.textContent = "Card unavailable";
+      setPaymentMethod("paypal");
       return;
     }
+    paymentMethodTabs.classList.remove("hidden");
+    paymentMethodTabs.classList.add("grid");
     if (cardMethodButton.getAttribute("aria-selected") === "true") setPaymentMethod("card");
     cardSubmit.addEventListener("click", async () => {
       setCardProcessingState(cardSubmit, true);

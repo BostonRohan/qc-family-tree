@@ -21,7 +21,7 @@ const bindings = {
   showPaymentErrorState: ui.showPaymentError,
 };
 
-async function checkout(options: { hash?: string; capture?: Response | Error | Promise<Response> | Array<Response | Error | Promise<Response>>; lookup?: Response | Error | Promise<Response>; blockedStorage?: boolean } = {}) {
+async function checkout(options: { hash?: string; capture?: Response | Error | Promise<Response> | Array<Response | Error | Promise<Response>>; lookup?: Response | Error | Promise<Response>; blockedStorage?: boolean; cardEligible?: boolean; deferSdk?: boolean } = {}) {
   const markup = '<div data-paypal-client-id="test" data-giving-mode="one-time"></div>' +
     [...page.matchAll(/<(button|div|section|p) id="([^"]+)"([^>]*)>/g)]
       .map(([, tag, id, attrs]) => `<${tag} id="${id}" ${attrs.includes('class="hidden ') ? 'class="hidden"' : ''}></${tag}>`).join("") +
@@ -37,7 +37,7 @@ async function checkout(options: { hash?: string; capture?: Response | Error | P
     Buttons(callbacks: unknown) { wallet = callbacks; renders++; return field(); },
     CardFields(callbacks: unknown) {
       card = callbacks;
-      return { isEligible: () => true, NameField: field, NumberField: field, ExpiryField: field, CVVField: field,
+      return { isEligible: () => options.cardEligible ?? true, NameField: field, NumberField: field, ExpiryField: field, CVVField: field,
         submit: () => card.onApprove({ orderID: "ORDER123" }) };
     },
   } });
@@ -53,7 +53,7 @@ async function checkout(options: { hash?: string; capture?: Response | Error | P
   );
   await new Promise(resolve => setImmediate(resolve));
   const loadSdk = () => window.document.head.querySelector("script")?.onload?.(new window.Event("load"));
-  loadSdk();
+  if (!options.deferSdk) loadSdk();
   const get = (id: string) => window.document.getElementById(id) as HTMLButtonElement;
   const visible = (id: string) => !get(id).classList.contains("hidden");
   return { dom, window, get, visible, fetchMock, loadSdk, renders: () => renders, wallet: () => wallet, card: () => card };
@@ -62,6 +62,24 @@ async function checkout(options: { hash?: string; capture?: Response | Error | P
 const flush = () => new Promise(resolve => setImmediate(resolve));
 
 describe("donation capture recovery", () => {
+  it("shows the card tab only after PayPal confirms eligibility", async () => {
+    const view = await checkout({ deferSdk: true });
+    expect(view.visible("payment-method-tabs")).toBe(false);
+    view.loadSdk();
+    expect(view.visible("payment-method-tabs")).toBe(true);
+    view.get("card-method-button").click();
+    expect(view.visible("card-form")).toBe(true);
+    view.dom.window.close();
+  });
+
+  it("keeps PayPal checkout visible when embedded card fields are ineligible", async () => {
+    const view = await checkout({ cardEligible: false });
+    expect(view.visible("payment-method-tabs")).toBe(false);
+    expect(view.visible("paypal-payment-panel")).toBe(true);
+    expect(view.visible("card-form")).toBe(false);
+    expect(view.renders()).toBe(1);
+    view.dom.window.close();
+  });
   it("shows the appropriate outcome for completed, pending, and declined captures", async () => {
     for (const status of ["COMPLETED", "PENDING", "DECLINED"]) {
       const view = await checkout({ capture: Response.json({ purchase_units: [{ payments: { captures: [{ status }] } }] }) });
