@@ -86,17 +86,19 @@ function CustomAccordion({ items }: CustomAccordionProps) {
   );
 }
 
-function RhizomeFAQ({ season, annualFee }: { season: number; annualFee: string }) {
+function RhizomeFAQ({ pricing }: { pricing?: { season: number; annualFee: string } }) {
   const faqs = [
     {
       title: "What does it mean to be a Rhizome member?",
       content:
         "Members meet regularly to share art, learn from one another, and build a supportive network that fosters both personal and collective growth.",
     },
-    {
-      title: "How much does it cost to join?",
-      content: `The ${season} annual Rhizome Membership fee is ${annualFee}.`,
-    },
+    ...(pricing
+      ? [{
+          title: "How much does it cost to join?",
+          content: `The ${pricing.season} annual Rhizome Membership fee is ${pricing.annualFee}.`,
+        }]
+      : []),
     {
       title: "Who can join the coalition?",
       content:
