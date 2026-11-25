@@ -4,6 +4,8 @@ type CheckoutElements = {
   confirmationMessage: HTMLElement | null;
   subscriptionIdRow: HTMLElement | null;
   subscriptionId: HTMLElement | null;
+  paymentPending: HTMLElement | null;
+  paymentPendingMessage: HTMLElement | null;
   paymentError: HTMLElement | null;
   paymentErrorMessage: HTMLElement | null;
   donationCheckout: HTMLElement | null;
@@ -11,13 +13,19 @@ type CheckoutElements = {
   paypalFallback: HTMLElement | null;
 };
 
+function showOutcome(elements: CheckoutElements, outcome: "confirmation" | "paymentPending" | "paymentError"): void {
+  elements.supportingInfo?.classList.add("hidden");
+  elements.confirmation?.classList.toggle("hidden", outcome !== "confirmation");
+  elements.paymentPending?.classList.toggle("hidden", outcome !== "paymentPending");
+  elements.paymentError?.classList.toggle("hidden", outcome !== "paymentError");
+}
+
 export function showConfirmation(
   elements: CheckoutElements,
   message: string,
   subscriptionID?: string,
 ): void {
-  elements.supportingInfo?.classList.add("hidden");
-  elements.confirmation?.classList.remove("hidden");
+  showOutcome(elements, "confirmation");
   if (elements.confirmationMessage) elements.confirmationMessage.textContent = message;
   if (subscriptionID && elements.subscriptionId && elements.subscriptionIdRow) {
     elements.subscriptionId.textContent = subscriptionID;
@@ -25,9 +33,14 @@ export function showConfirmation(
   }
 }
 
+export function showPaymentPending(elements: CheckoutElements, message: string): void {
+  showOutcome(elements, "paymentPending");
+  if (elements.paymentPendingMessage) elements.paymentPendingMessage.textContent = message;
+  elements.donationCheckout?.classList.add("hidden");
+}
+
 export function showPaymentError(elements: CheckoutElements, message: string): void {
-  elements.supportingInfo?.classList.add("hidden");
-  elements.paymentError?.classList.remove("hidden");
+  showOutcome(elements, "paymentError");
   if (elements.paymentErrorMessage) elements.paymentErrorMessage.textContent = message;
 }
 

@@ -135,17 +135,74 @@ describe("PayPal API routes", () => {
     expect(paypalFetch).not.toHaveBeenCalled();
   });
 
+  it("reuses the capture attempt key for retries and changes it for a new funding approval", async () => {
+    const { POST } = await loadRoute("../src/pages/api/paypal/capture-order");
+    for (const attempt of [0, 1, 1]) {
+      paypalFetch.mockResolvedValueOnce(Response.json({ access_token: "access-token" })).mockResolvedValueOnce(Response.json({ status: "COMPLETED" }));
+      expect((await POST({ request: jsonRequest({ orderID: "ORDER123", attempt }) })).status).toBe(200);
+    }
+    const captureCalls = paypalFetch.mock.calls.filter(([url]) => String(url).endsWith("/capture"));
+    expect(captureCalls.map(([, options]) => options.headers["PayPal-Request-Id"])).toEqual([
+      "capture-ORDER123", "capture-ORDER123-1", "capture-ORDER123-1",
+    ]);
+  });
+
+  it("rejects an invalid capture attempt without contacting PayPal", async () => {
+    const { POST } = await loadRoute("../src/pages/api/paypal/capture-order");
+    const response = await POST({ request: jsonRequest({ orderID: "ORDER123", attempt: -1 }) });
+    expect(response.status).toBe(400);
+    expect(paypalFetch).not.toHaveBeenCalled();
+  });
+
+  it("checks the original order without exposing PayPal customer details", async () => {
+    const { GET } = await loadRoute("../src/pages/api/paypal/capture-order");
+    paypalFetch
+      .mockResolvedValueOnce(Response.json({ access_token: "access-token" }))
+      .mockResolvedValueOnce(Response.json({ payer: { email_address: "private@example.test" }, purchase_units: [{ payments: { captures: [{ status: "COMPLETED" }] } }] }));
+    const response = await GET({ request: new Request("http://localhost/api/paypal/capture-order?orderID=ORDER123") });
+    expect(await response.json()).toEqual({ status: "COMPLETED" });
+    expect(response.headers.get("Cache-Control")).toBe("no-store");
+  });
+
+  it("distinguishes an approved order with no capture from an unknown capture status", async () => {
+    const { GET } = await loadRoute("../src/pages/api/paypal/capture-order");
+    for (const [order, expected] of [
+      [{ status: "APPROVED", purchase_units: [{}] }, "APPROVED"],
+      [{ status: "APPROVED", purchase_units: [{ payments: { captures: [{ status: "REFUNDED" }] } }] }, "UNKNOWN"],
+      [{ status: "COMPLETED", purchase_units: [{}] }, "UNKNOWN"],
+    ] as const) {
+      paypalFetch.mockResolvedValueOnce(Response.json({ access_token: "access-token" })).mockResolvedValueOnce(Response.json(order));
+      const response = await GET({ request: new Request("http://localhost/api/paypal/capture-order?orderID=ORDER123") });
+      expect(await response.json()).toEqual({ status: expected });
+    }
+  });
+
+  it("returns an unknown outcome when order lookup fails", async () => {
+    const { GET } = await loadRoute("../src/pages/api/paypal/capture-order");
+    paypalFetch.mockResolvedValueOnce(Response.json({ access_token: "access-token" })).mockRejectedValueOnce(new Error("offline"));
+    const response = await GET({ request: new Request("http://localhost/api/paypal/capture-order?orderID=ORDER123") });
+    expect(response.status).toBe(503);
+    expect(await response.json()).toEqual({ status: "UNKNOWN" });
+  });
+
   it("captures an approved order", async () => {
     const { POST } = await loadRoute("../src/pages/api/paypal/capture-order");
+    const order = {
+      status: "COMPLETED",
+      purchase_units: [{ payments: { captures: [{ status: "PENDING" }] } }],
+    };
     paypalFetch
       .mockResolvedValueOnce(new Response(JSON.stringify({ access_token: "access-token" }), { status: 200 }))
-      .mockResolvedValueOnce(new Response(JSON.stringify({ status: "COMPLETED" }), { status: 200 }));
+      .mockResolvedValueOnce(new Response(JSON.stringify(order), { status: 200 }));
 
     const response = await POST({ request: jsonRequest({ orderID: "ORDER-123" }) });
 
     expect(response.status).toBe(200);
-    expect(await responseJson(response)).toEqual({ status: "COMPLETED" });
-    expect(paypalFetch).toHaveBeenNthCalledWith(2, "https://api-m.sandbox.paypal.com/v2/checkout/orders/ORDER-123/capture", expect.objectContaining({ method: "POST" }));
+    expect(await responseJson(response)).toEqual(order);
+    expect(paypalFetch).toHaveBeenNthCalledWith(2, "https://api-m.sandbox.paypal.com/v2/checkout/orders/ORDER-123/capture", expect.objectContaining({
+      method: "POST",
+      headers: expect.objectContaining({ Prefer: "return=representation", "PayPal-Request-Id": "capture-ORDER-123" }),
+    }));
   });
 
   it("returns PayPal's capture error for a declined order", async () => {

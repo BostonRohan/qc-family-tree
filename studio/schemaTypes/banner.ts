@@ -1,9 +1,20 @@
-import { defineType, defineField } from "sanity";
+import { defineType, defineField, getPublishedId } from "sanity";
+import { getBannerDocumentId } from "@/utils/banner";
 
 export const bannerType = defineType({
   name: "banner",
   title: "Banner",
   type: "document",
+  validation: (rule) =>
+    rule.custom(async (document, { getClient }) => {
+      if (!document?._id) return true;
+
+      const client = getClient({ apiVersion: "2025-08-08" });
+      const bannerId = await getBannerDocumentId(client);
+      return getPublishedId(document._id) === bannerId
+        ? true
+        : "Only one banner can be published. Edit the existing Banner in Content.";
+    }),
   fields: [
     defineField({
       name: "title",

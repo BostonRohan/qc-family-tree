@@ -19,8 +19,13 @@ export const rhizomeMembershipType = defineType({
       initialValue: 45,
       validation: (rule) => rule.required().min(0).precision(2),
     }),
+    defineField({
+      name: "signupUrl",
+      title: "Sign-up link",
+      description: "The destination for the Rhizome Membership sign-up buttons.",
+      type: "url",
+      initialValue: "https://docs.google.com/forms/d/e/1FAIpQLSea5129FAq4Z_JIOhByXJFjGYem2_Y3kNDzDTx17BlMVK6TfA/viewform",
+      validation: (rule) => rule.required().uri({ scheme: ["http", "https"] }),
+    }),
   ],
-  preview: {
-    prepare: () => ({ title: "Rhizome Membership" }),
-  },
 });

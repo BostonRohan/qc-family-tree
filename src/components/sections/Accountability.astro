@@ -6,7 +6,7 @@ type Report = { year: number; url: string };
 type Accountability = { annualReports?: Report[]; form990s?: Report[] };
 
 const ACCOUNTABILITY_QUERY = defineQuery(`
-  *[_type == "accountability" && _id == "accountability"][0] {
+  *[_type == "accountability"] | order((_id == "accountability") desc, _updatedAt desc, _id asc)[0] {
     "annualReports": annualReports[] | order(year desc) { year, url },
     "form990s": form990s[] | order(year desc) { year, url }
   }
@@ -33,14 +33,14 @@ interface Props { compact?: boolean }
 const { compact = false } = Astro.props;
 ---
 
-<section id="accountability" class:list={["space-y-6 max-w-5xl mx-auto", { "pb-16": !compact }]}>
-  <div>
+<section id="accountability" class:list={{ "space-y-6 max-w-5xl mx-auto pb-16": !compact }}>
+  {!compact && <div>
     <h2 class="font-ubuntu text-3xl font-bold sm:text-4xl">Accountability</h2>
     <p class="mt-3 max-w-2xl text-muted-foreground">
       QC Family Tree is committed to being open, responsible, and accountable to the community that makes this work possible.
     </p>
-  </div>
-  <div class="grid gap-6 sm:grid-cols-2">
+  </div>}
+  <div class={compact ? "space-y-6 pt-4" : "grid gap-6 sm:grid-cols-2"}>
     <div>
       <h3 class="mb-2 font-semibold">Annual Reports</h3>
       <ul class="flex flex-wrap gap-3">

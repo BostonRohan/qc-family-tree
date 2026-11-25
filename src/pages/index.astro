@@ -20,12 +20,16 @@ const HOME_PAGE_QUERY = defineQuery(`
   },
   "featuredSection": *[_type == "featuredSection"][0] {
     _id,
+    eyebrow,
     title,
+    dateLine,
     description,
+    highlights,
     primaryCtaLink,
     primaryCtaLabel,
     secondaryCtaLabel,
     secondaryCtaLink,
+    imageAlt,
     image {
       asset->{_id}
     }
@@ -47,19 +51,13 @@ const featuredSection = homepageData?.featuredSection ?? null;
   slug=""
   title="QC Family Tree"
 >
-  <div>
-    <div>
-      <Welcome hero={hero} />
-    </div>
-    <div class="space-y-8 lg:space-y-16">
-      <ImpactSection />
-      <Programs showPillars={false} showDivider={false} />
-      <Featured section={featuredSection} />
-      <section id="events">
-        <Events includeFilters={false} maxResults={10} maxDays={30} />
-      </section>
-      <DonateSection />
-      <ContactBrief />
-    </div>
-  </div>
+  <Welcome hero={hero} />
+  <ImpactSection />
+  <Featured section={featuredSection} />
+  <Programs showPillars={false} showDivider={false} />
+  <section id="events" class="site-section">
+    <Events includeFilters={false} maxResults={10} maxDays={30} />
+  </section>
+  <DonateSection />
+  <ContactBrief />
 </Layout>

@@ -26,6 +26,8 @@ export default function AlumniCarousel({ alumni }: { alumni: Alumni[] }) {
                 <img
                   src={artist.portraitUrl}
                   alt={artist.alt}
+                  width={3}
+                  height={4}
                   className="h-full w-full object-cover"
                   loading="lazy"
                 />
