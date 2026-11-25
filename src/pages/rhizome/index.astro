@@ -1,7 +1,7 @@
 ---
 export const prerender = false;
 
-import { getRhizomeSignupUrl } from "@/utils/rhizome";
+import { getRhizomeMembership } from "@/utils/rhizome";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import { CustomTooltip } from "@/components/ui/tooltip";
@@ -15,7 +15,18 @@ import slide_2 from "@/assets/rhizome/slide_2.jpg";
 import slide_3 from "@/assets/rhizome/slide_3.jpg";
 import slide_4 from "@/assets/rhizome/slide_4.jpg";
 
-const signupUrl = await getRhizomeSignupUrl();
+const membership = await getRhizomeMembership();
+const { signupUrl, season, annualFee } = membership ?? {};
+const pricing = typeof season === "number" && typeof annualFee === "number"
+  ? {
+      season,
+      annualFee: new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: Number.isInteger(annualFee) ? 0 : 2,
+      }).format(annualFee),
+    }
+  : undefined;
 ---
 
 <Layout
@@ -28,10 +39,10 @@ const signupUrl = await getRhizomeSignupUrl();
     title="Rhizome Coalition"
     tagline="Artists united for community and creativity."
     image={slide_1}
-    primaryCta={{
+    primaryCta={signupUrl ? {
       label: "Sign up",
       href: signupUrl,
-    }}
+    } : undefined}
   />
   <section
     id="about"
@@ -88,7 +99,7 @@ const signupUrl = await getRhizomeSignupUrl();
             progress.
           </p>
           <div class="flex flex-col gap-3 sm:flex-row">
-            <Link className="rounded-xl" href={signupUrl}>Sign up</Link>
+            {signupUrl && <Link className="rounded-xl" href={signupUrl}>Sign up</Link>}
             <Link
               className="rounded-xl border-accent-foreground/70 text-accent-foreground hover:bg-accent-foreground hover:text-accent"
               variant="outline"
@@ -351,7 +362,7 @@ const signupUrl = await getRhizomeSignupUrl();
   <section id="faqs" class="site-section bg-accent text-accent-foreground">
     <div class="site-container max-w-4xl">
       <h2 class="sm:text-3xl text-xl font-semibold font-ubuntu">FAQs</h2>
-      <RhizomeFAQ client:load />
+      <RhizomeFAQ pricing={pricing} client:load />
     </div>
   </section>
 </Layout>
