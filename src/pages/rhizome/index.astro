@@ -1,6 +1,8 @@
 ---
-export const prerender = true;
+export const prerender = false;
 
+import { defineQuery } from "groq";
+import { sanityClient } from "sanity:client";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import { CustomTooltip } from "@/components/ui/tooltip";
@@ -13,6 +15,21 @@ import slide_1 from "@/assets/rhizome/slide_1.jpg";
 import slide_2 from "@/assets/rhizome/slide_2.jpg";
 import slide_3 from "@/assets/rhizome/slide_3.jpg";
 import slide_4 from "@/assets/rhizome/slide_4.jpg";
+
+const RHIZOME_MEMBERSHIP_QUERY = defineQuery(`
+  *[_type == "rhizomeMembership" && _id == "rhizomeMembership"][0] {
+    season, annualFee
+  }
+`);
+const membership = await sanityClient
+  .fetch<{ season: number; annualFee: number } | null>(RHIZOME_MEMBERSHIP_QUERY)
+  .catch(() => null);
+const season = membership?.season ?? 2027;
+const annualFee = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  trailingZeroDisplay: "stripIfInteger",
+}).format(membership?.annualFee ?? 45);
 ---
 
 <Layout
@@ -349,7 +366,7 @@ import slide_4 from "@/assets/rhizome/slide_4.jpg";
   <section id="faqs" class="bg-secondary py-16 px-4 text-white w-full">
     <div class="max-w-[932px] mx-auto">
       <h2 class="sm:text-3xl text-xl font-semibold font-ubuntu">FAQs</h2>
-      <RhizomeFAQ client:load />
+      <RhizomeFAQ season={season} annualFee={annualFee} client:load />
     </div>
   </section>
 </Layout>

@@ -86,7 +86,7 @@ function CustomAccordion({ items }: CustomAccordionProps) {
   );
 }
 
-function RhizomeFAQ() {
+function RhizomeFAQ({ season, annualFee }: { season: number; annualFee: string }) {
   const faqs = [
     {
       title: "What does it mean to be a Rhizome member?",
@@ -95,7 +95,7 @@ function RhizomeFAQ() {
     },
     {
       title: "How much does it cost to join?",
-      content: "The 2026 annual Rhizome Membership fee is $40.",
+      content: `The ${season} annual Rhizome Membership fee is ${annualFee}.`,
     },
     {
       title: "Who can join the coalition?",

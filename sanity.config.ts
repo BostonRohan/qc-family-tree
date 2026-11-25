@@ -25,6 +25,9 @@ export default defineConfig({
               S.document().schemaType("cultureBearerCohort").documentId("cultureBearerCohort"),
             ),
             S.documentTypeListItem("alumni").title("Culture Bearer Alumni"),
+            S.listItem().title("Rhizome Membership").id("rhizomeMembership").child(
+              S.document().schemaType("rhizomeMembership").documentId("rhizomeMembership"),
+            ),
           ]),
     }),
     structureTool({
