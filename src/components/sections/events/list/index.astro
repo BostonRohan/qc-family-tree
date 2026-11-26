@@ -97,10 +97,6 @@ const statusPills = {
       {visibleDates.map((dateKey, index) => {
         const dayEvents = groupedEvents[dateKey];
         const firstEvent = dayEvents[0];
-        const dayStatus = firstEvent.status !== "scheduled" &&
-          dayEvents.every((event) => event.status === firstEvent.status)
-          ? statusPills[firstEvent.status]
-          : null;
         const firstScheduledEvent = dayEvents.find(
           (event) => event.status === "scheduled" || event.status === "soldOut",
         );
@@ -118,9 +114,7 @@ const statusPills = {
             <div class="text-sm font-bold" data-day-subtitle data-start={firstEvent?.startUtc}>
               <span class="inline-block h-4 w-14 rounded bg-muted animate-pulse"></span>
             </div>
-            {dayStatus ? (
-              <Badge className={dayStatus.className}>{dayStatus.label}</Badge>
-            ) : firstScheduledEvent && (
+            {firstScheduledEvent && (
               <div class="text-xs opacity-80" data-day-time data-start={firstScheduledEvent.startUtc}>
                 <span class="inline-block h-4 w-14 rounded bg-muted animate-pulse"></span>
               </div>
