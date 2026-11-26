@@ -13,21 +13,10 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "@/components/ui/link";
-
-interface Event {
-  id: string;
-  title: string;
-  startUtc: string;
-  endUtc: string;
-  location: string;
-  description: string;
-  category: "Workshop" | "Meeting" | "Community" | "Social";
-  url?: string;
-  imageUrl?: string;
-}
+import type { EventbriteEvent } from "@/lib/eventbrite";
 
 interface Props {
-  events: Event[];
+  events: EventbriteEvent[];
 }
 
 const { events } = Astro.props;
@@ -47,7 +36,7 @@ const getCategoryIcon = (category: string) => {
   }
 };
 
-const generateCalendarLink = (event: Event) => {
+const generateCalendarLink = (event: EventbriteEvent) => {
   const startFormatted = event.startUtc.replace(/-|:|\.\d\d\d/g, "");
   const endFormatted = event.endUtc.replace(/-|:|\.\d\d\d/g, "");
   return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${startFormatted}/${endFormatted}&details=${encodeURIComponent(event.description)}&location=${encodeURIComponent(event.location)}`;
@@ -66,7 +55,7 @@ const groupedEvents = events.reduce(
     groups[dateKey].push(event);
     return groups;
   },
-  {} as Record<string, Event[]>,
+  {} as Record<string, EventbriteEvent[]>,
 );
 
 const sortedDates = Object.keys(groupedEvents).sort(
@@ -74,6 +63,20 @@ const sortedDates = Object.keys(groupedEvents).sort(
 );
 
 const visibleDates = sortedDates.slice(0, 6);
+const statusPills = {
+  postponed: {
+    label: "Postponed",
+    className: "border-amber-300 bg-amber-100 text-amber-900 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-200",
+  },
+  canceled: {
+    label: "Canceled",
+    className: "border-red-300 bg-red-100 text-red-900 dark:border-red-700 dark:bg-red-950 dark:text-red-200",
+  },
+  soldOut: {
+    label: "Sold out",
+    className: "border-violet-300 bg-violet-100 text-violet-900 dark:border-violet-700 dark:bg-violet-950 dark:text-violet-200",
+  },
+};
 ---
 
 <div class="space-y-6 max-w-5xl mx-auto px-4 pb-4">
@@ -92,7 +95,15 @@ const visibleDates = sortedDates.slice(0, 6);
 
     <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide" data-day-rail>
       {visibleDates.map((dateKey, index) => {
-        const firstEvent = groupedEvents[dateKey]?.[0];
+        const dayEvents = groupedEvents[dateKey];
+        const firstEvent = dayEvents[0];
+        const dayStatus = firstEvent.status !== "scheduled" &&
+          dayEvents.every((event) => event.status === firstEvent.status)
+          ? statusPills[firstEvent.status]
+          : null;
+        const firstScheduledEvent = dayEvents.find(
+          (event) => event.status === "scheduled" || event.status === "soldOut",
+        );
 
         return (
           <button
@@ -107,13 +118,13 @@ const visibleDates = sortedDates.slice(0, 6);
             <div class="text-sm font-bold" data-day-subtitle data-start={firstEvent?.startUtc}>
               <span class="inline-block h-4 w-14 rounded bg-muted animate-pulse"></span>
             </div>
-            <div
-              class="text-xs opacity-80"
-              data-day-time
-              data-start={firstEvent?.startUtc}
-            >
-              <span class="inline-block h-4 w-14 rounded bg-muted animate-pulse"></span>
-            </div>
+            {dayStatus ? (
+              <Badge className={dayStatus.className}>{dayStatus.label}</Badge>
+            ) : firstScheduledEvent && (
+              <div class="text-xs opacity-80" data-day-time data-start={firstScheduledEvent.startUtc}>
+                <span class="inline-block h-4 w-14 rounded bg-muted animate-pulse"></span>
+              </div>
+            )}
           </button>
         );
       })}
@@ -166,11 +177,13 @@ const visibleDates = sortedDates.slice(0, 6);
                     {
                       dateEvents.map((event) => {
                         const CategoryIcon = getCategoryIcon(event.category);
+                        const statusPill = event.status === "scheduled" ? null : statusPills[event.status];
+                        const hasScheduledTime = event.status === "scheduled" || event.status === "soldOut";
 
                         return (
                           <div class="overflow-hidden rounded-xl border border-border bg-background/60">
                             {event.imageUrl && (
-                              <div class="overflow-hidden border-b border-border bg-muted">
+                              <div class="relative overflow-hidden border-b border-border bg-muted">
                                 <img
                                   src={event.imageUrl}
                                   alt={event.title}
@@ -179,31 +192,43 @@ const visibleDates = sortedDates.slice(0, 6);
                                   loading="lazy"
                                   class="block aspect-[4/3] max-h-[280px] min-h-[180px] w-full object-cover"
                                 />
+                                {statusPill && (
+                                  <Badge className={`absolute right-3 top-3 ${statusPill.className}`}>
+                                    {statusPill.label}
+                                  </Badge>
+                                )}
                               </div>
                             )}
 
                             <div class="p-4 space-y-3">
                               <div class="flex justify-between items-start gap-4">
-                                <h5 class="font-bold leading-snug">
-                                  {event.title}
-                                </h5>
+                                <div class="space-y-1.5">
+                                  <h5 class="font-bold leading-snug">
+                                    {event.title}
+                                  </h5>
+                                  {!event.imageUrl && statusPill && (
+                                    <Badge className={statusPill.className}>{statusPill.label}</Badge>
+                                  )}
+                                </div>
                                 <div class="shrink-0 p-2 bg-muted rounded-lg text-muted-foreground">
                                   <CategoryIcon className="w-4 h-4" />
                                 </div>
                               </div>
 
                               <div class="space-y-2 text-sm text-muted-foreground">
-                                <div class="flex items-center gap-2">
-                                  <Clock className="w-4 h-4 text-accent/70" />
-                                  <span
-                                    class="font-medium inline-block min-w-24 rounded bg-muted/70 px-2 py-0.5 text-transparent animate-pulse"
-                                    data-event-time
-                                    data-start={event.startUtc}
-                                    data-end={event.endUtc}
-                                  >
-                                    Loading
-                                  </span>
-                                </div>
+                                {hasScheduledTime && (
+                                  <div class="flex items-center gap-2">
+                                    <Clock className="w-4 h-4 text-accent/70" />
+                                    <span
+                                      class="font-medium inline-block min-w-24 rounded bg-muted/70 px-2 py-0.5 text-transparent animate-pulse"
+                                      data-event-time
+                                      data-start={event.startUtc}
+                                      data-end={event.endUtc}
+                                    >
+                                      Loading
+                                    </span>
+                                  </div>
+                                )}
                                 <div class="flex items-start gap-2">
                                   <MapPin className="w-4 h-4 text-accent/70 mt-0.5" />
                                   <div class="flex items-start gap-2 min-w-0">
@@ -257,21 +282,23 @@ const visibleDates = sortedDates.slice(0, 6);
                                       View event
                                     </Link>
                                   )}
-                                  <Link
-                                    href={generateCalendarLink(event)}
-                                    variant="outline"
-                                    size="sm"
-                                    className="!rounded-xl text-xs gap-1.5"
-                                    data-event-id={event.id}
-                                    data-event-title={event.title}
-                                    data-event-start={event.startUtc}
-                                    data-event-end={event.endUtc}
-                                    data-event-location={event.location}
-                                    data-event-description={event.description}
-                                  >
-                                    <CalendarPlus className="w-3.5 h-3.5" />
-                                    Add to Calendar
-                                  </Link>
+                                  {hasScheduledTime && (
+                                    <Link
+                                      href={generateCalendarLink(event)}
+                                      variant="outline"
+                                      size="sm"
+                                      className="!rounded-xl text-xs gap-1.5"
+                                      data-event-id={event.id}
+                                      data-event-title={event.title}
+                                      data-event-start={event.startUtc}
+                                      data-event-end={event.endUtc}
+                                      data-event-location={event.location}
+                                      data-event-description={event.description}
+                                    >
+                                      <CalendarPlus className="w-3.5 h-3.5" />
+                                      Add to Calendar
+                                    </Link>
+                                  )}
                                 </div>
                               </div>
                             </div>

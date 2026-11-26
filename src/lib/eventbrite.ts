@@ -2,6 +2,8 @@ const EVENTBRITE_API_TOKEN = import.meta.env.EVENTBRITE_API_TOKEN;
 const EVENTBRITE_ORGANIZATION_ID = import.meta.env.EVENTBRITE_ORGANIZATION_ID;
 const EVENTBRITE_API_BASE = "https://www.eventbriteapi.com/v3";
 
+export type EventStatus = "scheduled" | "postponed" | "canceled" | "soldOut";
+
 export interface EventbriteEvent {
   id: string;
   title: string;
@@ -12,6 +14,7 @@ export interface EventbriteEvent {
   category: "Workshop" | "Meeting" | "Community" | "Social";
   url: string;
   imageUrl?: string;
+  status: EventStatus;
 }
 
 interface EventbriteApiResponse {
@@ -30,6 +33,11 @@ interface EventbriteApiEvent {
   end: { utc: string; local: string };
   description: { text: string; html: string };
   url: string;
+  status?: string;
+  event_sales_status?: {
+    sales_status?: string;
+    message_code?: string | null;
+  } | null;
   logo?: {
     original?: {
       url?: string;
@@ -87,8 +95,8 @@ export async function getUpcomingEvents(
     const now = new Date();
 
     const params = new URLSearchParams({
-      expand: "venue",
-      status: "live,started",
+      expand: "venue,event_sales_status",
+      status: "live,started,canceled",
       order_by: "start_asc",
       time_filter: "current_future",
     });
@@ -195,7 +203,20 @@ function mapEventbriteEvent(event: EventbriteApiEvent): EventbriteEvent {
     category: extractCategory(event.name.text, event.description.text),
     url: event.url,
     imageUrl: event.logo?.original?.url || event.logo?.url,
+    status: getEventStatus(event),
   };
+}
+
+function getEventStatus(event: EventbriteApiEvent): EventStatus {
+  const sales = event.event_sales_status;
+  if (event.status === "canceled" || sales?.message_code === "event_cancelled") {
+    return "canceled";
+  }
+  if (sales?.message_code === "event_postponed") return "postponed";
+  if (sales?.message_code === "tickets_sold_out" || sales?.sales_status === "sold_out") {
+    return "soldOut";
+  }
+  return "scheduled";
 }
 
 function getEventStartDate(event: EventbriteApiEvent): Date | null {
