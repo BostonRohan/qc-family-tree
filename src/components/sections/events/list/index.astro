@@ -274,7 +274,7 @@ const statusPills = {
                                       View event
                                     </Link>
                                   )}
-                                  {hasScheduledTime && (
+                                  {event.status === "scheduled" && (
                                     <Link
                                       href={generateCalendarLink(event)}
                                       variant="outline"
